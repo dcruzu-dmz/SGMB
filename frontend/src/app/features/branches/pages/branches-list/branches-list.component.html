@@ -1,0 +1,71 @@
+<div class="branches-container">
+    <div class="branches-header">
+        <h1>Sucursales</h1>
+        <p>Gestión de sucursales del sistema</p>
+    </div>
+    <div class="branches-grid">
+        <div class="card form-card">
+            <h2>{{ isEditing ? 'Editar sucursal' : 'Nueva sucursal' }}</h2>
+
+            <form (ngSubmit)="submitForm()">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" [(ngModel)]="form.name" name="name" required />
+                </div>
+                <div class="form-group">
+                    <label>Dirección</label>
+                    <input type="text" [(ngModel)]="form.address" name="address" required />
+                </div>
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input type="text" [(ngModel)]="form.phone" name="phone" required />
+                </div>
+                <div class="form-group">
+                    <label>Estado</label>
+                    <select [(ngModel)]="form.is_active" name="status">
+                    <option [ngValue]="true">Activo</option>
+                    <option [ngValue]="false">Inactivo</option>
+                </select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit">
+                        {{ isEditing ? 'Actualizar' : 'Crear sucursal' }}
+                    </button>
+                    <button type="button" class="secondary" (click)="resetForm()" *ngIf="isEditing">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+            <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+        
+        </div>
+
+        <div class="card list-card">
+            <h2>Lista de sucursales</h2>
+            <p *ngIf="loading">Cargando sucursales...</p>
+            <table *ngIf="!loading">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Dirección</th>
+                        <th>Teléfono</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let branch of branches">
+                        <td>{{ branch.name }}</td>
+                        <td>{{ branch.address }}</td>
+                        <td>{{ branch.phone }}</td>
+                        <td>{{ branch.is_active ? 'Activo' : 'Inactivo' }}</td>
+                        <td class="actions">
+                            <button (click)="editBranch(branch)">Editar</button>
+                            <button class="secondary" (click)="toggleStatus(branch)">{{ branch.is_active ? 'Desactivar' : 'Activar' }}</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>  
+        </div>
+    </div>
+</div>  

@@ -1,0 +1,92 @@
+<div class="assets-container">
+    <div class="assets-header">
+        <h1>Equipos</h1>
+        <p>Gestión de equipos del sistema</p>
+</div>
+
+<div class="assets-grid">
+    <div class="card form-card">
+        <h2>{{ isEditing ? 'Editar equipo' : 'Nuevo equipo' }}</h2>
+
+    <form (ngSubmit)="submitForm()">
+        
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" [(ngModel)]="form.name" name="name" required />
+            </div>
+
+            <div class="form-group">
+                <label>Tipo</label>
+                <input type="text" [(ngModel)]="form.type" name="type" required />
+            </div>
+            <div class="form-group">
+                <label>Marca</label>
+                <input type="text" [(ngModel)]="form.brand" name="brand" required />
+            </div>
+            <div class="form-group">
+                <label>Modelo</label>
+                <input type="text" [(ngModel)]="form.model" name="model" required />
+            </div>
+            <div class="form-group">
+                <label>Serie</label>
+                <input type="text" [(ngModel)]="form.serial_number" name="serie" required />
+            </div>
+            <div class="form-group">
+                <label>Ubicación</label>
+                <input type="text" [(ngModel)]="form.location" name="location" required />
+            </div>
+            <div class="form-group">
+                <label>Estado</label>
+                <select [(ngModel)]="form.status" name="status">
+                    <option value="activo">Activo</option>
+                    <option value="en_mantenimiento">En mantenimiento</option>
+                    <option value="dado de baja">Dado de baja</option>
+                </select>
+            </div> 
+            <div class="form-group">
+                <label>Descripción</label>
+                <textarea [(ngModel)]="form.description" name="description"></textarea>
+            </div>
+            <div class="form-actions">
+          <button type="submit">
+            {{ isEditing ? 'Actualizar' : 'Crear equipo' }}
+          </button>
+          <button type="button" class="secondary" (click)="resetForm()" *ngIf="isEditing">
+            Cancelar
+          </button>
+        </div>
+      </form>
+
+      <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    </div>
+
+        <div class="card table-card">
+            <h2>Listado de equipos</h2>
+            <p *ngIf="loading">Cargando equipos...</p>
+            <table *ngIf="!loading">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Marca</th>
+                    <th>Ubicación</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let asset of assets">
+                    <td>{{ asset.name }}</td>
+                    <td>{{ asset.type }}</td>
+                    <td>{{ asset.brand }}</td>
+                    <td>{{ asset.location }}</td>
+                    <td>{{ asset.status }}</td>
+                    <td class="actions">
+                        <button (click)="editAsset(asset)">Editar</button>
+                        <button class="secondary" (click)="toggleStatus(asset)">{{ asset.status === 'activo' ? 'Dar de baja' : 'Reactivar' }}</button>
+                    </td>
+                </tr>
+            </tbody>
+            </table>    
+        </div>
+    </div>

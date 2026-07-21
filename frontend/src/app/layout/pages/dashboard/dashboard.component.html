@@ -1,0 +1,91 @@
+<div class="dashboard-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">SG</div>
+      <div>
+        <h2>SGMB</h2>
+        <p>Mantenimiento</p>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <a class="menu-item" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a class="menu-item" routerLink="/users" routerLinkActive="active">Usuarios</a>
+      <a class="menu-item" routerLink="/branches" routerLinkActive="active">Sucursales</a>
+      <a class="menu-item" routerLink="/assets" routerLinkActive="active">Equipos</a>
+      <a class="menu-item" routerLink="/requests" routerLinkActive="active">Solicitudes</a>
+      <a class="menu-item" routerLink="/preventive" routerLinkActive="active">Preventivos</a>
+      <a class="menu-item" routerLink="/reports" routerLinkActive="active">Reportes</a>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div>
+        <h1>Dashboard</h1>
+        <p class="subtitle">Panel principal del sistema SGMB</p>
+      </div>
+
+      <div class="topbar-actions" *ngIf="user">
+        <div class="user-chip">
+          <div class="avatar">{{ user.name?.charAt(0) }}</div>
+          <div>
+            <strong>{{ user.name }}</strong>
+            <p>{{ user.role }}</p>
+          </div>
+        </div>
+
+        <button class="logout-btn" (click)="logout()">Cerrar sesión</button>
+      </div>
+    </header>
+
+    <section class="cards">
+      <div class="card stat-card">
+        <span class="stat-title">Usuario actual</span>
+        <strong class="stat-value">{{ user?.name || 'Cargando...' }}</strong>
+        <small>{{ user?.email || 'Obteniendo datos...' }}</small>
+      </div>
+
+      <div class="card stat-card">
+        <span class="stat-title">Rol</span>
+        <strong class="stat-value">{{ user?.role || '--' }}</strong>
+        <small>Permisos del sistema</small>
+      </div>
+
+      <div class="card stat-card">
+        <span class="stat-title">Estado de sesión</span>
+        <strong class="stat-value">Activa</strong>
+        <small *ngIf="user">Acceso autorizado</small>
+        <small *ngIf="!user">Validando...</small>
+      </div>
+    </section>
+
+    <section class="content-grid">
+      <div class="card panel">
+        <h3>Bienvenido al sistema</h3>
+
+        <div *ngIf="user; else loadingUser" class="user-info">
+          <p><strong>Nombre:</strong> {{ user.name }}</p>
+          <p><strong>Correo:</strong> {{ user.email }}</p>
+          <p><strong>Rol:</strong> {{ user.role }}</p>
+          <p><strong>Sesión:</strong> Activa</p>
+        </div>
+
+        <ng-template #loadingUser>
+          <p>Cargando información del usuario...</p>
+        </ng-template>
+      </div>
+
+      <div class="card panel">
+        <h3>Accesos rápidos</h3>
+
+        <div class="quick-actions">
+          <button class="action-btn">Registrar usuario</button>
+          <button class="action-btn">Registrar equipo</button>
+          <button class="action-btn">Nueva solicitud</button>
+          <button class="action-btn">Programar mantenimiento</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

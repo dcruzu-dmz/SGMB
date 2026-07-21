@@ -1,0 +1,54 @@
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+export interface Branch {
+  id: number,
+  name: string,
+  address: string,
+  phone: string,
+  is_active: boolean,
+  created_at: string,
+}
+
+export interface BranchCreate {
+  name: string,
+  address?: string,
+  phone?: string,
+  is_active?: boolean,
+}
+
+export interface BranchUpdate {
+  name?: string,
+  address?: string,
+  phone?: string,
+  is_active?: boolean,
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class BranchesService {
+  private http = inject(HttpClient);
+  private apiUrl = 'http://127.0.0.1:8000/branches';
+
+  getBranches(): Observable<Branch[]> {
+    return this.http.get<Branch[]>(this.apiUrl);
+  }
+
+  getBranch(id: number): Observable<Branch> {
+    return this.http.get<Branch>(`${this.apiUrl}/${id}`);
+  }
+
+  createBranch(data: BranchCreate): Observable<Branch> {
+    return this.http.post<Branch>(this.apiUrl, data);
+  }
+
+  updateBranch(id: number, data: BranchUpdate): Observable<Branch> {
+    return this.http.put<Branch>(`${this.apiUrl}/${id}`, data);
+  }
+
+  changeBranchStatus(id: number, isActive: boolean): Observable<Branch> {
+  return this.http.patch<Branch>(`${this.apiUrl}/${id}/status?is_active=${isActive}`, {});
+}
+}
