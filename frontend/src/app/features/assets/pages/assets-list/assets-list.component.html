@@ -63,7 +63,8 @@
         <div class="card table-card">
             <h2>Listado de equipos</h2>
             <p *ngIf="loading">Cargando equipos...</p>
-            <table *ngIf="!loading">
+            <div class="table-scroll" *ngIf="!loading">
+            <table>
             <thead>
                 <tr>
                     <th>Nombre</th>
@@ -88,6 +89,7 @@
                 </tr>
             </tbody>
             </table>
+            </div>
             <p class="empty" *ngIf="!loading && visibleAssets.length === 0">
               {{ searchTerm ? 'Sin resultados para "' + searchTerm + '"' : 'No hay equipos registrados' }}
             </p>

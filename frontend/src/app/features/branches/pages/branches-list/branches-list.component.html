@@ -43,7 +43,8 @@
         <div class="card list-card">
             <h2>Lista de sucursales</h2>
             <p *ngIf="loading">Cargando sucursales...</p>
-            <table *ngIf="!loading">
+            <div class="table-scroll" *ngIf="!loading">
+            <table>
                 <thead>
                     <tr>
                         <th>Nombre</th>
@@ -69,7 +70,8 @@
                         </td>
                     </tr>
                 </tbody>
-            </table>  
+            </table>
+            </div>
         </div>
     </div>
 </div>  

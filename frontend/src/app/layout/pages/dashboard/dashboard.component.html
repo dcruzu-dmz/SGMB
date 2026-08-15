@@ -137,7 +137,8 @@
         <h2>Solicitudes correctivas abiertas</h2>
       </div>
 
-      <table *ngIf="criticalRequests.length > 0">
+      <div class="table-scroll" *ngIf="criticalRequests.length > 0">
+      <table>
         <thead>
           <tr>
             <th>ID</th>
@@ -159,6 +160,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
 
       <p class="empty" *ngIf="criticalRequests.length === 0">No hay solicitudes abiertas</p>
     </section>

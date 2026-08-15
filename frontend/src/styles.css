@@ -77,6 +77,11 @@ html, body {
 .badge-dado_de_baja,
 .badge-dado-de-baja { background: var(--color-neutral-bg); color: var(--color-text-muted); }
 
+/* Horizontal scroll wrapper for wide tables on narrow screens */
+.table-scroll {
+  overflow-x: auto;
+}
+
 /* Shared card token used across modules */
 .card {
   background: var(--color-surface);

@@ -59,7 +59,8 @@
 
       <p *ngIf="loading">Cargando usuarios...</p>
 
-      <table *ngIf="!loading">
+      <div class="table-scroll" *ngIf="!loading">
+      <table>
         <thead>
           <tr>
             <th>ID</th>
@@ -91,6 +92,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
     </div>
   </div>
 </div>

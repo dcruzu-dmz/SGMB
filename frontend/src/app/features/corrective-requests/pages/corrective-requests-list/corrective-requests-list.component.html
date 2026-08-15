@@ -80,7 +80,8 @@
 
       <p *ngIf="loading">Cargando solicitudes...</p>
 
-      <table *ngIf="!loading">
+      <div class="table-scroll" *ngIf="!loading">
+      <table>
         <thead>
           <tr>
             <th>ID</th>
@@ -116,6 +117,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
 
       <p class="empty" *ngIf="!loading && visibleRequests.length === 0">
         {{ searchTerm ? 'Sin resultados para "' + searchTerm + '"' : 'No hay solicitudes registradas' }}

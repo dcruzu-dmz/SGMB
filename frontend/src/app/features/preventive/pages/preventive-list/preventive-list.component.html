@@ -93,7 +93,8 @@
 
       <p *ngIf="loading">Cargando mantenimientos...</p>
 
-      <table *ngIf="!loading">
+      <div class="table-scroll" *ngIf="!loading">
+      <table>
         <thead>
           <tr>
             <th>ID</th>
@@ -129,6 +130,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
 
       <p *ngIf="!loading && preventives.length === 0">
         No hay mantenimientos programados

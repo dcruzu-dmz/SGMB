@@ -7,9 +7,9 @@
   <p *ngIf="loading">Cargando reportes...</p>
   <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
 
-  <div class="grid-base" *ngIf="!loading && !errorMessage">
+  <ng-container *ngIf="!loading && !errorMessage">
 
-    <section class="stat-grid">
+    <div class="stat-grid">
       <div class="card stat-card">
         <span class="stat-title">Equipos</span>
         <strong class="stat-value">{{ assets.length }}</strong>
@@ -35,10 +35,9 @@
         <strong class="stat-value">{{ activeUsersCount }}</strong>
         <small>de {{ users.length }} registrados</small>
       </div>
-    </section>
+    </div>
 
-    <section class="reports-grid">
-
+    <div class="reports-grid">
       <div class="card chart-card">
         <h2>Solicitudes correctivas por estado</h2>
         <div class="bar-row" *ngFor="let entry of requestsByStatus">
@@ -89,7 +88,8 @@
 
       <div class="card wide">
         <h2>Próximos mantenimientos preventivos</h2>
-        <table *ngIf="upcomingPreventives.length > 0">
+        <div class="table-scroll" *ngIf="upcomingPreventives.length > 0">
+        <table>
           <thead>
             <tr>
               <th>Equipo</th>
@@ -107,9 +107,10 @@
             </tr>
           </tbody>
         </table>
+        </div>
         <p class="empty" *ngIf="upcomingPreventives.length === 0">No hay mantenimientos próximos</p>
       </div>
+    </div>
 
-    </section>
-  </div>
+  </ng-container>
 </div>
