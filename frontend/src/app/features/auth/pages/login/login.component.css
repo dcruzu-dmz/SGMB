@@ -56,15 +56,10 @@
 
 /* Logo */
 .card-logo {
-  width: 56px; height: 56px;
-  background: var(--color-primary);
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.6rem;
-  color: #fff;
-  margin: 0 auto 1.25rem;
+  display: block;
+  width: 96px;
+  height: auto;
+  margin: 0 auto 1rem;
 }
 
 .card-title {
@@ -198,6 +193,21 @@ label {
 .login-footer {
   text-align: center;
   margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-sidebar-border);
+}
+
+.footer-brands {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  margin: 0 auto 0.75rem;
+  display: block;
+  opacity: 0.9;
+}
+
+.login-footer p {
   font-size: 0.72rem;
   color: var(--color-text-faint);
+  margin: 0;
 }

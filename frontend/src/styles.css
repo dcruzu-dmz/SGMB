@@ -9,12 +9,13 @@
   --color-text-muted: #6b7280;
   --color-text-faint: #9ca3af;
 
-  --color-primary: #1e40af;
-  --color-primary-dark: #1e3a8a;
-  --color-primary-light: #eef2ff;
+  /* Paleta BOFASA: marino + verde extraidos del logo oficial */
+  --color-primary: #14336a;
+  --color-primary-dark: #0e2650;
+  --color-primary-light: #e7ecf6;
 
-  --color-accent: #2563eb;
-  --color-accent-hover: #1d4ed8;
+  --color-accent: #3ea854;
+  --color-accent-hover: #2f8a42;
 
   --color-danger: #dc2626;
   --color-danger-bg: #fee2e2;

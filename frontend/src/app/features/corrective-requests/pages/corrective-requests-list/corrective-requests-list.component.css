@@ -70,7 +70,7 @@ input, select, textarea {
 }
 
 input:focus, select:focus, textarea:focus {
-  border-color: #2563eb;
+  border-color: var(--color-accent);
   background: white;
 }
 
@@ -86,7 +86,7 @@ textarea {
 
 button[type="submit"] {
   padding: 0.75rem 1.25rem;
-  background: #2563eb;
+  background: var(--color-accent);
   color: white;
   border: none;
   border-radius: 10px;
@@ -96,7 +96,7 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-  background: #1d4ed8;
+  background: var(--color-accent-hover);
 }
 
 button.secondary {
