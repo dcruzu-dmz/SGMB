@@ -38,9 +38,9 @@
             <div class="form-group">
                 <label>Estado</label>
                 <select [(ngModel)]="form.status" name="status">
-                    <option value="activo">Activo</option>
+                    <option value="disponible">Disponible</option>
                     <option value="en_mantenimiento">En mantenimiento</option>
-                    <option value="dado de baja">Dado de baja</option>
+                    <option value="dado_de_baja">Dado de baja</option>
                 </select>
             </div> 
             <div class="form-group">
@@ -75,18 +75,21 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let asset of assets">
+                <tr *ngFor="let asset of visibleAssets">
                     <td>{{ asset.name }}</td>
                     <td>{{ asset.type }}</td>
                     <td>{{ asset.brand }}</td>
                     <td>{{ asset.location }}</td>
-                    <td>{{ asset.status }}</td>
+                    <td><span [class]="'badge badge-' + asset.status">{{ asset.status | label }}</span></td>
                     <td class="actions">
                         <button (click)="editAsset(asset)">Editar</button>
-                        <button class="secondary" (click)="toggleStatus(asset)">{{ asset.status === 'activo' ? 'Dar de baja' : 'Reactivar' }}</button>
+                        <button class="secondary" (click)="toggleStatus(asset)">{{ asset.status === 'dado_de_baja' ? 'Reactivar' : 'Dar de baja' }}</button>
                     </td>
                 </tr>
             </tbody>
-            </table>    
+            </table>
+            <p class="empty" *ngIf="!loading && visibleAssets.length === 0">
+              {{ searchTerm ? 'Sin resultados para "' + searchTerm + '"' : 'No hay equipos registrados' }}
+            </p>
         </div>
     </div>

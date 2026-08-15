@@ -1,20 +1,26 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AssetsService, Asset, AssetCreate, AssetUpdate } from '../../../../core/services/assets.service';
+import { LabelPipe } from '../../../../core/pipes/label.pipe';
+import { SearchService } from '../../../../core/services/search.service';
 
 
 @Component({
   selector: 'app-assets-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, ],
+  imports: [CommonModule, FormsModule, LabelPipe],
   templateUrl: './assets-list.component.html',
   styleUrl: './assets-list.component.css',
 })
 export class AssetsListComponent implements OnInit {
   private assetsService = inject(AssetsService);
+  private searchService = inject(SearchService);
+  private destroyRef = inject(DestroyRef);
 
   assets: Asset[] = [];
+  searchTerm = '';
   loading = false;
   errorMessage = '';
 
@@ -34,6 +40,16 @@ export class AssetsListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadAssets();
+    this.searchService.term.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(term => this.searchTerm = term);
+  }
+
+  get visibleAssets(): Asset[] {
+    if (!this.searchTerm) return this.assets;
+    return this.assets.filter(a =>
+      a.name?.toLowerCase().includes(this.searchTerm) ||
+      a.type?.toLowerCase().includes(this.searchTerm) ||
+      a.location?.toLowerCase().includes(this.searchTerm)
+    );
   }
 
   loadAssets(): void {
@@ -126,9 +142,9 @@ export class AssetsListComponent implements OnInit {
   }
 
   toggleStatus(asset: Asset): void {
-    this.assetsService.changeStatus(asset.id, asset.status === 'activo' ? 'dado de baja' : 'activo').subscribe({
-      next: () => {this.loadAssets()
-        ;},
+    const nextStatus = asset.status === 'dado_de_baja' ? 'disponible' : 'dado_de_baja';
+    this.assetsService.changeStatus(asset.id, nextStatus).subscribe({
+      next: () => this.loadAssets(),
       error: () => {
         this.errorMessage = 'No se pudo cambiar el estado del equipo';
       }

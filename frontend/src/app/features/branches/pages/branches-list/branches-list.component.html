@@ -58,7 +58,11 @@
                         <td>{{ branch.name }}</td>
                         <td>{{ branch.address }}</td>
                         <td>{{ branch.phone }}</td>
-                        <td>{{ branch.is_active ? 'Activo' : 'Inactivo' }}</td>
+                        <td>
+                            <span class="badge" [class.badge-activo]="branch.is_active" [class.badge-cerrada]="!branch.is_active">
+                                {{ branch.is_active ? 'Activo' : 'Inactivo' }}
+                            </span>
+                        </td>
                         <td class="actions">
                             <button (click)="editBranch(branch)">Editar</button>
                             <button class="secondary" (click)="toggleStatus(branch)">{{ branch.is_active ? 'Desactivar' : 'Activar' }}</button>

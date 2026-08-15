@@ -2,10 +2,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine
-from app.routers import auth, users, asset, branch
+from app.routers import auth, users, asset, branch, corrective_request, preventive_maintenance
 from app.models.user import User
 from app.models.asset import Asset
 from app.models.branch import Branch
+from app.models.corrective_request import CorrectiveRequest
+from app.models.preventive_maintenance import PreventiveMaintenance
 
 
 Base.metadata.create_all(bind=engine)
@@ -24,6 +26,8 @@ app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(asset.router)
 app.include_router(branch.router)
+app.include_router(corrective_request.router)
+app.include_router(preventive_maintenance.router)
 
   
 @app.get("/")

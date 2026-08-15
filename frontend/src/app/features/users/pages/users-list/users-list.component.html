@@ -78,7 +78,7 @@
             <td>{{ user.email }}</td>
             <td>{{ user.role }}</td>
             <td>
-              <span [class.active]="user.is_active" [class.inactive]="!user.is_active">
+              <span class="badge" [class.badge-activo]="user.is_active" [class.badge-cerrada]="!user.is_active">
                 {{ user.is_active ? 'Activo' : 'Inactivo' }}
               </span>
             </td>

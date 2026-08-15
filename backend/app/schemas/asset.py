@@ -9,7 +9,7 @@ class AssetBase(BaseModel):
     model: str | None = None
     serial_number: str | None = None
     location: str | None = None
-    status: str = "activo"
+    status: str = "disponible"
     description: str | None = None
     
 

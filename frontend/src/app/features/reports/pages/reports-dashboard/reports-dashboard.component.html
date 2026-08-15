@@ -1,0 +1,115 @@
+<div class="reports-container">
+  <div class="reports-header">
+    <h1>Reportes</h1>
+    <p>Resumen general del estado del sistema</p>
+  </div>
+
+  <p *ngIf="loading">Cargando reportes...</p>
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <div class="grid-base" *ngIf="!loading && !errorMessage">
+
+    <section class="stat-grid">
+      <div class="card stat-card">
+        <span class="stat-title">Equipos</span>
+        <strong class="stat-value">{{ assets.length }}</strong>
+        <small>Registrados en el sistema</small>
+      </div>
+      <div class="card stat-card">
+        <span class="stat-title">Solicitudes abiertas</span>
+        <strong class="stat-value">{{ openRequestsCount }}</strong>
+        <small>de {{ correctiveRequests.length }} solicitudes totales</small>
+      </div>
+      <div class="card stat-card">
+        <span class="stat-title">Preventivos pendientes</span>
+        <strong class="stat-value">{{ pendingPreventivesCount }}</strong>
+        <small>de {{ preventiveMaintenances.length }} programados</small>
+      </div>
+      <div class="card stat-card">
+        <span class="stat-title">Sucursales activas</span>
+        <strong class="stat-value">{{ activeBranchesCount }}</strong>
+        <small>de {{ branches.length }} registradas</small>
+      </div>
+      <div class="card stat-card">
+        <span class="stat-title">Usuarios activos</span>
+        <strong class="stat-value">{{ activeUsersCount }}</strong>
+        <small>de {{ users.length }} registrados</small>
+      </div>
+    </section>
+
+    <section class="reports-grid">
+
+      <div class="card chart-card">
+        <h2>Solicitudes correctivas por estado</h2>
+        <div class="bar-row" *ngFor="let entry of requestsByStatus">
+          <span class="bar-label">{{ entry.label | label }}</span>
+          <div class="bar-track">
+            <div class="bar-fill" [style.width.%]="entry.percent"></div>
+          </div>
+          <span class="bar-count">{{ entry.count }}</span>
+        </div>
+        <p class="empty" *ngIf="requestsByStatus.length === 0">Sin solicitudes registradas</p>
+      </div>
+
+      <div class="card chart-card">
+        <h2>Solicitudes correctivas por prioridad</h2>
+        <div class="bar-row" *ngFor="let entry of requestsByPriority">
+          <span class="bar-label">{{ entry.label | label }}</span>
+          <div class="bar-track">
+            <div class="bar-fill priority" [style.width.%]="entry.percent"></div>
+          </div>
+          <span class="bar-count">{{ entry.count }}</span>
+        </div>
+        <p class="empty" *ngIf="requestsByPriority.length === 0">Sin solicitudes registradas</p>
+      </div>
+
+      <div class="card chart-card">
+        <h2>Mantenimientos preventivos por estado</h2>
+        <div class="bar-row" *ngFor="let entry of preventivesByStatus">
+          <span class="bar-label">{{ entry.label | label }}</span>
+          <div class="bar-track">
+            <div class="bar-fill preventive" [style.width.%]="entry.percent"></div>
+          </div>
+          <span class="bar-count">{{ entry.count }}</span>
+        </div>
+        <p class="empty" *ngIf="preventivesByStatus.length === 0">Sin mantenimientos registrados</p>
+      </div>
+
+      <div class="card chart-card">
+        <h2>Equipos por estado</h2>
+        <div class="bar-row" *ngFor="let entry of assetsByStatus">
+          <span class="bar-label">{{ entry.label | label }}</span>
+          <div class="bar-track">
+            <div class="bar-fill asset" [style.width.%]="entry.percent"></div>
+          </div>
+          <span class="bar-count">{{ entry.count }}</span>
+        </div>
+        <p class="empty" *ngIf="assetsByStatus.length === 0">Sin equipos registrados</p>
+      </div>
+
+      <div class="card wide">
+        <h2>Próximos mantenimientos preventivos</h2>
+        <table *ngIf="upcomingPreventives.length > 0">
+          <thead>
+            <tr>
+              <th>Equipo</th>
+              <th>Tipo</th>
+              <th>Fecha programada</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of upcomingPreventives">
+              <td>{{ getAssetName(p.asset_id) }}</td>
+              <td>{{ p.maintenance_type }}</td>
+              <td>{{ p.scheduled_date }}</td>
+              <td>{{ p.status | label }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="empty" *ngIf="upcomingPreventives.length === 0">No hay mantenimientos próximos</p>
+      </div>
+
+    </section>
+  </div>
+</div>

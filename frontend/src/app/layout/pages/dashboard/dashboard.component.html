@@ -1,91 +1,167 @@
-<div class="dashboard-shell">
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-logo">SG</div>
-      <div>
-        <h2>SGMB</h2>
-        <p>Mantenimiento</p>
+<div class="dashboard">
+  <div class="page-header">
+    <div>
+      <h1>Dashboard</h1>
+      <p class="subtitle">Panel principal del sistema SGMB</p>
+    </div>
+    <a class="cta-btn" routerLink="/requests">+ Nueva solicitud</a>
+  </div>
+
+  <p *ngIf="loading">Cargando panel...</p>
+
+  <ng-container *ngIf="!loading">
+
+    <div class="alert-banner" *ngIf="topCriticalRequest">
+      <div class="alert-icon">!</div>
+      <div class="alert-text">
+        <strong>ALERTA: Solicitud de prioridad alta abierta</strong>
+        <p>{{ getAssetName(topCriticalRequest.asset_id) }} · {{ topCriticalRequest.description }}</p>
       </div>
+      <a class="alert-btn" routerLink="/requests">Ver detalles</a>
     </div>
 
-    <nav class="menu">
-      <a class="menu-item" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-      <a class="menu-item" routerLink="/users" routerLinkActive="active">Usuarios</a>
-      <a class="menu-item" routerLink="/branches" routerLinkActive="active">Sucursales</a>
-      <a class="menu-item" routerLink="/assets" routerLinkActive="active">Equipos</a>
-      <a class="menu-item" routerLink="/requests" routerLinkActive="active">Solicitudes</a>
-      <a class="menu-item" routerLink="/preventive" routerLinkActive="active">Preventivos</a>
-      <a class="menu-item" routerLink="/reports" routerLinkActive="active">Reportes</a>
-    </nav>
-  </aside>
-
-  <main class="main-content">
-    <header class="topbar">
-      <div>
-        <h1>Dashboard</h1>
-        <p class="subtitle">Panel principal del sistema SGMB</p>
+    <section class="stat-grid">
+      <div class="card stat-card">
+        <div class="stat-top">
+          <span class="stat-title">Solicitudes abiertas</span>
+          <span class="stat-icon icon-info">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4V8Z"/></svg>
+          </span>
+        </div>
+        <strong class="stat-value">{{ openRequestsCount }}</strong>
+        <small>de {{ correctiveRequests.length }} totales</small>
       </div>
 
-      <div class="topbar-actions" *ngIf="user">
-        <div class="user-chip">
-          <div class="avatar">{{ user.name?.charAt(0) }}</div>
+      <div class="card stat-card">
+        <div class="stat-top">
+          <span class="stat-title">Equipos en mantenimiento</span>
+          <span class="stat-icon icon-warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 0 1-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 1 5.4-5.4l-2.3 2.3-2-2 2.3-2.3Z"/></svg>
+          </span>
+        </div>
+        <strong class="stat-value">{{ assetsInMaintenanceCount }}</strong>
+        <small>de {{ assets.length }} equipos</small>
+      </div>
+
+      <div class="card stat-card">
+        <div class="stat-top">
+          <span class="stat-title">Mantenimientos hoy</span>
+          <span class="stat-icon icon-neutral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>
+          </span>
+        </div>
+        <strong class="stat-value">{{ todayPreventivesCount }}</strong>
+        <small>programados para hoy</small>
+      </div>
+
+      <div class="card stat-card">
+        <div class="stat-top">
+          <span class="stat-title">Cumplimiento preventivo</span>
+          <span class="stat-icon icon-success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
+          </span>
+        </div>
+        <strong class="stat-value">{{ preventiveComplianceRate }}%</strong>
+        <small>{{ preventives.length }} programados</small>
+      </div>
+    </section>
+
+    <section class="main-grid">
+
+      <div class="card calendar-card">
+        <div class="calendar-header">
           <div>
-            <strong>{{ user.name }}</strong>
-            <p>{{ user.role }}</p>
+            <h2>Calendario Preventivo</h2>
+            <p class="calendar-month">{{ calendarLabel }}</p>
+          </div>
+          <div class="calendar-nav">
+            <button (click)="prevMonth()" aria-label="Mes anterior">&lt;</button>
+            <button class="today-btn" (click)="goToday()">Hoy</button>
+            <button (click)="nextMonth()" aria-label="Mes siguiente">&gt;</button>
           </div>
         </div>
 
-        <button class="logout-btn" (click)="logout()">Cerrar sesión</button>
-      </div>
-    </header>
+        <div class="calendar-grid">
+          <div class="weekday" *ngFor="let wd of weekdays">{{ wd }}</div>
 
-    <section class="cards">
-      <div class="card stat-card">
-        <span class="stat-title">Usuario actual</span>
-        <strong class="stat-value">{{ user?.name || 'Cargando...' }}</strong>
-        <small>{{ user?.email || 'Obteniendo datos...' }}</small>
-      </div>
-
-      <div class="card stat-card">
-        <span class="stat-title">Rol</span>
-        <strong class="stat-value">{{ user?.role || '--' }}</strong>
-        <small>Permisos del sistema</small>
-      </div>
-
-      <div class="card stat-card">
-        <span class="stat-title">Estado de sesión</span>
-        <strong class="stat-value">Activa</strong>
-        <small *ngIf="user">Acceso autorizado</small>
-        <small *ngIf="!user">Validando...</small>
-      </div>
-    </section>
-
-    <section class="content-grid">
-      <div class="card panel">
-        <h3>Bienvenido al sistema</h3>
-
-        <div *ngIf="user; else loadingUser" class="user-info">
-          <p><strong>Nombre:</strong> {{ user.name }}</p>
-          <p><strong>Correo:</strong> {{ user.email }}</p>
-          <p><strong>Rol:</strong> {{ user.role }}</p>
-          <p><strong>Sesión:</strong> Activa</p>
+          <ng-container *ngFor="let week of calendarWeeks">
+            <div class="day-cell"
+                 *ngFor="let day of week"
+                 [class.out-month]="!day.inMonth"
+                 [class.is-today]="day.isToday"
+                 [class.selected]="day.inMonth && selectedDay?.date === day.date"
+                 [class.has-items]="day.items.length > 0"
+                 (click)="selectDay(day)">
+              <span class="day-number" *ngIf="day.dayNumber">{{ day.dayNumber }}</span>
+              <div class="day-chips">
+                <span class="chip" [class]="'chip-' + item.status" *ngFor="let item of day.items.slice(0,2)">
+                  {{ item.maintenance_type }}
+                </span>
+                <span class="chip-more" *ngIf="day.items.length > 2">+{{ day.items.length - 2 }}</span>
+              </div>
+            </div>
+          </ng-container>
         </div>
 
-        <ng-template #loadingUser>
-          <p>Cargando información del usuario...</p>
-        </ng-template>
-      </div>
-
-      <div class="card panel">
-        <h3>Accesos rápidos</h3>
-
-        <div class="quick-actions">
-          <button class="action-btn">Registrar usuario</button>
-          <button class="action-btn">Registrar equipo</button>
-          <button class="action-btn">Nueva solicitud</button>
-          <button class="action-btn">Programar mantenimiento</button>
+        <div class="day-detail" *ngIf="selectedDay">
+          <h3>Mantenimientos del {{ selectedDay.dayNumber }} de {{ calendarLabel }}</h3>
+          <p *ngIf="selectedDay.items.length === 0" class="empty">No hay mantenimientos programados este día</p>
+          <ul *ngIf="selectedDay.items.length > 0">
+            <li *ngFor="let item of selectedDay.items">
+              <span [class]="'badge badge-' + item.status">{{ item.status | label }}</span>
+              <strong>{{ item.maintenance_type }}</strong> · {{ getAssetName(item.asset_id) }}
+              · {{ getUserName(item.responsible_id) }}
+            </li>
+          </ul>
         </div>
       </div>
+
+      <div class="card activity-card">
+        <h2>Actividad reciente</h2>
+        <ul class="activity-list">
+          <li *ngFor="let entry of activity">
+            <span class="activity-dot" [class.dot-preventive]="entry.kind === 'preventive'"></span>
+            <div>
+              <strong>{{ entry.title }}</strong>
+              <p>{{ entry.subtitle }}</p>
+            </div>
+          </li>
+        </ul>
+        <p class="empty" *ngIf="activity.length === 0">Sin actividad registrada todavía</p>
+      </div>
+
     </section>
-  </main>
+
+    <section class="card critical-card">
+      <div class="critical-header">
+        <h2>Solicitudes correctivas abiertas</h2>
+      </div>
+
+      <table *ngIf="criticalRequests.length > 0">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Prioridad</th>
+            <th>Equipo</th>
+            <th>Técnico</th>
+            <th>Estado</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let req of criticalRequests">
+            <td>#{{ req.id }}</td>
+            <td><span [class]="'badge badge-' + req.priority">{{ req.priority }}</span></td>
+            <td>{{ getAssetName(req.asset_id) }}</td>
+            <td>{{ getUserName(req.assigned_id) }}</td>
+            <td><span [class]="'badge badge-' + req.status">{{ req.status | label }}</span></td>
+            <td><a routerLink="/requests">Ver</a></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="empty" *ngIf="criticalRequests.length === 0">No hay solicitudes abiertas</p>
+    </section>
+
+  </ng-container>
 </div>

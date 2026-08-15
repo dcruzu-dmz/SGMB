@@ -1,0 +1,126 @@
+<div class="corrective-container">
+  <div class="corrective-header">
+    <h1>Solicitudes Correctivas</h1>
+    <p>Gestión de solicitudes de mantenimiento correctivo</p>
+  </div>
+
+  <div class="corrective-grid">
+
+    <!-- CARD 1: Formulario -->
+    <div class="card form-card">
+      <h2>{{ isEditing ? 'Editar solicitud' : 'Nueva solicitud' }}</h2>
+
+      <form (ngSubmit)="submitForm()">
+
+        <div class="form-group">
+          <label>Equipo</label>
+          <select [(ngModel)]="form.asset_id" name="asset_id" required>
+            <option [ngValue]="0" disabled>Selecciona un equipo</option>
+            <option *ngFor="let asset of assets" [ngValue]="asset.id">
+              {{ asset.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Técnico asignado</label>
+          <select [(ngModel)]="form.assigned_id" name="assigned_id">
+            <option [ngValue]="null">Sin asignar</option>
+            <option *ngFor="let tech of technicians" [ngValue]="tech.id">
+              {{ tech.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Prioridad</label>
+          <select [(ngModel)]="form.priority" name="priority" required>
+            <option value="alta">Alta</option>
+            <option value="media">Media</option>
+            <option value="baja">Baja</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Estado</label>
+          <select [(ngModel)]="form.status" name="status" required>
+            <option value="abierta">Abierta</option>
+            <option value="en_proceso">En proceso</option>
+            <option value="cerrada">Cerrada</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea [(ngModel)]="form.description" name="description" required rows="4"></textarea>
+        </div>
+
+        <div class="form-group" *ngIf="isEditing">
+          <label>Solución</label>
+          <textarea [(ngModel)]="form.solution" name="solution" rows="3" placeholder="¿Qué se hizo para resolverla?"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit">
+            {{ isEditing ? 'Actualizar' : 'Crear solicitud' }}
+          </button>
+          <button type="button" class="secondary" (click)="resetForm()" *ngIf="isEditing">
+            Cancelar
+          </button>
+        </div>
+
+      </form>
+
+      <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    </div>
+
+    <!-- CARD 2: Tabla -->
+    <div class="card table-card">
+      <h2>Listado de solicitudes</h2>
+
+      <p *ngIf="loading">Cargando solicitudes...</p>
+
+      <table *ngIf="!loading">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Equipo</th>
+            <th>Técnico</th>
+            <th>Prioridad</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let request of visibleRequests">
+            <td>{{ request.id }}</td>
+            <td>{{ getAssetName(request.asset_id) }}</td>
+            <td>{{ getTechnicianName(request.assigned_id) }}</td>
+            <td>
+              <span [class]="'badge badge-' + request.priority">
+                {{ request.priority }}
+              </span>
+            </td>
+            <td>
+              <span [class]="'badge badge-' + request.status">
+                {{ request.status | label }}
+              </span>
+            </td>
+            <td class="actions">
+              <button (click)="editRequest(request)">Editar</button>
+              <button class="secondary" (click)="changeStatus(request, 'cerrada')"
+                *ngIf="request.status !== 'cerrada'">
+                Cerrar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="empty" *ngIf="!loading && visibleRequests.length === 0">
+        {{ searchTerm ? 'Sin resultados para "' + searchTerm + '"' : 'No hay solicitudes registradas' }}
+      </p>
+    </div>
+
+  </div>
+</div>

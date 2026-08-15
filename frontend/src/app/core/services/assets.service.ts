@@ -48,7 +48,7 @@ export class AssetsService {
     return this.http.get<Asset[]>(this.apiUrl);
   }
 
-  getAsset(id: number): Observable<Asset> {
+  getAsset_by_id(id: number): Observable<Asset> {
     return this.http.get<Asset>(`${this.apiUrl}/${id}`);
   }
 
