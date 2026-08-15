@@ -9,6 +9,9 @@ import { BranchesListComponent } from './features/branches/pages/branches-list/b
 import { CorrectiveRequestListComponent } from './features/corrective-requests/pages/corrective-requests-list/corrective-requests-list.component';
 import { PreventiveListComponent } from './features/preventive/pages/preventive-list/preventive-list.component';
 import { ReportsDashboardComponent } from './features/reports/pages/reports-dashboard/reports-dashboard.component';
+import { VisitListComponent } from './features/maintenance-visits/pages/visit-list/visit-list.component';
+import { VisitFormComponent } from './features/maintenance-visits/pages/visit-form/visit-form.component';
+import { VisitDetailComponent } from './features/maintenance-visits/pages/visit-detail/visit-detail.component';
 
 
 export const routes: Routes = [
@@ -28,6 +31,9 @@ export const routes: Routes = [
       { path: 'requests', component: CorrectiveRequestListComponent },
       { path: 'preventive', component: PreventiveListComponent },
       { path: 'reports', component: ReportsDashboardComponent },
+      { path: 'maintenance-visits', component: VisitListComponent },
+      { path: 'maintenance-visits/new', component: VisitFormComponent },
+      { path: 'maintenance-visits/:id', component: VisitDetailComponent },
     ]
   }
 ];

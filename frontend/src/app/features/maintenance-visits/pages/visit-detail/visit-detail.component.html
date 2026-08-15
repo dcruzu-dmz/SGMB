@@ -1,0 +1,114 @@
+<div class="detail-container">
+  <a class="back-link" routerLink="/maintenance-visits">← Volver a visitas</a>
+
+  <p *ngIf="loading">Cargando visita...</p>
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <ng-container *ngIf="visit && !loading">
+
+    <div class="detail-header">
+      <div>
+        <h1>Visita del {{ visit.visit_date }}</h1>
+        <p>{{ branchName }} · Técnico: {{ technicianName }}</p>
+      </div>
+      <span class="badge" [class.badge-completado]="visit.status === 'completado'" [class.badge-pendiente]="visit.status !== 'completado'">
+        {{ visit.status }}
+      </span>
+    </div>
+
+    <section class="card">
+      <h2>Datos generales</h2>
+      <div class="info-grid">
+        <div><span>Hora de entrada</span><strong>{{ visit.entry_time || '—' }}</strong></div>
+        <div><span>Hora de salida</span><strong>{{ visit.exit_time || '—' }}</strong></div>
+        <div><span>Encargado de sucursal</span><strong>{{ visit.branch_contact_name || '—' }}</strong></div>
+        <div><span>Código de empleado</span><strong>{{ visit.branch_contact_employee_code || '—' }}</strong></div>
+        <div><span>Revisión de cámaras por</span><strong>{{ visit.camera_review_by || '—' }}</strong></div>
+        <div><span>Hora de revisión</span><strong>{{ visit.camera_review_time || '—' }}</strong></div>
+      </div>
+
+      <div class="reason-tags" *ngIf="reasons.length > 0">
+        <span class="tag" *ngFor="let r of reasons">{{ r }}</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Resumen de equipos en sucursal</h2>
+      <div class="info-grid">
+        <div><span>Equipos de cómputo</span><strong>{{ visit.equipment_count ?? '—' }}</strong></div>
+        <div><span>Impresoras térmicas</span><strong>{{ visit.thermal_printers_count ?? '—' }}</strong></div>
+        <div><span>Impresoras matriciales</span><strong>{{ visit.matrix_printers_count ?? '—' }}</strong></div>
+      </div>
+    </section>
+
+    <section class="card" *ngIf="visit.equipment_change_previous_serial || visit.delivered_equipment">
+      <h2>Cambio y entrega de equipo</h2>
+      <div class="info-grid" *ngIf="visit.equipment_change_previous_serial">
+        <div><span>Serie anterior</span><strong>{{ visit.equipment_change_previous_serial }}</strong></div>
+        <div><span>Marca anterior</span><strong>{{ visit.equipment_change_previous_brand || '—' }}</strong></div>
+        <div><span>Serie nueva</span><strong>{{ visit.equipment_change_new_serial || '—' }}</strong></div>
+        <div><span>Marca nueva</span><strong>{{ visit.equipment_change_new_brand || '—' }}</strong></div>
+      </div>
+      <div class="info-grid" *ngIf="visit.delivered_equipment">
+        <div><span>Equipo entregado</span><strong>{{ visit.delivered_equipment }}</strong></div>
+        <div><span>Marca</span><strong>{{ visit.delivered_brand || '—' }}</strong></div>
+        <div><span>No. serie</span><strong>{{ visit.delivered_serial || '—' }}</strong></div>
+        <div><span>Modelo</span><strong>{{ visit.delivered_model || '—' }}</strong></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Equipos atendidos ({{ visit.items.length }})</h2>
+      <div class="item-block" *ngFor="let item of visit.items">
+        <div class="item-block-header">
+          <strong>{{ item.equipment_type }}</strong>
+          <span class="item-loc">{{ item.identification_location }}<span *ngIf="item.serial"> · Serie: {{ item.serial }}</span></span>
+        </div>
+        <div class="item-status-row">
+          <span class="status-pill" [class.ok]="item.installed" [class.bad]="item.installed === false">
+            Instalado: {{ item.installed === null ? 'N/A' : (item.installed ? 'Sí' : 'No') }}
+          </span>
+          <span class="status-pill" [class.ok]="item.working" [class.bad]="item.working === false">
+            Funciona: {{ item.working === null ? 'N/A' : (item.working ? 'Sí' : 'No') }}
+          </span>
+          <span class="status-pill" [class.ok]="item.cleaning_done" [class.bad]="item.cleaning_done === false">
+            Limpieza: {{ item.cleaning_done === null ? 'N/A' : (item.cleaning_done ? 'Sí' : 'No') }}
+          </span>
+        </div>
+        <p class="item-notes" *ngIf="item.notes">{{ item.notes }}</p>
+
+        <div class="photo-gallery" *ngIf="item.photos.length > 0">
+          <a *ngFor="let photo of item.photos" [href]="photoUrl(photo.file_path)" target="_blank">
+            <img [src]="photoUrl(photo.file_path)" alt="Foto del equipo">
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" *ngFor="let category of categories">
+      <h2>{{ categoryTitles[category] }}</h2>
+      <div class="checklist-view-rows">
+        <div class="checklist-view-row" *ngFor="let entry of checklistByCategory(category)">
+          <span class="status-pill small" [class.ok]="entry.checked" [class.bad]="!entry.checked">
+            {{ entry.checked ? '✓' : '✕' }}
+          </span>
+          <span class="entry-label">{{ entry.label }}</span>
+          <span class="entry-comment" *ngIf="entry.comment">{{ entry.comment }}</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" *ngIf="visit.general_observations || visit.supervisor_observations">
+      <h2>Observaciones</h2>
+      <div *ngIf="visit.general_observations">
+        <span class="obs-label">Observaciones generales</span>
+        <p>{{ visit.general_observations }}</p>
+      </div>
+      <div *ngIf="visit.supervisor_observations">
+        <span class="obs-label">Observación del encargado</span>
+        <p>{{ visit.supervisor_observations }}</p>
+      </div>
+    </section>
+
+  </ng-container>
+</div>

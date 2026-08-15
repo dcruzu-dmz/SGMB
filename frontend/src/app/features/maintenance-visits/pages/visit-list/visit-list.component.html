@@ -1,0 +1,47 @@
+<div class="list-container">
+  <div class="list-header">
+    <div>
+      <h1>Visitas de mantenimiento</h1>
+      <p>Reportes de soporte y mantenimiento técnico por sucursal</p>
+    </div>
+    <a class="cta-btn" routerLink="/maintenance-visits/new">+ Nueva visita</a>
+  </div>
+
+  <p *ngIf="loading">Cargando visitas...</p>
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <div class="card" *ngIf="!loading && !errorMessage">
+    <div class="table-scroll">
+      <table *ngIf="visits.length > 0">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Sucursal</th>
+            <th>Técnico</th>
+            <th>Equipos</th>
+            <th>Motivo</th>
+            <th>Estado</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let visit of visits">
+            <td>{{ visit.visit_date }}</td>
+            <td>{{ getBranchName(visit.branch_id) }}</td>
+            <td>{{ getTechnicianName(visit.technician_id) }}</td>
+            <td>{{ visit.items.length }}</td>
+            <td class="reasons-cell">{{ getReasons(visit.visit_reasons) }}</td>
+            <td>
+              <span class="badge" [class.badge-completado]="visit.status === 'completado'" [class.badge-pendiente]="visit.status !== 'completado'">
+                {{ visit.status }}
+              </span>
+            </td>
+            <td><a [routerLink]="['/maintenance-visits', visit.id]">Ver</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="empty" *ngIf="visits.length === 0">No hay visitas registradas todavía</p>
+  </div>
+</div>

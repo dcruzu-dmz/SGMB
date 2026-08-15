@@ -1,0 +1,225 @@
+<div class="visit-container">
+  <div class="visit-header">
+    <h1>Nueva visita de mantenimiento</h1>
+    <p>Registra los equipos atendidos en la sucursal, el checklist técnico y las fotos de respaldo</p>
+  </div>
+
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <!-- Datos generales -->
+  <section class="card">
+    <h2>Datos generales</h2>
+    <div class="field-grid">
+      <div class="form-group">
+        <label>Sucursal</label>
+        <select [(ngModel)]="header.branch_id" name="branch_id" required>
+          <option [ngValue]="0" disabled>Selecciona una sucursal</option>
+          <option *ngFor="let b of branches" [ngValue]="b.id">{{ b.name }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Técnico</label>
+        <select [(ngModel)]="header.technician_id" name="technician_id" required>
+          <option [ngValue]="0" disabled>Selecciona un técnico</option>
+          <option *ngFor="let t of technicians" [ngValue]="t.id">{{ t.name }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Fecha</label>
+        <input type="date" [(ngModel)]="header.visit_date" name="visit_date" required>
+      </div>
+      <div class="form-group">
+        <label>Hora de entrada</label>
+        <input type="time" [(ngModel)]="header.entry_time" name="entry_time">
+      </div>
+      <div class="form-group">
+        <label>Hora de salida</label>
+        <input type="time" [(ngModel)]="header.exit_time" name="exit_time">
+      </div>
+    </div>
+  </section>
+
+  <!-- Motivo de la visita -->
+  <section class="card">
+    <h2>Motivo de la visita</h2>
+    <div class="checkbox-grid">
+      <label class="checkbox-chip" *ngFor="let reason of visitReasons">
+        <input type="checkbox" [(ngModel)]="selectedReasons[reason]" [name]="'reason-' + reason">
+        {{ reason }}
+      </label>
+    </div>
+  </section>
+
+  <!-- Contacto en sucursal / cámaras -->
+  <section class="card">
+    <h2>Contacto en sucursal</h2>
+    <div class="field-grid">
+      <div class="form-group">
+        <label>Encargado o responsable</label>
+        <input type="text" [(ngModel)]="header.branch_contact_name" name="branch_contact_name">
+      </div>
+      <div class="form-group">
+        <label>Código de empleado</label>
+        <input type="text" [(ngModel)]="header.branch_contact_employee_code" name="branch_contact_employee_code">
+      </div>
+      <div class="form-group">
+        <label>Encargado de revisión de cámaras</label>
+        <input type="text" [(ngModel)]="header.camera_review_by" name="camera_review_by">
+      </div>
+      <div class="form-group">
+        <label>Hora de revisión</label>
+        <input type="time" [(ngModel)]="header.camera_review_time" name="camera_review_time">
+      </div>
+    </div>
+  </section>
+
+  <!-- Resumen de equipos -->
+  <section class="card">
+    <h2>Resumen de equipos en sucursal</h2>
+    <div class="field-grid">
+      <div class="form-group">
+        <label>No. equipos de cómputo</label>
+        <input type="number" min="0" [(ngModel)]="header.equipment_count" name="equipment_count">
+      </div>
+      <div class="form-group">
+        <label>No. impresoras de facturación térmicas</label>
+        <input type="number" min="0" [(ngModel)]="header.thermal_printers_count" name="thermal_printers_count">
+      </div>
+      <div class="form-group">
+        <label>No. impresoras de facturación matriciales</label>
+        <input type="number" min="0" [(ngModel)]="header.matrix_printers_count" name="matrix_printers_count">
+      </div>
+    </div>
+  </section>
+
+  <!-- Cambio y entrega de equipo -->
+  <section class="card">
+    <h2>Cambio de equipo (si aplica)</h2>
+    <div class="field-grid">
+      <div class="form-group">
+        <label>Serie anterior</label>
+        <input type="text" [(ngModel)]="header.equipment_change_previous_serial" name="equipment_change_previous_serial">
+      </div>
+      <div class="form-group">
+        <label>Marca anterior</label>
+        <input type="text" [(ngModel)]="header.equipment_change_previous_brand" name="equipment_change_previous_brand">
+      </div>
+      <div class="form-group">
+        <label>Serie nueva</label>
+        <input type="text" [(ngModel)]="header.equipment_change_new_serial" name="equipment_change_new_serial">
+      </div>
+      <div class="form-group">
+        <label>Marca nueva</label>
+        <input type="text" [(ngModel)]="header.equipment_change_new_brand" name="equipment_change_new_brand">
+      </div>
+    </div>
+
+    <h2 class="section-subtitle">Entrega de equipo (si aplica)</h2>
+    <div class="field-grid">
+      <div class="form-group">
+        <label>Equipo</label>
+        <input type="text" [(ngModel)]="header.delivered_equipment" name="delivered_equipment">
+      </div>
+      <div class="form-group">
+        <label>Marca</label>
+        <input type="text" [(ngModel)]="header.delivered_brand" name="delivered_brand">
+      </div>
+      <div class="form-group">
+        <label>No. serie</label>
+        <input type="text" [(ngModel)]="header.delivered_serial" name="delivered_serial">
+      </div>
+      <div class="form-group">
+        <label>Modelo</label>
+        <input type="text" [(ngModel)]="header.delivered_model" name="delivered_model">
+      </div>
+    </div>
+  </section>
+
+  <!-- Equipos atendidos -->
+  <section class="card">
+    <div class="section-header">
+      <h2>Equipos atendidos</h2>
+      <button type="button" class="secondary" (click)="addItem()">+ Agregar equipo</button>
+    </div>
+
+    <div class="item-card" *ngFor="let item of items; let i = index; trackBy: trackByIndex">
+      <div class="item-card-header">
+        <strong>Equipo {{ i + 1 }}</strong>
+        <button type="button" class="link-danger" (click)="removeItem(i)" *ngIf="items.length > 1">Quitar</button>
+      </div>
+
+      <div class="field-grid">
+        <div class="form-group">
+          <label>Tipo de equipo</label>
+          <select [(ngModel)]="item.equipment_type" [name]="'type-' + i">
+            <option *ngFor="let type of equipmentTypes" [value]="type">{{ type }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Identificación / ubicación</label>
+          <input type="text" [(ngModel)]="item.identification_location" [name]="'loc-' + i" placeholder="Ej. Caja 1, Servidor principal">
+        </div>
+        <div class="form-group">
+          <label>No. serie</label>
+          <input type="text" [(ngModel)]="item.serial" [name]="'serial-' + i">
+        </div>
+      </div>
+
+      <div class="tri-checks">
+        <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.installed" [name]="'installed-' + i"> Instalado</label>
+        <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.working" [name]="'working-' + i"> Funciona</label>
+        <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.cleaning_done" [name]="'cleaning-' + i"> Limpieza realizada</label>
+      </div>
+
+      <div class="form-group">
+        <label>Observaciones del equipo</label>
+        <textarea [(ngModel)]="item.notes" [name]="'notes-' + i" rows="2"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Fotos del equipo (cómo quedó)</label>
+        <input type="file" accept="image/*" multiple (change)="onPhotosSelected(item, $event)">
+        <div class="photo-preview-row" *ngIf="item._previews.length > 0">
+          <div class="photo-preview" *ngFor="let preview of item._previews; let p = index">
+            <img [src]="preview" alt="Foto del equipo">
+            <button type="button" (click)="removePhoto(item, p)">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Checklist detallado -->
+  <section class="card" *ngFor="let group of checklistGroups">
+    <h2>{{ group.title }}</h2>
+    <div class="checklist-rows">
+      <div class="checklist-row" *ngFor="let entry of group.entries">
+        <label class="checkbox-chip">
+          <input type="checkbox" [(ngModel)]="entry.checked" [name]="'chk-' + group.category + '-' + entry.label">
+          {{ entry.label }}
+        </label>
+        <input type="text" class="comment-input" placeholder="Comentario / versión" [(ngModel)]="entry.comment" [name]="'chkcmt-' + group.category + '-' + entry.label">
+      </div>
+    </div>
+  </section>
+
+  <!-- Observaciones finales -->
+  <section class="card">
+    <h2>Observaciones</h2>
+    <div class="form-group">
+      <label>Descripción de equipo / observaciones generales</label>
+      <textarea [(ngModel)]="header.general_observations" name="general_observations" rows="3"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Observación del encargado de sucursal</label>
+      <textarea [(ngModel)]="header.supervisor_observations" name="supervisor_observations" rows="3"></textarea>
+    </div>
+  </section>
+
+  <div class="form-actions-bar">
+    <button type="button" class="secondary" [disabled]="loading" (click)="submitVisit('borrador')">Guardar como borrador</button>
+    <button type="button" class="primary" [disabled]="loading" (click)="submitVisit('completado')">
+      {{ loading ? 'Guardando...' : 'Finalizar visita' }}
+    </button>
+  </div>
+</div>
