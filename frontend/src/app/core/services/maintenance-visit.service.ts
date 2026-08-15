@@ -134,6 +134,14 @@ export class MaintenanceVisitService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
+  addVisitItem(visitId: number, data: MaintenanceVisitItemCreate): Observable<MaintenanceVisitItem> {
+    return this.http.post<MaintenanceVisitItem>(`${this.apiUrl}/${visitId}/items`, data);
+  }
+
+  addChecklistEntries(visitId: number, data: MaintenanceVisitChecklistEntryCreate[]): Observable<MaintenanceVisitChecklistEntry[]> {
+    return this.http.post<MaintenanceVisitChecklistEntry[]>(`${this.apiUrl}/${visitId}/checklist`, data);
+  }
+
   uploadItemPhotos(itemId: number, files: File[]): Observable<MaintenanceVisitPhoto[]> {
     const formData = new FormData();
     files.forEach(f => formData.append('files', f));

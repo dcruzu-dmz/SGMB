@@ -4,7 +4,10 @@
       <h1>Visitas de mantenimiento</h1>
       <p>Reportes de soporte y mantenimiento técnico por sucursal</p>
     </div>
-    <a class="cta-btn" routerLink="/maintenance-visits/new">+ Nueva visita</a>
+    <div class="header-actions">
+      <a class="cta-btn secondary-btn" routerLink="/maintenance-visits/schedule">+ Programar visita</a>
+      <a class="cta-btn" routerLink="/maintenance-visits/new">+ Registrar visita completa</a>
+    </div>
   </div>
 
   <p *ngIf="loading">Cargando visitas...</p>
@@ -32,11 +35,17 @@
             <td>{{ visit.items.length }}</td>
             <td class="reasons-cell">{{ getReasons(visit.visit_reasons) }}</td>
             <td>
-              <span class="badge" [class.badge-completado]="visit.status === 'completado'" [class.badge-pendiente]="visit.status !== 'completado'">
+              <span class="badge"
+                [class.badge-completado]="visit.status === 'completado'"
+                [class.badge-en_proceso]="visit.status === 'programada'"
+                [class.badge-pendiente]="visit.status === 'borrador'">
                 {{ visit.status }}
               </span>
             </td>
-            <td><a [routerLink]="['/maintenance-visits', visit.id]">Ver</a></td>
+            <td>
+              <a [routerLink]="['/maintenance-visits', visit.id]">Ver</a>
+              <a *ngIf="visit.status === 'programada'" [routerLink]="['/maintenance-visits', visit.id, 'edit']" class="complete-link">Completar</a>
+            </td>
           </tr>
         </tbody>
       </table>

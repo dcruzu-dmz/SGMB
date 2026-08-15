@@ -1,10 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { BranchesService, Branch } from '../../../../core/services/branches.service';
 import { UsersService, User } from '../../../../core/services/users.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { AssetsService, Asset } from '../../../../core/services/assets.service';
 import {
   MaintenanceVisitService,
   MaintenanceVisitItemCreate,
@@ -76,13 +77,19 @@ export class VisitFormComponent implements OnInit {
   private branchesService = inject(BranchesService);
   private usersService = inject(UsersService);
   private authService = inject(AuthService);
+  private assetsService = inject(AssetsService);
   private visitService = inject(MaintenanceVisitService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   branches: Branch[] = [];
   technicians: User[] = [];
+  allAssets: Asset[] = [];
   equipmentTypes = EQUIPMENT_TYPES;
   visitReasons = VISIT_REASONS;
+
+  visitId: number | null = null;
+  isCompleting = false;
 
   loading = false;
   errorMessage = '';
@@ -113,25 +120,96 @@ export class VisitFormComponent implements OnInit {
   };
 
   selectedReasons: Record<string, boolean> = {};
+  selectedAssetIds: Record<number, boolean> = {};
   items: DraftItem[] = [];
   checklistGroups: ChecklistGroup[] = CHECKLIST_TEMPLATE.map(g => ({
     ...g,
     entries: g.entries.map(e => ({ ...e })),
   }));
 
+  get branchAssets(): Asset[] {
+    if (!this.header.branch_id) return [];
+    return this.allAssets.filter(a => a.branch_id === this.header.branch_id);
+  }
+
+  get manualItems(): DraftItem[] {
+    return this.items.filter(i => !i.asset_id);
+  }
+
   ngOnInit(): void {
+    const idParam = this.route.snapshot.paramMap.get('id');
+    this.visitId = idParam ? Number(idParam) : null;
+    this.isCompleting = !!this.visitId;
+
     this.branchesService.getBranches().subscribe({ next: res => this.branches = res });
+    this.assetsService.getAssets().subscribe({ next: res => this.allAssets = res });
     this.usersService.getUsers().subscribe({
       next: res => this.technicians = res.filter(u => u.role === 'tecnico' || u.role === 'admin'),
     });
-    this.authService.getMe().subscribe({
-      next: user => this.header.technician_id = user.id,
-    });
-    this.addItem();
+
+    if (this.visitId) {
+      this.visitService.getVisit(this.visitId).subscribe({
+        next: visit => {
+          this.header.branch_id = visit.branch_id;
+          this.header.technician_id = visit.technician_id;
+          this.header.visit_date = visit.visit_date;
+          this.header.entry_time = visit.entry_time || '';
+          this.header.exit_time = visit.exit_time || '';
+          this.header.equipment_count = visit.equipment_count;
+          this.header.thermal_printers_count = visit.thermal_printers_count;
+          this.header.matrix_printers_count = visit.matrix_printers_count;
+          this.header.branch_contact_name = visit.branch_contact_name || '';
+          this.header.branch_contact_employee_code = visit.branch_contact_employee_code || '';
+          this.header.camera_review_by = visit.camera_review_by || '';
+          this.header.camera_review_time = visit.camera_review_time || '';
+          this.header.general_observations = visit.general_observations || '';
+          this.header.supervisor_observations = visit.supervisor_observations || '';
+
+          if (visit.visit_reasons) {
+            try {
+              const reasons: string[] = JSON.parse(visit.visit_reasons);
+              reasons.forEach(r => this.selectedReasons[r] = true);
+            } catch { /* ignore malformed data */ }
+          }
+        },
+      });
+    } else {
+      this.authService.getMe().subscribe({
+        next: user => this.header.technician_id = user.id,
+      });
+    }
   }
 
-  addItem(): void {
+  toggleAsset(asset: Asset): void {
+    const checked = !this.selectedAssetIds[asset.id];
+    this.selectedAssetIds[asset.id] = checked;
+
+    if (checked) {
+      this.items.push({
+        asset_id: asset.id,
+        equipment_type: asset.type,
+        identification_location: asset.location || asset.name,
+        serial: asset.serial_number,
+        installed: true,
+        working: true,
+        cleaning_done: true,
+        notes: '',
+        _files: [],
+        _previews: [],
+      });
+    } else {
+      const idx = this.items.findIndex(i => i.asset_id === asset.id);
+      if (idx >= 0) this.removeItem(this.items.indexOf(this.items[idx]));
+    }
+  }
+
+  getItemForAsset(assetId: number): DraftItem | undefined {
+    return this.items.find(i => i.asset_id === assetId);
+  }
+
+  addManualItem(): void {
     this.items.push({
+      asset_id: null,
       equipment_type: this.equipmentTypes[0],
       identification_location: '',
       serial: '',
@@ -149,7 +227,9 @@ export class VisitFormComponent implements OnInit {
   }
 
   removeItem(index: number): void {
-    this.items[index]._previews.forEach(url => URL.revokeObjectURL(url));
+    const item = this.items[index];
+    if (item.asset_id) this.selectedAssetIds[item.asset_id] = false;
+    item._previews.forEach(url => URL.revokeObjectURL(url));
     this.items.splice(index, 1);
   }
 
@@ -168,6 +248,25 @@ export class VisitFormComponent implements OnInit {
     item._previews.splice(index, 1);
   }
 
+  private uploadPendingPhotos(savedItems: { id: number }[], onDone: () => void): void {
+    const uploads = savedItems
+      .map((savedItem, i) => ({ savedItem, files: this.items[i]?._files || [] }))
+      .filter(u => u.files.length > 0);
+
+    if (uploads.length === 0) {
+      onDone();
+      return;
+    }
+
+    let remaining = uploads.length;
+    uploads.forEach(u => {
+      this.visitService.uploadItemPhotos(u.savedItem.id, u.files).subscribe({
+        next: () => { remaining--; if (remaining === 0) onDone(); },
+        error: () => { remaining--; if (remaining === 0) onDone(); },
+      });
+    });
+  }
+
   submitVisit(status: 'borrador' | 'completado'): void {
     if (!this.header.branch_id || !this.header.technician_id) {
       this.errorMessage = 'Selecciona sucursal y técnico';
@@ -181,47 +280,78 @@ export class VisitFormComponent implements OnInit {
     const checklist_entries: MaintenanceVisitChecklistEntryCreate[] =
       this.checklistGroups.flatMap(g => g.entries);
 
-    const payload = {
+    const headerPayload = {
       ...this.header,
       entry_time: this.header.entry_time || null,
       exit_time: this.header.exit_time || null,
       camera_review_time: this.header.camera_review_time || null,
       visit_reasons: JSON.stringify(reasons),
       status,
+    };
+
+    if (this.isCompleting && this.visitId) {
+      const id = this.visitId;
+      this.visitService.updateVisit(id, headerPayload).subscribe({
+        next: () => {
+          let itemsSaved = 0;
+          const savedItems: { id: number }[] = [];
+          const totalItems = this.items.length;
+
+          const afterAllSaved = () => {
+            this.visitService.getVisit(id).subscribe({
+              next: (full) => {
+                this.uploadPendingPhotos(full.items, () => {
+                  this.loading = false;
+                  this.router.navigate(['/maintenance-visits', id]);
+                });
+              },
+              error: () => {
+                this.loading = false;
+                this.router.navigate(['/maintenance-visits', id]);
+              },
+            });
+          };
+
+          if (totalItems === 0) {
+            afterAllSaved();
+            return;
+          }
+
+          this.items.forEach(({ _files, _previews, ...rest }) => {
+            this.visitService.addVisitItem(id, rest).subscribe({
+              next: (saved) => {
+                savedItems.push(saved);
+                itemsSaved++;
+                if (itemsSaved === totalItems) afterAllSaved();
+              },
+              error: () => {
+                itemsSaved++;
+                if (itemsSaved === totalItems) afterAllSaved();
+              },
+            });
+          });
+
+          this.visitService.addChecklistEntries(id, checklist_entries).subscribe();
+        },
+        error: () => {
+          this.loading = false;
+          this.errorMessage = 'No se pudo actualizar la visita';
+        },
+      });
+      return;
+    }
+
+    const payload = {
+      ...headerPayload,
       items: this.items.map(({ _files, _previews, ...rest }) => rest),
       checklist_entries,
     };
 
     this.visitService.createVisit(payload).subscribe({
       next: (created) => {
-        const uploads = created.items
-          .map((savedItem, i) => ({ savedItem, files: this.items[i]?._files || [] }))
-          .filter(u => u.files.length > 0);
-
-        if (uploads.length === 0) {
+        this.uploadPendingPhotos(created.items, () => {
           this.loading = false;
           this.router.navigate(['/maintenance-visits', created.id]);
-          return;
-        }
-
-        let remaining = uploads.length;
-        uploads.forEach(u => {
-          this.visitService.uploadItemPhotos(u.savedItem.id, u.files).subscribe({
-            next: () => {
-              remaining--;
-              if (remaining === 0) {
-                this.loading = false;
-                this.router.navigate(['/maintenance-visits', created.id]);
-              }
-            },
-            error: () => {
-              remaining--;
-              if (remaining === 0) {
-                this.loading = false;
-                this.router.navigate(['/maintenance-visits', created.id]);
-              }
-            },
-          });
         });
       },
       error: () => {

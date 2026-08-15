@@ -18,6 +18,7 @@ from app.schemas.maintenance_visit import (
     MaintenanceVisitItemCreate,
     MaintenanceVisitItemUpdate,
     MaintenanceVisitItemResponse,
+    MaintenanceVisitChecklistEntryCreate,
     MaintenanceVisitChecklistEntryUpdate,
     MaintenanceVisitChecklistEntryResponse,
     MaintenanceVisitPhotoResponse,
@@ -152,6 +153,26 @@ def add_visit_item(
     db.commit()
     db.refresh(item)
     return item
+
+
+# Agregar entradas de checklist a una visita (al completarla)
+@router.post("/{visit_id}/checklist", response_model=list[MaintenanceVisitChecklistEntryResponse])
+def add_checklist_entries(
+    visit_id: int,
+    data: list[MaintenanceVisitChecklistEntryCreate],
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    visit = db.query(MaintenanceVisit).filter(MaintenanceVisit.id == visit_id).first()
+    if not visit:
+        raise HTTPException(status_code=404, detail="Visita no encontrada")
+
+    entries = [MaintenanceVisitChecklistEntry(visit_id=visit_id, **entry.dict()) for entry in data]
+    db.add_all(entries)
+    db.commit()
+    for entry in entries:
+        db.refresh(entry)
+    return entries
 
 
 # Actualizar un equipo de la visita

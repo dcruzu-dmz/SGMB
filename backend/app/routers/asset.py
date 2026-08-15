@@ -26,6 +26,7 @@ def create_asset(
         location=data.location,
         status=data.status,
         description=data.description,
+        branch_id=data.branch_id,
     )
 
     db.add(asset)
@@ -71,8 +72,9 @@ def update_asset(
 
     db.commit()
     db.refresh(asset)
+    return asset
 
-# Eliminar equipo
+# Cambiar estado del equipo
 @router.patch("/{asset_id}", response_model=AssetResponse)
 def update_asset_status(
     asset_id: int,

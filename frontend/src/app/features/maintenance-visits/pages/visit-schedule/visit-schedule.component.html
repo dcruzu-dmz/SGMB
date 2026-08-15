@@ -1,0 +1,42 @@
+<div class="schedule-container">
+  <div class="schedule-header">
+    <h1>Programar visita</h1>
+    <p>El supervisor decide cuándo se visita cada sucursal. El técnico completará el reporte el día de la visita.</p>
+  </div>
+
+  <div class="card">
+    <div class="form-group">
+      <label>Sucursal</label>
+      <select [(ngModel)]="form.branch_id" name="branch_id" required>
+        <option [ngValue]="0" disabled>Selecciona una sucursal</option>
+        <option *ngFor="let b of branches" [ngValue]="b.id">{{ b.name }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Técnico asignado</label>
+      <select [(ngModel)]="form.technician_id" name="technician_id" required>
+        <option [ngValue]="0" disabled>Selecciona un técnico</option>
+        <option *ngFor="let t of technicians" [ngValue]="t.id">{{ t.name }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Fecha de la visita</label>
+      <input type="date" [(ngModel)]="form.visit_date" name="visit_date" required>
+    </div>
+
+    <div class="form-group">
+      <label>Notas para el técnico (opcional)</label>
+      <textarea [(ngModel)]="form.general_observations" name="general_observations" rows="3"></textarea>
+    </div>
+
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+    <div class="form-actions">
+      <button type="button" class="primary" [disabled]="loading" (click)="submit()">
+        {{ loading ? 'Programando...' : 'Programar visita' }}
+      </button>
+    </div>
+  </div>
+</div>

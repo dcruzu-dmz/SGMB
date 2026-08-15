@@ -70,6 +70,8 @@ html, body {
 
 .badge-pendiente { background: var(--color-warning-bg); color: var(--color-warning); }
 .badge-completado { background: var(--color-success-bg); color: var(--color-success); }
+.badge-programada { background: var(--color-info-bg); color: var(--color-info); }
+.badge-borrador { background: var(--color-warning-bg); color: var(--color-warning); }
 
 .badge-activo { background: var(--color-success-bg); color: var(--color-success); }
 .badge-disponible { background: var(--color-success-bg); color: var(--color-success); }

@@ -11,7 +11,8 @@ class AssetBase(BaseModel):
     location: str | None = None
     status: str = "disponible"
     description: str | None = None
-    
+    branch_id: int | None = None
+
 
 class AssetCreate(AssetBase):
     pass
@@ -25,6 +26,7 @@ class AssetUpdate(BaseModel):
     location: Optional[str] = None
     status: Optional[str] = None
     description: Optional[str] = None
+    branch_id: Optional[int] = None
 
 class AssetResponse(AssetBase):
     id: int

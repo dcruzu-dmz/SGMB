@@ -33,7 +33,6 @@ export class AppShellComponent implements OnInit {
     { label: 'Sucursales', path: '/branches', icon: 'building' },
     { label: 'Equipos', path: '/assets', icon: 'box' },
     { label: 'Solicitudes', path: '/requests', icon: 'ticket' },
-    { label: 'Preventivos', path: '/preventive', icon: 'calendar' },
     { label: 'Visitas', path: '/maintenance-visits', icon: 'clipboard' },
     { label: 'Reportes', path: '/reports', icon: 'chart' },
   ];

@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Text
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 from app.database import Base
 
 class Asset(Base):
@@ -14,4 +15,7 @@ class Asset(Base):
     location = Column(String(100), nullable=True)
     status = Column(String(50), default="activo")
     description = Column(Text, nullable=True)
+    branch_id = Column(Integer, ForeignKey("branches.id"), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    branch = relationship("Branch", foreign_keys=[branch_id])

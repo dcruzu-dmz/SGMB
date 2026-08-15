@@ -5,7 +5,8 @@ import { forkJoin } from 'rxjs';
 import { CorrectiveRequestService, CorrectiveRequest } from '../../../core/services/corrective-requests.service';
 import { AssetsService, Asset } from '../../../core/services/assets.service';
 import { UsersService, User } from '../../../core/services/users.service';
-import { PreventiveMaintenanceService, PreventiveMaintenance } from '../../../core/services/preventive-maintenance.service';
+import { BranchesService, Branch } from '../../../core/services/branches.service';
+import { MaintenanceVisitService, MaintenanceVisit } from '../../../core/services/maintenance-visit.service';
 import { LabelPipe } from '../../../core/pipes/label.pipe';
 
 interface CalendarDay {
@@ -13,11 +14,11 @@ interface CalendarDay {
   dayNumber: number | null;
   inMonth: boolean;
   isToday: boolean;
-  items: PreventiveMaintenance[];
+  items: MaintenanceVisit[];
 }
 
 interface ActivityEntry {
-  kind: 'request' | 'preventive';
+  kind: 'request' | 'visit';
   title: string;
   subtitle: string;
   date: string;
@@ -40,14 +41,16 @@ export class DashboardComponent implements OnInit {
   private correctiveService = inject(CorrectiveRequestService);
   private assetsService = inject(AssetsService);
   private usersService = inject(UsersService);
-  private preventiveService = inject(PreventiveMaintenanceService);
+  private branchesService = inject(BranchesService);
+  private visitService = inject(MaintenanceVisitService);
 
   loading = false;
 
   correctiveRequests: CorrectiveRequest[] = [];
   assets: Asset[] = [];
   users: User[] = [];
-  preventives: PreventiveMaintenance[] = [];
+  branches: Branch[] = [];
+  visits: MaintenanceVisit[] = [];
 
   weekdays = WEEKDAYS;
   viewYear = new Date().getFullYear();
@@ -63,13 +66,15 @@ export class DashboardComponent implements OnInit {
       requests: this.correctiveService.getCorrectiveRequest(),
       assets: this.assetsService.getAssets(),
       users: this.usersService.getUsers(),
-      preventives: this.preventiveService.getPreventiveMaintenances(),
+      branches: this.branchesService.getBranches(),
+      visits: this.visitService.getVisits(),
     }).subscribe({
       next: (res) => {
         this.correctiveRequests = res.requests;
         this.assets = res.assets;
         this.users = res.users;
-        this.preventives = res.preventives;
+        this.branches = res.branches;
+        this.visits = res.visits;
         this.buildCalendar();
         this.buildActivity();
         this.loading = false;
@@ -90,15 +95,15 @@ export class DashboardComponent implements OnInit {
     return this.assets.filter(a => a.status === 'en_mantenimiento').length;
   }
 
-  get todayPreventivesCount(): number {
+  get todayVisitsCount(): number {
     const today = this.toIsoDate(new Date());
-    return this.preventives.filter(p => p.scheduled_date === today).length;
+    return this.visits.filter(v => v.visit_date === today).length;
   }
 
-  get preventiveComplianceRate(): number {
-    if (this.preventives.length === 0) return 0;
-    const done = this.preventives.filter(p => p.status === 'completado').length;
-    return Math.round((done / this.preventives.length) * 100);
+  get visitCompletionRate(): number {
+    if (this.visits.length === 0) return 0;
+    const done = this.visits.filter(v => v.status === 'completado').length;
+    return Math.round((done / this.visits.length) * 100);
   }
 
   // ---- Calendar ----
@@ -130,7 +135,7 @@ export class DashboardComponent implements OnInit {
         dayNumber: day,
         inMonth: true,
         isToday: date === todayIso,
-        items: this.preventives.filter(p => p.scheduled_date === date),
+        items: this.visits.filter(v => v.visit_date === date),
       });
     }
 
@@ -197,6 +202,10 @@ export class DashboardComponent implements OnInit {
     return this.users.find(u => u.id === id)?.name || 'Desconocido';
   }
 
+  getBranchName(id: number): string {
+    return this.branches.find(b => b.id === id)?.name || 'Desconocida';
+  }
+
   // ---- Activity feed ----
 
   buildActivity(): void {
@@ -207,14 +216,14 @@ export class DashboardComponent implements OnInit {
       date: r.created_at,
     }));
 
-    const fromPreventives: ActivityEntry[] = this.preventives.map(p => ({
-      kind: 'preventive',
-      title: `${p.maintenance_type} · ${this.getAssetName(p.asset_id)}`,
-      subtitle: `Programado ${p.scheduled_date} · ${p.status}`,
-      date: p.created_at,
+    const fromVisits: ActivityEntry[] = this.visits.map(v => ({
+      kind: 'visit',
+      title: `Visita · ${this.getBranchName(v.branch_id)}`,
+      subtitle: `Programada ${v.visit_date} · ${v.status}`,
+      date: v.created_at,
     }));
 
-    this.activity = [...fromRequests, ...fromPreventives]
+    this.activity = [...fromRequests, ...fromVisits]
       .sort((a, b) => b.date.localeCompare(a.date))
       .slice(0, 6);
   }

@@ -21,9 +21,9 @@
         <small>de {{ correctiveRequests.length }} solicitudes totales</small>
       </div>
       <div class="card stat-card">
-        <span class="stat-title">Preventivos pendientes</span>
-        <strong class="stat-value">{{ pendingPreventivesCount }}</strong>
-        <small>de {{ preventiveMaintenances.length }} programados</small>
+        <span class="stat-title">Visitas pendientes</span>
+        <strong class="stat-value">{{ pendingVisitsCount }}</strong>
+        <small>de {{ visits.length }} registradas</small>
       </div>
       <div class="card stat-card">
         <span class="stat-title">Sucursales activas</span>
@@ -63,15 +63,15 @@
       </div>
 
       <div class="card chart-card">
-        <h2>Mantenimientos preventivos por estado</h2>
-        <div class="bar-row" *ngFor="let entry of preventivesByStatus">
+        <h2>Visitas de mantenimiento por estado</h2>
+        <div class="bar-row" *ngFor="let entry of visitsByStatus">
           <span class="bar-label">{{ entry.label | label }}</span>
           <div class="bar-track">
             <div class="bar-fill preventive" [style.width.%]="entry.percent"></div>
           </div>
           <span class="bar-count">{{ entry.count }}</span>
         </div>
-        <p class="empty" *ngIf="preventivesByStatus.length === 0">Sin mantenimientos registrados</p>
+        <p class="empty" *ngIf="visitsByStatus.length === 0">Sin visitas registradas</p>
       </div>
 
       <div class="card chart-card">
@@ -87,28 +87,26 @@
       </div>
 
       <div class="card wide">
-        <h2>Próximos mantenimientos preventivos</h2>
-        <div class="table-scroll" *ngIf="upcomingPreventives.length > 0">
+        <h2>Próximas visitas de mantenimiento</h2>
+        <div class="table-scroll" *ngIf="upcomingVisits.length > 0">
         <table>
           <thead>
             <tr>
-              <th>Equipo</th>
-              <th>Tipo</th>
+              <th>Sucursal</th>
               <th>Fecha programada</th>
               <th>Estado</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let p of upcomingPreventives">
-              <td>{{ getAssetName(p.asset_id) }}</td>
-              <td>{{ p.maintenance_type }}</td>
-              <td>{{ p.scheduled_date }}</td>
-              <td>{{ p.status | label }}</td>
+            <tr *ngFor="let v of upcomingVisits">
+              <td>{{ getBranchName(v.branch_id) }}</td>
+              <td>{{ v.visit_date }}</td>
+              <td>{{ v.status | label }}</td>
             </tr>
           </tbody>
         </table>
         </div>
-        <p class="empty" *ngIf="upcomingPreventives.length === 0">No hay mantenimientos próximos</p>
+        <p class="empty" *ngIf="upcomingVisits.length === 0">No hay visitas próximas</p>
       </div>
     </div>
 

@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { AssetsService, Asset, AssetCreate, AssetUpdate } from '../../../../core/services/assets.service';
 import { LabelPipe } from '../../../../core/pipes/label.pipe';
 import { SearchService } from '../../../../core/services/search.service';
+import { BranchesService, Branch } from '../../../../core/services/branches.service';
 
 
 @Component({
@@ -18,8 +19,10 @@ export class AssetsListComponent implements OnInit {
   private assetsService = inject(AssetsService);
   private searchService = inject(SearchService);
   private destroyRef = inject(DestroyRef);
+  private branchesService = inject(BranchesService);
 
   assets: Asset[] = [];
+  branches: Branch[] = [];
   searchTerm = '';
   loading = false;
   errorMessage = '';
@@ -36,11 +39,18 @@ export class AssetsListComponent implements OnInit {
     location: '',
     status: 'disponible',
     description: '',
+    branch_id: null as number | null,
     };
 
   ngOnInit(): void {
     this.loadAssets();
+    this.branchesService.getBranches().subscribe({ next: res => this.branches = res });
     this.searchService.term.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(term => this.searchTerm = term);
+  }
+
+  getBranchName(id: number | null): string {
+    if (!id) return 'Sin asignar';
+    return this.branches.find(b => b.id === id)?.name || 'Desconocida';
   }
 
   get visibleAssets(): Asset[] {
@@ -75,6 +85,7 @@ export class AssetsListComponent implements OnInit {
       location: '',
       status: 'disponible',
       description: '',
+      branch_id: null,
     };
     this.isEditing = false;
     this.selectedAssetId = null;
@@ -91,6 +102,7 @@ export class AssetsListComponent implements OnInit {
         location: this.form.location,
         status: this.form.status,
         description: this.form.description,
+        branch_id: this.form.branch_id,
       };
       this.assetsService.updateAsset(this.selectedAssetId, updateData).subscribe({
         next: () => {
@@ -114,6 +126,7 @@ export class AssetsListComponent implements OnInit {
       location: this.form.location,
       status: this.form.status,
       description: this.form.description,
+      branch_id: this.form.branch_id,
     };
 
     this.assetsService.createAsset(createData).subscribe({
@@ -139,6 +152,7 @@ export class AssetsListComponent implements OnInit {
     this.form.location = asset.location;
     this.form.status = asset.status;
     this.form.description = asset.description;
+    this.form.branch_id = asset.branch_id;
   }
 
   toggleStatus(asset: Asset): void {

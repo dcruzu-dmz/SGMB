@@ -12,6 +12,7 @@ export interface Asset {
   location: string;
   status: string;
   description: string;
+  branch_id: number | null;
   created_at: string;
 }
 
@@ -24,6 +25,7 @@ export interface AssetCreate {
   location: string;
   status: string;
   description: string;
+  branch_id: number | null;
 }
 
 export interface AssetUpdate {
@@ -35,6 +37,7 @@ export interface AssetUpdate {
   location?: string;
   status?: string;
   description?: string;
+  branch_id?: number | null;
 }
 
 @Injectable({

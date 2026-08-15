@@ -45,24 +45,24 @@
 
       <div class="card stat-card">
         <div class="stat-top">
-          <span class="stat-title">Mantenimientos hoy</span>
+          <span class="stat-title">Visitas hoy</span>
           <span class="stat-icon icon-neutral">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>
           </span>
         </div>
-        <strong class="stat-value">{{ todayPreventivesCount }}</strong>
-        <small>programados para hoy</small>
+        <strong class="stat-value">{{ todayVisitsCount }}</strong>
+        <small>programadas para hoy</small>
       </div>
 
       <div class="card stat-card">
         <div class="stat-top">
-          <span class="stat-title">Cumplimiento preventivo</span>
+          <span class="stat-title">Cumplimiento de visitas</span>
           <span class="stat-icon icon-success">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
           </span>
         </div>
-        <strong class="stat-value">{{ preventiveComplianceRate }}%</strong>
-        <small>{{ preventives.length }} programados</small>
+        <strong class="stat-value">{{ visitCompletionRate }}%</strong>
+        <small>{{ visits.length }} visitas registradas</small>
       </div>
     </section>
 
@@ -71,7 +71,7 @@
       <div class="card calendar-card">
         <div class="calendar-header">
           <div>
-            <h2>Calendario Preventivo</h2>
+            <h2>Calendario de Visitas</h2>
             <p class="calendar-month">{{ calendarLabel }}</p>
           </div>
           <div class="calendar-nav">
@@ -95,7 +95,7 @@
               <span class="day-number" *ngIf="day.dayNumber">{{ day.dayNumber }}</span>
               <div class="day-chips">
                 <span class="chip" [class]="'chip-' + item.status" *ngFor="let item of day.items.slice(0,2)">
-                  {{ item.maintenance_type }}
+                  {{ getBranchName(item.branch_id) }}
                 </span>
                 <span class="chip-more" *ngIf="day.items.length > 2">+{{ day.items.length - 2 }}</span>
               </div>
@@ -104,13 +104,13 @@
         </div>
 
         <div class="day-detail" *ngIf="selectedDay">
-          <h3>Mantenimientos del {{ selectedDay.dayNumber }} de {{ calendarLabel }}</h3>
-          <p *ngIf="selectedDay.items.length === 0" class="empty">No hay mantenimientos programados este día</p>
+          <h3>Visitas del {{ selectedDay.dayNumber }} de {{ calendarLabel }}</h3>
+          <p *ngIf="selectedDay.items.length === 0" class="empty">No hay visitas programadas este día</p>
           <ul *ngIf="selectedDay.items.length > 0">
             <li *ngFor="let item of selectedDay.items">
               <span [class]="'badge badge-' + item.status">{{ item.status | label }}</span>
-              <strong>{{ item.maintenance_type }}</strong> · {{ getAssetName(item.asset_id) }}
-              · {{ getUserName(item.responsible_id) }}
+              <a [routerLink]="['/maintenance-visits', item.id]"><strong>{{ getBranchName(item.branch_id) }}</strong></a>
+              · {{ getUserName(item.technician_id) }}
             </li>
           </ul>
         </div>
@@ -120,7 +120,7 @@
         <h2>Actividad reciente</h2>
         <ul class="activity-list">
           <li *ngFor="let entry of activity">
-            <span class="activity-dot" [class.dot-preventive]="entry.kind === 'preventive'"></span>
+            <span class="activity-dot" [class.dot-preventive]="entry.kind === 'visit'"></span>
             <div>
               <strong>{{ entry.title }}</strong>
               <p>{{ entry.subtitle }}</p>

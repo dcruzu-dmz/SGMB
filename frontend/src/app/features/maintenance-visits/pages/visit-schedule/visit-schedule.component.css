@@ -1,0 +1,93 @@
+* {
+  box-sizing: border-box;
+}
+
+.schedule-container {
+  padding: 1.5rem 1.75rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 520px;
+}
+
+.schedule-header h1 {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.schedule-header p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1.5px solid var(--color-sidebar-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  color: var(--color-text);
+  background: var(--color-bg);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--color-accent);
+  background: var(--color-surface);
+}
+
+textarea {
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.25rem;
+}
+
+button.primary {
+  padding: 0.8rem 1.5rem;
+  background: var(--color-accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button.primary:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+}
+
+button.primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error {
+  color: var(--color-danger);
+  font-size: 0.85rem;
+  padding: 0.65rem 1rem;
+  background: var(--color-danger-bg);
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-sm);
+}

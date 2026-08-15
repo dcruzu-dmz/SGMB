@@ -13,6 +13,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .list-header h1 {
@@ -28,6 +30,12 @@
   font-size: 0.9rem;
 }
 
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
 .cta-btn {
   background: var(--color-accent);
   color: #fff;
@@ -41,6 +49,20 @@
 
 .cta-btn:hover {
   background: var(--color-accent-hover);
+}
+
+.cta-btn.secondary-btn {
+  background: var(--color-neutral-bg);
+  color: var(--color-text);
+}
+
+.cta-btn.secondary-btn:hover {
+  background: #e5e7eb;
+}
+
+.complete-link {
+  margin-left: 0.75rem;
+  color: var(--color-warning) !important;
 }
 
 table {

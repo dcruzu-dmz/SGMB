@@ -5,12 +5,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.database import Base, engine
-from app.routers import auth, users, asset, branch, corrective_request, preventive_maintenance, maintenance_visit
+from app.routers import auth, users, asset, branch, corrective_request, maintenance_visit
 from app.models.user import User
 from app.models.asset import Asset
 from app.models.branch import Branch
 from app.models.corrective_request import CorrectiveRequest
-from app.models.preventive_maintenance import PreventiveMaintenance
 from app.models.maintenance_visit import (
     MaintenanceVisit,
     MaintenanceVisitItem,
@@ -36,7 +35,6 @@ app.include_router(users.router)
 app.include_router(asset.router)
 app.include_router(branch.router)
 app.include_router(corrective_request.router)
-app.include_router(preventive_maintenance.router)
 app.include_router(maintenance_visit.router)
 
 uploads_dir = os.path.join(os.path.dirname(__file__), "..", "uploads")

@@ -277,8 +277,8 @@
   white-space: nowrap;
 }
 
-.chip-pendiente { background: var(--color-warning-bg); color: var(--color-warning); }
-.chip-en_proceso { background: var(--color-info-bg); color: var(--color-info); }
+.chip-programada { background: var(--color-info-bg); color: var(--color-info); }
+.chip-borrador { background: var(--color-warning-bg); color: var(--color-warning); }
 .chip-completado { background: var(--color-success-bg); color: var(--color-success); }
 
 .chip-more {

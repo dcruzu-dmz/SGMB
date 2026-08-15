@@ -5,7 +5,7 @@ import { AssetsService, Asset } from "../../../../core/services/assets.service";
 import { BranchesService, Branch } from "../../../../core/services/branches.service";
 import { UsersService, User } from "../../../../core/services/users.service";
 import { CorrectiveRequestService, CorrectiveRequest } from "../../../../core/services/corrective-requests.service";
-import { PreventiveMaintenanceService, PreventiveMaintenance } from "../../../../core/services/preventive-maintenance.service";
+import { MaintenanceVisitService, MaintenanceVisit } from "../../../../core/services/maintenance-visit.service";
 import { LabelPipe } from "../../../../core/pipes/label.pipe";
 
 interface CountEntry {
@@ -26,7 +26,7 @@ export class ReportsDashboardComponent implements OnInit {
   private branchesService = inject(BranchesService);
   private usersService = inject(UsersService);
   private correctiveService = inject(CorrectiveRequestService);
-  private preventiveService = inject(PreventiveMaintenanceService);
+  private visitService = inject(MaintenanceVisitService);
 
   loading = false;
   errorMessage = '';
@@ -35,14 +35,14 @@ export class ReportsDashboardComponent implements OnInit {
   branches: Branch[] = [];
   users: User[] = [];
   correctiveRequests: CorrectiveRequest[] = [];
-  preventiveMaintenances: PreventiveMaintenance[] = [];
+  visits: MaintenanceVisit[] = [];
 
   requestsByStatus: CountEntry[] = [];
   requestsByPriority: CountEntry[] = [];
-  preventivesByStatus: CountEntry[] = [];
+  visitsByStatus: CountEntry[] = [];
   assetsByStatus: CountEntry[] = [];
 
-  upcomingPreventives: PreventiveMaintenance[] = [];
+  upcomingVisits: MaintenanceVisit[] = [];
 
   ngOnInit(): void {
     this.loading = true;
@@ -51,24 +51,24 @@ export class ReportsDashboardComponent implements OnInit {
       branches: this.branchesService.getBranches(),
       users: this.usersService.getUsers(),
       requests: this.correctiveService.getCorrectiveRequest(),
-      preventives: this.preventiveService.getPreventiveMaintenances(),
+      visits: this.visitService.getVisits(),
     }).subscribe({
       next: (res) => {
         this.assets = res.assets;
         this.branches = res.branches;
         this.users = res.users;
         this.correctiveRequests = res.requests;
-        this.preventiveMaintenances = res.preventives;
+        this.visits = res.visits;
 
         this.requestsByStatus = this.countBy(this.correctiveRequests, r => r.status);
         this.requestsByPriority = this.countBy(this.correctiveRequests, r => r.priority);
-        this.preventivesByStatus = this.countBy(this.preventiveMaintenances, p => p.status);
+        this.visitsByStatus = this.countBy(this.visits, v => v.status);
         this.assetsByStatus = this.countBy(this.assets, a => a.status);
 
         const today = new Date().toISOString().slice(0, 10);
-        this.upcomingPreventives = this.preventiveMaintenances
-          .filter(p => p.status !== 'completado' && p.scheduled_date >= today)
-          .sort((a, b) => a.scheduled_date.localeCompare(b.scheduled_date))
+        this.upcomingVisits = this.visits
+          .filter(v => v.status !== 'completado' && v.visit_date >= today)
+          .sort((a, b) => a.visit_date.localeCompare(b.visit_date))
           .slice(0, 5);
 
         this.loading = false;
@@ -96,12 +96,16 @@ export class ReportsDashboardComponent implements OnInit {
     return this.assets.find(a => a.id === id)?.name || 'Desconocido';
   }
 
+  getBranchName(id: number): string {
+    return this.branches.find(b => b.id === id)?.name || 'Desconocida';
+  }
+
   get openRequestsCount(): number {
     return this.correctiveRequests.filter(r => r.status !== 'cerrada').length;
   }
 
-  get pendingPreventivesCount(): number {
-    return this.preventiveMaintenances.filter(p => p.status !== 'completado').length;
+  get pendingVisitsCount(): number {
+    return this.visits.filter(v => v.status !== 'completado').length;
   }
 
   get activeBranchesCount(): number {

@@ -36,6 +36,13 @@
                 <input type="text" [(ngModel)]="form.location" name="location" required />
             </div>
             <div class="form-group">
+                <label>Sucursal</label>
+                <select [(ngModel)]="form.branch_id" name="branch_id">
+                    <option [ngValue]="null">Sin asignar</option>
+                    <option *ngFor="let b of branches" [ngValue]="b.id">{{ b.name }}</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label>Estado</label>
                 <select [(ngModel)]="form.status" name="status">
                     <option value="disponible">Disponible</option>
@@ -71,6 +78,7 @@
                     <th>Tipo</th>
                     <th>Marca</th>
                     <th>Ubicación</th>
+                    <th>Sucursal</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
@@ -81,6 +89,7 @@
                     <td>{{ asset.type }}</td>
                     <td>{{ asset.brand }}</td>
                     <td>{{ asset.location }}</td>
+                    <td>{{ getBranchName(asset.branch_id) }}</td>
                     <td><span [class]="'badge badge-' + asset.status">{{ asset.status | label }}</span></td>
                     <td class="actions">
                         <button (click)="editAsset(asset)">Editar</button>

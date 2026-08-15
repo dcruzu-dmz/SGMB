@@ -11,9 +11,17 @@
         <h1>Visita del {{ visit.visit_date }}</h1>
         <p>{{ branchName }} · Técnico: {{ technicianName }}</p>
       </div>
-      <span class="badge" [class.badge-completado]="visit.status === 'completado'" [class.badge-pendiente]="visit.status !== 'completado'">
-        {{ visit.status }}
-      </span>
+      <div class="header-right">
+        <span class="badge"
+          [class.badge-completado]="visit.status === 'completado'"
+          [class.badge-en_proceso]="visit.status === 'programada'"
+          [class.badge-pendiente]="visit.status === 'borrador'">
+          {{ visit.status }}
+        </span>
+        <a class="complete-btn" *ngIf="visit.status === 'programada'" [routerLink]="['/maintenance-visits', visit.id, 'edit']">
+          Completar visita
+        </a>
+      </div>
     </div>
 
     <section class="card">
