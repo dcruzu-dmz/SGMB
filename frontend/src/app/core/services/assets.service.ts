@@ -14,6 +14,10 @@ export interface Asset {
   description: string;
   branch_id: number | null;
   created_at: string;
+  ram: string | null;
+  storage: string | null;
+  processor: string | null;
+  operating_system: string | null;
 }
 
 export interface AssetCreate {
@@ -26,6 +30,10 @@ export interface AssetCreate {
   status: string;
   description: string;
   branch_id: number | null;
+  ram?: string | null;
+  storage?: string | null;
+  processor?: string | null;
+  operating_system?: string | null;
 }
 
 export interface AssetUpdate {
@@ -38,6 +46,10 @@ export interface AssetUpdate {
   status?: string;
   description?: string;
   branch_id?: number | null;
+  ram?: string | null;
+  storage?: string | null;
+  processor?: string | null;
+  operating_system?: string | null;
 }
 
 @Injectable({

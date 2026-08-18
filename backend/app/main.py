@@ -1,3 +1,4 @@
+import asyncio
 import os
 
 from fastapi import FastAPI
@@ -6,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.database import Base, engine
 from app.routers import auth, users, asset, branch, corrective_request, maintenance_visit
+from app.services.preventive_scheduler import preventive_check_loop
 from app.models.user import User
 from app.models.asset import Asset
 from app.models.branch import Branch
@@ -40,6 +42,11 @@ app.include_router(maintenance_visit.router)
 uploads_dir = os.path.join(os.path.dirname(__file__), "..", "uploads")
 os.makedirs(uploads_dir, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
+
+
+@app.on_event("startup")
+async def start_background_jobs():
+    asyncio.create_task(preventive_check_loop())
 
 
 @app.get("/")

@@ -1,0 +1,100 @@
+<div class="bulk-container">
+  <div class="bulk-header">
+    <div>
+      <h1>Registrar equipos de sucursal</h1>
+      <p>Genera de una vez el servidor, DVR, cámaras y los equipos de cada cliente</p>
+    </div>
+    <a routerLink="/assets" class="back-link">&larr; Volver a Equipos</a>
+  </div>
+
+  <div class="card">
+    <div class="form-group">
+      <label>Sucursal</label>
+      <select [(ngModel)]="form.branch_id" name="branch_id">
+        <option [ngValue]="null" disabled>Selecciona una sucursal</option>
+        <option *ngFor="let b of branches" [ngValue]="b.id">{{ b.name }}</option>
+      </select>
+    </div>
+
+    <div class="checkbox-row">
+      <label class="checkbox"><input type="checkbox" [(ngModel)]="form.includeServer" name="includeServer" /> Incluir servidor</label>
+      <label class="checkbox"><input type="checkbox" [(ngModel)]="form.includeDvr" name="includeDvr" /> Incluir DVR</label>
+    </div>
+
+    <div *ngIf="form.includeServer">
+      <div class="form-group client-count">
+        <label>Nombre del servidor</label>
+        <input type="text" [(ngModel)]="form.serverName" name="serverName" placeholder="Ej. FCVTrebol" />
+      </div>
+
+      <p class="hint">El servidor es un equipo completo (más robusto), pero no todos tienen los mismos periféricos. Marca los que aplican:</p>
+      <div class="checkbox-row">
+        <label class="checkbox"><input type="checkbox" [(ngModel)]="form.serverHasKeyboard" name="serverHasKeyboard" /> Teclado</label>
+        <label class="checkbox"><input type="checkbox" [(ngModel)]="form.serverHasMouse" name="serverHasMouse" /> Mouse</label>
+        <label class="checkbox"><input type="checkbox" [(ngModel)]="form.serverHasUps" name="serverHasUps" /> UPS</label>
+        <label class="checkbox"><input type="checkbox" [(ngModel)]="form.serverHasScanner" name="serverHasScanner" /> Escáner de código de barra</label>
+      </div>
+    </div>
+
+    <div class="form-group client-count">
+      <label>Número de cámaras</label>
+      <input type="number" min="0" [(ngModel)]="form.cameraCount" name="cameraCount" />
+    </div>
+
+    <h3>Especificaciones estándar de CPU (opcional)</h3>
+    <p class="hint">Se aplican al servidor y a cada CPU de cliente generado. Puedes ajustarlas por equipo después desde Equipos.</p>
+    <div class="cpu-specs">
+      <div class="form-group">
+        <label>Procesador</label>
+        <input type="text" [(ngModel)]="form.cpuProcessor" name="cpuProcessor" placeholder="Ej. Intel Core i5-10400" />
+      </div>
+      <div class="form-group">
+        <label>Memoria RAM</label>
+        <input type="text" [(ngModel)]="form.cpuRam" name="cpuRam" placeholder="Ej. 8 GB" />
+      </div>
+      <div class="form-group">
+        <label>Disco</label>
+        <input type="text" [(ngModel)]="form.cpuStorage" name="cpuStorage" placeholder="Ej. 256 GB SSD" />
+      </div>
+      <div class="form-group">
+        <label>Sistema operativo</label>
+        <input type="text" [(ngModel)]="form.cpuOs" name="cpuOs" placeholder="Ej. Windows 10 Pro" />
+      </div>
+    </div>
+
+    <div class="form-group client-count">
+      <label>Número de clientes</label>
+      <input type="number" min="0" [(ngModel)]="form.clientCount" name="clientCount" (ngModelChange)="onClientCountChange()" />
+    </div>
+
+    <div class="table-scroll" *ngIf="clients.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>CPU, teclado, mouse, monitor, UPS</th>
+            <th>Escáner de código de barra</th>
+            <th>Impresora</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let client of clients">
+            <td>Cliente {{ client.number }}</td>
+            <td class="muted">Incluido</td>
+            <td><input type="checkbox" [(ngModel)]="client.hasScanner" [name]="'scanner-' + client.number" /></td>
+            <td><input type="checkbox" [(ngModel)]="client.hasPrinter" [name]="'printer-' + client.number" /></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="preview" *ngIf="form.branch_id">Se generarán <strong>{{ totalCount }}</strong> equipos.</p>
+
+    <div class="form-actions">
+      <button type="button" (click)="submit()" [disabled]="loading">{{ loading ? 'Generando...' : 'Generar equipos' }}</button>
+    </div>
+
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+  </div>
+</div>

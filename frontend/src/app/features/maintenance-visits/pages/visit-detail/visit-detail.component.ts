@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { MaintenanceVisitService, MaintenanceVisit } from '../../../../core/services/maintenance-visit.service';
+import { MaintenanceVisitService, MaintenanceVisit, MaintenanceVisitItem } from '../../../../core/services/maintenance-visit.service';
 import { BranchesService, Branch } from '../../../../core/services/branches.service';
 import { UsersService, User } from '../../../../core/services/users.service';
 
@@ -19,12 +19,10 @@ export class VisitDetailComponent implements OnInit {
   private usersService = inject(UsersService);
 
   categoryTitles: Record<string, string> = {
-    limpieza: 'Limpieza',
-    software: 'Software / Aplicaciones instaladas',
     revision: 'Revisión',
     compartido: 'Recursos compartidos',
   };
-  categories = ['limpieza', 'software', 'revision', 'compartido'];
+  categories = ['revision', 'compartido'];
 
   visit: MaintenanceVisit | null = null;
   branches: Branch[] = [];
@@ -56,6 +54,7 @@ export class VisitDetailComponent implements OnInit {
   }
 
   get technicianName(): string {
+    if (!this.visit?.technician_id) return 'Sin asignar';
     return this.technicians.find(t => t.id === this.visit?.technician_id)?.name || '—';
   }
 
@@ -70,7 +69,11 @@ export class VisitDetailComponent implements OnInit {
   }
 
   checklistByCategory(category: string) {
-    return this.visit?.checklist_entries.filter(e => e.category === category) || [];
+    return this.visit?.checklist_entries.filter(e => e.category === category && !e.item_id) || [];
+  }
+
+  itemEntriesByCategory(item: MaintenanceVisitItem, category: string) {
+    return item.checklist_entries.filter(e => e.category === category);
   }
 
   photoUrl(path: string): string {

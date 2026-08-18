@@ -12,45 +12,12 @@ class MaintenanceVisitPhotoResponse(BaseModel):
         from_attributes = True
 
 
-class MaintenanceVisitItemBase(BaseModel):
-    asset_id: Optional[int] = None
-    equipment_type: str
-    identification_location: Optional[str] = None
-    serial: Optional[str] = None
-    installed: Optional[bool] = None
-    working: Optional[bool] = None
-    cleaning_done: Optional[bool] = None
-    notes: Optional[str] = None
-
-
-class MaintenanceVisitItemCreate(MaintenanceVisitItemBase):
-    pass
-
-
-class MaintenanceVisitItemUpdate(BaseModel):
-    asset_id: Optional[int] = None
-    equipment_type: Optional[str] = None
-    identification_location: Optional[str] = None
-    serial: Optional[str] = None
-    installed: Optional[bool] = None
-    working: Optional[bool] = None
-    cleaning_done: Optional[bool] = None
-    notes: Optional[str] = None
-
-
-class MaintenanceVisitItemResponse(MaintenanceVisitItemBase):
-    id: int
-    photos: list[MaintenanceVisitPhotoResponse] = []
-
-    class Config:
-        from_attributes = True
-
-
 class MaintenanceVisitChecklistEntryBase(BaseModel):
     category: str
     label: str
     checked: bool = False
     comment: Optional[str] = None
+    item_id: Optional[int] = None
 
 
 class MaintenanceVisitChecklistEntryCreate(MaintenanceVisitChecklistEntryBase):
@@ -69,9 +36,44 @@ class MaintenanceVisitChecklistEntryResponse(MaintenanceVisitChecklistEntryBase)
         from_attributes = True
 
 
+class MaintenanceVisitItemBase(BaseModel):
+    asset_id: Optional[int] = None
+    equipment_type: str
+    identification_location: Optional[str] = None
+    serial: Optional[str] = None
+    installed: Optional[bool] = None
+    working: Optional[bool] = None
+    cleaning_done: Optional[bool] = None
+    notes: Optional[str] = None
+
+
+class MaintenanceVisitItemCreate(MaintenanceVisitItemBase):
+    checklist_entries: list[MaintenanceVisitChecklistEntryCreate] = []
+
+
+class MaintenanceVisitItemUpdate(BaseModel):
+    asset_id: Optional[int] = None
+    equipment_type: Optional[str] = None
+    identification_location: Optional[str] = None
+    serial: Optional[str] = None
+    installed: Optional[bool] = None
+    working: Optional[bool] = None
+    cleaning_done: Optional[bool] = None
+    notes: Optional[str] = None
+
+
+class MaintenanceVisitItemResponse(MaintenanceVisitItemBase):
+    id: int
+    photos: list[MaintenanceVisitPhotoResponse] = []
+    checklist_entries: list[MaintenanceVisitChecklistEntryResponse] = []
+
+    class Config:
+        from_attributes = True
+
+
 class MaintenanceVisitBase(BaseModel):
     branch_id: int
-    technician_id: int
+    technician_id: Optional[int] = None
     visit_date: date
     entry_time: Optional[time] = None
     exit_time: Optional[time] = None

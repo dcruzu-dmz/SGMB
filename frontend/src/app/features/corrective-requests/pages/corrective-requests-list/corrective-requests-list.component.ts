@@ -33,6 +33,8 @@ export class CorrectiveRequestListComponent implements OnInit {
 
   isEditing = false;
   selectedRequestId: number | null = null;
+  canCreate = false;
+  isTecnico = false;
 
   form = {
     asset_id: 0,
@@ -62,7 +64,11 @@ export class CorrectiveRequestListComponent implements OnInit {
 
   loadCurrentUser(): void {
     this.authService.getMe().subscribe({
-      next: (user) => this.form.requester_id = user.id,
+      next: (user) => {
+        this.form.requester_id = user.id;
+        this.canCreate = user.role === 'admin' || user.role === 'solicitante';
+        this.isTecnico = user.role === 'tecnico';
+      },
       error: () => this.errorMessage = 'No se pudo identificar al usuario actual'
     });
   }
@@ -111,6 +117,11 @@ export class CorrectiveRequestListComponent implements OnInit {
   }
 
   submitForm(): void {
+    if (this.form.status === 'cerrada' && !this.form.solution.trim()) {
+      this.errorMessage = 'Debes especificar qué se hizo antes de cerrar la solicitud';
+      return;
+    }
+
     if (this.isEditing && this.selectedRequestId !== null) {
       const updateData: CorrectiveRequestUpdate = {
         asset_id: this.form.asset_id,
@@ -161,10 +172,15 @@ export class CorrectiveRequestListComponent implements OnInit {
     this.form.solution = request.solution || '';
   }
 
-  changeStatus(request: CorrectiveRequest, status: string): void {
-    this.correctiveRequestsService.changeStatus(request.id, status).subscribe({
+  startClosing(request: CorrectiveRequest): void {
+    this.editRequest(request);
+    this.form.status = 'cerrada';
+  }
+
+  startReview(request: CorrectiveRequest): void {
+    this.correctiveRequestsService.changeStatus(request.id, 'en_proceso').subscribe({
       next: () => this.loadCorrectiveRequests(),
-      error: () => this.errorMessage = 'No se pudo cambiar el estado'
+      error: () => this.errorMessage = 'No se pudo poner en revisión la solicitud'
     });
   }
 

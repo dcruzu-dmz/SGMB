@@ -1,20 +1,27 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import func
 
 from app.database import get_db
 from app.models.corrective_request import CorrectiveRequest
 from app.schemas.corrective_request import CorrectiveRequestCreate, CorrectiveRequestResponse, CorrectiveRequestUpdate
-from app.utils.dependencies import get_current_user
+from app.utils.dependencies import get_current_user, require_roles
 from app.models.user import User
 
 router = APIRouter(prefix="/correctiverequest", tags=["CorrectiveRequest"])
+
+
+def _check_request_access(request: CorrectiveRequest, current_user: User) -> None:
+    if current_user.role == "tecnico" and request.assigned_id != current_user.id:
+        raise HTTPException(status_code=403, detail="No tienes acceso a esta solicitud")
+
 
 #Crear Solicitud
 @router.post("/", response_model=CorrectiveRequestResponse)
 def create_correctiverequest(
     data: CorrectiveRequestCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_roles("admin", "solicitante"))
 ):
     corrective_request  = CorrectiveRequest(
         asset_id=data.asset_id,
@@ -30,14 +37,16 @@ def create_correctiverequest(
     db.refresh(corrective_request)
     return corrective_request
 
-#Obtener Solicitudes
+#Obtener Solicitudes (el técnico solo ve las que tiene asignadas)
 @router.get("/", response_model=list[CorrectiveRequestResponse])
 def get_corrective_request(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    corrective_request = db.query(CorrectiveRequest).all()
-    return corrective_request
+    query = db.query(CorrectiveRequest)
+    if current_user.role == "tecnico":
+        query = query.filter(CorrectiveRequest.assigned_id == current_user.id)
+    return query.all()
 
 #Obtener Solicitud por ID
 @router.get("/{corrective_request_id}", response_model=CorrectiveRequestResponse)
@@ -49,6 +58,7 @@ def get_corrective_request_by_id(
     corrective_request = db.query(CorrectiveRequest).filter(CorrectiveRequest.id == corrective_request_id).first()
     if not corrective_request:
         raise HTTPException(status_code=404, detail="Solicitud no encontrada")
+    _check_request_access(corrective_request, current_user)
     return corrective_request
 
 #Actualizar solicitud
@@ -62,9 +72,15 @@ def update_corrective_request(
     corrective_request = db.query(CorrectiveRequest).filter(CorrectiveRequest.id == corrective_request_id).first()
     if not corrective_request:
         raise HTTPException(status_code=404, detail="Solicitud no encontrada")
+    _check_request_access(corrective_request, current_user)
 
     for key, value in data.dict(exclude_unset=True).items():
         setattr(corrective_request,key, value)
+
+    if data.status == "cerrada" and corrective_request.closed_at is None:
+        corrective_request.closed_at = func.now()
+    elif data.status is not None and data.status != "cerrada":
+        corrective_request.closed_at = None
 
     db.commit()
     db.refresh(corrective_request)
@@ -81,8 +97,14 @@ def change_corrective_request_status(
     corrective_request = db.query(CorrectiveRequest).filter(CorrectiveRequest.id == corrective_request_id).first()
     if not corrective_request:
         raise HTTPException(status_code=404, detail="Solicitud no encontrada")
+    _check_request_access(corrective_request, current_user)
 
     corrective_request.status = status
+    if status == "cerrada" and corrective_request.closed_at is None:
+        corrective_request.closed_at = func.now()
+    elif status != "cerrada":
+        corrective_request.closed_at = None
+
     db.commit()
     db.refresh(corrective_request)
     return corrective_request

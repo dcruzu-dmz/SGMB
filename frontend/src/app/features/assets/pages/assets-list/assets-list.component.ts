@@ -2,16 +2,18 @@ import { Component, OnInit, inject, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { AssetsService, Asset, AssetCreate, AssetUpdate } from '../../../../core/services/assets.service';
 import { LabelPipe } from '../../../../core/pipes/label.pipe';
 import { SearchService } from '../../../../core/services/search.service';
 import { BranchesService, Branch } from '../../../../core/services/branches.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 
 @Component({
   selector: 'app-assets-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, LabelPipe],
+  imports: [CommonModule, FormsModule, LabelPipe, RouterLink],
   templateUrl: './assets-list.component.html',
   styleUrl: './assets-list.component.css',
 })
@@ -20,12 +22,14 @@ export class AssetsListComponent implements OnInit {
   private searchService = inject(SearchService);
   private destroyRef = inject(DestroyRef);
   private branchesService = inject(BranchesService);
+  private authService = inject(AuthService);
 
   assets: Asset[] = [];
   branches: Branch[] = [];
   searchTerm = '';
   loading = false;
   errorMessage = '';
+  canManage = false;
 
   isEditing = false;
   selectedAssetId: number | null = null;
@@ -40,11 +44,16 @@ export class AssetsListComponent implements OnInit {
     status: 'disponible',
     description: '',
     branch_id: null as number | null,
+    ram: '',
+    storage: '',
+    processor: '',
+    operating_system: '',
     };
 
   ngOnInit(): void {
     this.loadAssets();
     this.branchesService.getBranches().subscribe({ next: res => this.branches = res });
+    this.authService.getMe().subscribe({ next: res => this.canManage = res.role === 'admin' });
     this.searchService.term.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(term => this.searchTerm = term);
   }
 
@@ -86,6 +95,10 @@ export class AssetsListComponent implements OnInit {
       status: 'disponible',
       description: '',
       branch_id: null,
+      ram: '',
+      storage: '',
+      processor: '',
+      operating_system: '',
     };
     this.isEditing = false;
     this.selectedAssetId = null;
@@ -103,6 +116,10 @@ export class AssetsListComponent implements OnInit {
         status: this.form.status,
         description: this.form.description,
         branch_id: this.form.branch_id,
+        ram: this.form.ram || null,
+        storage: this.form.storage || null,
+        processor: this.form.processor || null,
+        operating_system: this.form.operating_system || null,
       };
       this.assetsService.updateAsset(this.selectedAssetId, updateData).subscribe({
         next: () => {
@@ -127,6 +144,10 @@ export class AssetsListComponent implements OnInit {
       status: this.form.status,
       description: this.form.description,
       branch_id: this.form.branch_id,
+      ram: this.form.ram || null,
+      storage: this.form.storage || null,
+      processor: this.form.processor || null,
+      operating_system: this.form.operating_system || null,
     };
 
     this.assetsService.createAsset(createData).subscribe({
@@ -153,6 +174,10 @@ export class AssetsListComponent implements OnInit {
     this.form.status = asset.status;
     this.form.description = asset.description;
     this.form.branch_id = asset.branch_id;
+    this.form.ram = asset.ram || '';
+    this.form.storage = asset.storage || '';
+    this.form.processor = asset.processor || '';
+    this.form.operating_system = asset.operating_system || '';
   }
 
   toggleStatus(asset: Asset): void {

@@ -5,7 +5,7 @@ from app.database import get_db
 from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse, UserUpdate
 from app.utils.security import hash_password
-from app.utils.dependencies import get_current_user
+from app.utils.dependencies import get_current_user, require_roles
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -15,7 +15,7 @@ router = APIRouter(prefix="/users", tags=["Users"])
 def create_user(
     data: UserCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_roles("admin"))
 ):
     existing = db.query(User).filter(User.email == data.email).first()
     if existing:
@@ -63,7 +63,7 @@ def update_user(
     user_id: int,
     data: UserUpdate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_roles("admin"))
 ):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
@@ -89,7 +89,7 @@ def toggle_user_status(
     user_id: int,
     is_active: bool,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_roles("admin"))
 ):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:

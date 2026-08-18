@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.asset import Asset
 from app.schemas.asset import AssetCreate, AssetResponse, AssetUpdate
-from app.utils.dependencies import get_current_user
+from app.utils.dependencies import get_current_user, require_roles
 from app.models.user import User
 
 
@@ -15,7 +15,7 @@ router = APIRouter(prefix="/assets", tags=["Assets"])
 def create_asset(
     data: AssetCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_roles("admin"))
 ):
     asset = Asset(
         name=data.name,
@@ -27,6 +27,10 @@ def create_asset(
         status=data.status,
         description=data.description,
         branch_id=data.branch_id,
+        ram=data.ram,
+        storage=data.storage,
+        processor=data.processor,
+        operating_system=data.operating_system,
     )
 
     db.add(asset)
@@ -61,7 +65,7 @@ def update_asset(
     asset_id: int,
     data: AssetUpdate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_roles("admin"))
 ):
     asset = db.query(Asset).filter(Asset.id == asset_id).first()
     if not asset:
@@ -80,7 +84,7 @@ def update_asset_status(
     asset_id: int,
     status: str,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_roles("admin"))
 ):
     asset = db.query(Asset).filter(Asset.id == asset_id).first()
     if not asset:

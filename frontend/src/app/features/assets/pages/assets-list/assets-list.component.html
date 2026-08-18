@@ -1,11 +1,14 @@
 <div class="assets-container">
     <div class="assets-header">
-        <h1>Equipos</h1>
-        <p>Gestión de equipos del sistema</p>
+        <div>
+          <h1>Equipos</h1>
+          <p>Gestión de equipos del sistema</p>
+        </div>
+        <a class="cta-btn" routerLink="/assets/bulk" *ngIf="canManage">+ Registrar equipos de sucursal</a>
 </div>
 
 <div class="assets-grid">
-    <div class="card form-card">
+    <div class="card form-card" *ngIf="canManage || isEditing">
         <h2>{{ isEditing ? 'Editar equipo' : 'Nuevo equipo' }}</h2>
 
     <form (ngSubmit)="submitForm()">
@@ -34,6 +37,22 @@
             <div class="form-group">
                 <label>Ubicación</label>
                 <input type="text" [(ngModel)]="form.location" name="location" required />
+            </div>
+            <div class="form-group">
+                <label>Procesador</label>
+                <input type="text" [(ngModel)]="form.processor" name="processor" placeholder="Ej. Intel Core i5-10400" />
+            </div>
+            <div class="form-group">
+                <label>Memoria RAM</label>
+                <input type="text" [(ngModel)]="form.ram" name="ram" placeholder="Ej. 8 GB" />
+            </div>
+            <div class="form-group">
+                <label>Disco</label>
+                <input type="text" [(ngModel)]="form.storage" name="storage" placeholder="Ej. 256 GB SSD" />
+            </div>
+            <div class="form-group">
+                <label>Sistema operativo</label>
+                <input type="text" [(ngModel)]="form.operating_system" name="operating_system" placeholder="Ej. Windows 10 Pro" />
             </div>
             <div class="form-group">
                 <label>Sucursal</label>
@@ -80,7 +99,7 @@
                     <th>Ubicación</th>
                     <th>Sucursal</th>
                     <th>Estado</th>
-                    <th>Acciones</th>
+                    <th *ngIf="canManage">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -91,7 +110,7 @@
                     <td>{{ asset.location }}</td>
                     <td>{{ getBranchName(asset.branch_id) }}</td>
                     <td><span [class]="'badge badge-' + asset.status">{{ asset.status | label }}</span></td>
-                    <td class="actions">
+                    <td class="actions" *ngIf="canManage">
                         <button (click)="editAsset(asset)">Editar</button>
                         <button class="secondary" (click)="toggleStatus(asset)">{{ asset.status === 'dado_de_baja' ? 'Reactivar' : 'Dar de baja' }}</button>
                     </td>

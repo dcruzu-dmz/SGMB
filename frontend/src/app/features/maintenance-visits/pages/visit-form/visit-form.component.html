@@ -19,8 +19,8 @@
       </div>
       <div class="form-group">
         <label>Técnico</label>
-        <select [(ngModel)]="header.technician_id" name="technician_id" required>
-          <option [ngValue]="0" disabled>Selecciona un técnico</option>
+        <select [(ngModel)]="header.technician_id" name="technician_id">
+          <option [ngValue]="null">Sin asignar</option>
           <option *ngFor="let t of technicians" [ngValue]="t.id">{{ t.name }}</option>
         </select>
       </div>
@@ -142,14 +142,22 @@
     <p class="hint" *ngIf="header.branch_id && branchAssets.length === 0">Esta sucursal no tiene equipos registrados todavía. Puedes agregarlos desde el módulo de Equipos, o registrar uno no catalogado abajo.</p>
 
     <div class="asset-pick-list" *ngIf="branchAssets.length > 0">
-      <label class="asset-pick-row" *ngFor="let asset of branchAssets">
-        <input type="checkbox" [checked]="!!selectedAssetIds[asset.id]" (change)="toggleAsset(asset)">
-        <span class="asset-pick-name">{{ asset.name }}</span>
-        <span class="asset-pick-meta">{{ asset.type }}<span *ngIf="asset.serial_number"> · Serie: {{ asset.serial_number }}</span></span>
-      </label>
-    </div>
+      <ng-container *ngFor="let asset of branchAssets">
+      <div class="asset-pick-row">
+        <label class="asset-pick-row-main">
+          <input type="checkbox" [checked]="!!selectedAssetIds[asset.id]" (change)="toggleAsset(asset)">
+          <span class="asset-pick-name">{{ asset.name }}</span>
+          <span class="asset-pick-meta">{{ asset.type }}<span *ngIf="asset.serial_number"> · Serie: {{ asset.serial_number }}</span></span>
+        </label>
+        <input
+          *ngIf="!selectedAssetIds[asset.id]"
+          type="text"
+          class="asset-observation-input"
+          [(ngModel)]="assetObservations[asset.id]"
+          [name]="'obs-' + asset.id"
+          placeholder="Observación (ej. enviar a revisión en oficinas centrales)">
+      </div>
 
-    <ng-container *ngFor="let asset of branchAssets">
       <div class="item-card" *ngIf="selectedAssetIds[asset.id] && getItemForAsset(asset.id) as item">
         <div class="item-card-header">
           <strong>{{ asset.name }}</strong>
@@ -160,6 +168,28 @@
           <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.installed" [name]="'installed-a' + asset.id"> Instalado</label>
           <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.working" [name]="'working-a' + asset.id"> Funciona</label>
           <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.cleaning_done" [name]="'cleaning-a' + asset.id"> Limpieza realizada</label>
+        </div>
+
+        <div class="checklist-rows" *ngIf="entriesByCategory(item, 'limpieza').length > 0">
+          <label>Limpieza y mantenimiento</label>
+          <div class="checklist-row" *ngFor="let entry of entriesByCategory(item, 'limpieza')">
+            <label class="checkbox-chip">
+              <input type="checkbox" [(ngModel)]="entry.checked" [name]="'cla' + asset.id + '-' + entry.label">
+              {{ entry.label }}
+            </label>
+            <input type="text" class="comment-input" placeholder="Comentario" [(ngModel)]="entry.comment" [name]="'clacmt' + asset.id + '-' + entry.label">
+          </div>
+        </div>
+
+        <div class="checklist-rows" *ngIf="entriesByCategory(item, 'software').length > 0">
+          <label>Software / Aplicaciones instaladas</label>
+          <div class="checklist-row" *ngFor="let entry of entriesByCategory(item, 'software')">
+            <label class="checkbox-chip">
+              <input type="checkbox" [(ngModel)]="entry.checked" [name]="'swa' + asset.id + '-' + entry.label">
+              {{ entry.label }}
+            </label>
+            <input type="text" class="comment-input" placeholder="Comentario / versión" [(ngModel)]="entry.comment" [name]="'swacmt' + asset.id + '-' + entry.label">
+          </div>
         </div>
 
         <div class="form-group">
@@ -178,7 +208,8 @@
           </div>
         </div>
       </div>
-    </ng-container>
+      </ng-container>
+    </div>
   </section>
 
   <!-- Equipos no registrados -->
@@ -198,7 +229,7 @@
       <div class="field-grid">
         <div class="form-group">
           <label>Tipo de equipo</label>
-          <select [(ngModel)]="item.equipment_type" [name]="'type-' + i">
+          <select [(ngModel)]="item.equipment_type" [name]="'type-' + i" (ngModelChange)="onManualTypeChange(item)">
             <option *ngFor="let type of equipmentTypes" [value]="type">{{ type }}</option>
           </select>
         </div>
@@ -216,6 +247,28 @@
         <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.installed" [name]="'installed-' + i"> Instalado</label>
         <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.working" [name]="'working-' + i"> Funciona</label>
         <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.cleaning_done" [name]="'cleaning-' + i"> Limpieza realizada</label>
+      </div>
+
+      <div class="checklist-rows" *ngIf="entriesByCategory(item, 'limpieza').length > 0">
+        <label>Limpieza y mantenimiento</label>
+        <div class="checklist-row" *ngFor="let entry of entriesByCategory(item, 'limpieza')">
+          <label class="checkbox-chip">
+            <input type="checkbox" [(ngModel)]="entry.checked" [name]="'cl' + i + '-' + entry.label">
+            {{ entry.label }}
+          </label>
+          <input type="text" class="comment-input" placeholder="Comentario" [(ngModel)]="entry.comment" [name]="'clcmt' + i + '-' + entry.label">
+        </div>
+      </div>
+
+      <div class="checklist-rows" *ngIf="entriesByCategory(item, 'software').length > 0">
+        <label>Software / Aplicaciones instaladas</label>
+        <div class="checklist-row" *ngFor="let entry of entriesByCategory(item, 'software')">
+          <label class="checkbox-chip">
+            <input type="checkbox" [(ngModel)]="entry.checked" [name]="'sw' + i + '-' + entry.label">
+            {{ entry.label }}
+          </label>
+          <input type="text" class="comment-input" placeholder="Comentario / versión" [(ngModel)]="entry.comment" [name]="'swcmt' + i + '-' + entry.label">
+        </div>
       </div>
 
       <div class="form-group">

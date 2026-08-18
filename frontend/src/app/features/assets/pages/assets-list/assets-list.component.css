@@ -9,6 +9,14 @@
   gap: 1rem;
 }
 
+.assets-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
 .assets-header h1 {
   margin: 0 0 4px;
   font-size: 1.6rem;
@@ -22,11 +30,30 @@
   font-size: 0.9rem;
 }
 
+.cta-btn {
+  background: var(--color-accent);
+  color: #fff;
+  text-decoration: none;
+  padding: 0.65rem 1.1rem;
+  border-radius: var(--radius-md, var(--radius-sm));
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.cta-btn:hover {
+  background: var(--color-accent-hover);
+}
+
 .assets-grid {
   display: grid;
   grid-template-columns: 360px minmax(0, 1fr);
   gap: 1.25rem;
   align-items: start;
+}
+
+.assets-grid.no-form {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .form-card h2,

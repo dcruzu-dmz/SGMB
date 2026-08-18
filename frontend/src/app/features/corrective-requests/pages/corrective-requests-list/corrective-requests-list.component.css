@@ -28,6 +28,10 @@
   align-items: start;
 }
 
+.corrective-grid.no-form {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .card {
   background: white;
   border-radius: 16px;

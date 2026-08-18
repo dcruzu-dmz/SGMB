@@ -7,6 +7,7 @@ import { AssetsService, Asset } from '../../../core/services/assets.service';
 import { UsersService, User } from '../../../core/services/users.service';
 import { BranchesService, Branch } from '../../../core/services/branches.service';
 import { MaintenanceVisitService, MaintenanceVisit } from '../../../core/services/maintenance-visit.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { LabelPipe } from '../../../core/pipes/label.pipe';
 
 interface CalendarDay {
@@ -43,8 +44,10 @@ export class DashboardComponent implements OnInit {
   private usersService = inject(UsersService);
   private branchesService = inject(BranchesService);
   private visitService = inject(MaintenanceVisitService);
+  private authService = inject(AuthService);
 
   loading = false;
+  isAdmin = false;
 
   correctiveRequests: CorrectiveRequest[] = [];
   assets: Asset[] = [];
@@ -62,6 +65,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
+    this.authService.getMe().subscribe({ next: res => this.isAdmin = res.role === 'admin' });
     forkJoin({
       requests: this.correctiveService.getCorrectiveRequest(),
       assets: this.assetsService.getAssets(),
@@ -104,6 +108,18 @@ export class DashboardComponent implements OnInit {
     if (this.visits.length === 0) return 0;
     const done = this.visits.filter(v => v.status === 'completado').length;
     return Math.round((done / this.visits.length) * 100);
+  }
+
+  get overdueVisits(): MaintenanceVisit[] {
+    const todayIso = this.toIsoDate(new Date());
+    return this.visits
+      .filter(v => v.status === 'programada' && v.visit_date < todayIso)
+      .sort((a, b) => a.visit_date.localeCompare(b.visit_date));
+  }
+
+  daysOverdue(visitDate: string): number {
+    const diffMs = new Date().getTime() - new Date(visitDate + 'T00:00:00').getTime();
+    return Math.max(0, Math.floor(diffMs / (1000 * 60 * 60 * 24)));
   }
 
   // ---- Calendar ----

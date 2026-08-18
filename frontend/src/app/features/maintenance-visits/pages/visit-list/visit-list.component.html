@@ -4,7 +4,7 @@
       <h1>Visitas de mantenimiento</h1>
       <p>Reportes de soporte y mantenimiento técnico por sucursal</p>
     </div>
-    <div class="header-actions">
+    <div class="header-actions" *ngIf="isAdmin">
       <a class="cta-btn secondary-btn" routerLink="/maintenance-visits/schedule">+ Programar visita</a>
       <a class="cta-btn" routerLink="/maintenance-visits/new">+ Registrar visita completa</a>
     </div>
@@ -15,7 +15,7 @@
 
   <div class="card" *ngIf="!loading && !errorMessage">
     <div class="table-scroll">
-      <table *ngIf="visits.length > 0">
+      <table *ngIf="visibleVisits.length > 0">
         <thead>
           <tr>
             <th>Fecha</th>
@@ -28,7 +28,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let visit of visits">
+          <tr *ngFor="let visit of visibleVisits">
             <td>{{ visit.visit_date }}</td>
             <td>{{ getBranchName(visit.branch_id) }}</td>
             <td>{{ getTechnicianName(visit.technician_id) }}</td>
@@ -51,6 +51,8 @@
       </table>
     </div>
 
-    <p class="empty" *ngIf="visits.length === 0">No hay visitas registradas todavía</p>
+    <p class="empty" *ngIf="visibleVisits.length === 0">
+      {{ searchTerm ? 'Sin resultados para "' + searchTerm + '"' : 'No hay visitas registradas todavía' }}
+    </p>
   </div>
 </div>

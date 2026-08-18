@@ -23,8 +23,9 @@ from app.schemas.maintenance_visit import (
     MaintenanceVisitChecklistEntryResponse,
     MaintenanceVisitPhotoResponse,
 )
-from app.utils.dependencies import get_current_user
+from app.utils.dependencies import get_current_user, require_roles
 from app.models.user import User
+from app.services.preventive_scheduler import run_preventive_check
 
 router = APIRouter(prefix="/maintenance-visits", tags=["MaintenanceVisits"])
 
@@ -33,6 +34,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 VISIT_LOAD_OPTIONS = [
     joinedload(MaintenanceVisit.items).joinedload(MaintenanceVisitItem.photos),
+    joinedload(MaintenanceVisit.items).joinedload(MaintenanceVisitItem.checklist_entries),
     joinedload(MaintenanceVisit.checklist_entries),
 ]
 
@@ -49,12 +51,27 @@ def _get_visit_or_404(visit_id: int, db: Session) -> MaintenanceVisit:
     return visit
 
 
-# Crear visita (con equipos y checklist anidados)
+def _check_visit_access(visit: MaintenanceVisit, current_user: User) -> None:
+    if current_user.role == "tecnico" and visit.technician_id != current_user.id:
+        raise HTTPException(status_code=403, detail="No tienes acceso a esta visita")
+
+
+# Forzar el chequeo de mantenimiento preventivo (crea visitas 'programada' vencidas)
+@router.post("/check-preventive")
+def check_preventive(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_roles("admin")),
+):
+    created = run_preventive_check(db)
+    return {"created": created}
+
+
+# Crear visita (con equipos y checklist anidados) — solo administradores programan/registran visitas
 @router.post("/", response_model=MaintenanceVisitResponse)
 def create_visit(
     data: MaintenanceVisitCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_roles("admin")),
 ):
     payload = data.dict(exclude={"items", "checklist_entries"})
     visit = MaintenanceVisit(**payload)
@@ -62,7 +79,13 @@ def create_visit(
     db.flush()
 
     for item_data in data.items:
-        db.add(MaintenanceVisitItem(visit_id=visit.id, **item_data.dict()))
+        item_dict = item_data.dict(exclude={"checklist_entries"})
+        item = MaintenanceVisitItem(visit_id=visit.id, **item_dict)
+        db.add(item)
+        db.flush()
+
+        for entry_data in item_data.checklist_entries:
+            db.add(MaintenanceVisitChecklistEntry(visit_id=visit.id, item_id=item.id, **entry_data.dict(exclude={"item_id"})))
 
     for entry_data in data.checklist_entries:
         db.add(MaintenanceVisitChecklistEntry(visit_id=visit.id, **entry_data.dict()))
@@ -71,18 +94,16 @@ def create_visit(
     return _get_visit_or_404(visit.id, db)
 
 
-# Listar visitas
+# Listar visitas (el técnico solo ve las visitas que le fueron asignadas)
 @router.get("/", response_model=list[MaintenanceVisitResponse])
 def get_visits(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    return (
-        db.query(MaintenanceVisit)
-        .options(*VISIT_LOAD_OPTIONS)
-        .order_by(MaintenanceVisit.visit_date.desc(), MaintenanceVisit.id.desc())
-        .all()
-    )
+    query = db.query(MaintenanceVisit).options(*VISIT_LOAD_OPTIONS)
+    if current_user.role == "tecnico":
+        query = query.filter(MaintenanceVisit.technician_id == current_user.id)
+    return query.order_by(MaintenanceVisit.visit_date.desc(), MaintenanceVisit.id.desc()).all()
 
 
 # Obtener visita por ID
@@ -92,10 +113,12 @@ def get_visit(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    return _get_visit_or_404(visit_id, db)
+    visit = _get_visit_or_404(visit_id, db)
+    _check_visit_access(visit, current_user)
+    return visit
 
 
-# Actualizar cabecera de la visita
+# Actualizar cabecera de la visita (el técnico solo puede completar sus propias visitas)
 @router.put("/{visit_id}", response_model=MaintenanceVisitResponse)
 def update_visit(
     visit_id: int,
@@ -106,6 +129,7 @@ def update_visit(
     visit = db.query(MaintenanceVisit).filter(MaintenanceVisit.id == visit_id).first()
     if not visit:
         raise HTTPException(status_code=404, detail="Visita no encontrada")
+    _check_visit_access(visit, current_user)
 
     for key, value in data.dict(exclude_unset=True).items():
         setattr(visit, key, value)
@@ -119,7 +143,7 @@ def update_visit(
 def delete_visit(
     visit_id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_roles("admin")),
 ):
     visit = db.query(MaintenanceVisit).filter(MaintenanceVisit.id == visit_id).first()
     if not visit:
@@ -147,9 +171,16 @@ def add_visit_item(
     visit = db.query(MaintenanceVisit).filter(MaintenanceVisit.id == visit_id).first()
     if not visit:
         raise HTTPException(status_code=404, detail="Visita no encontrada")
+    _check_visit_access(visit, current_user)
 
-    item = MaintenanceVisitItem(visit_id=visit_id, **data.dict())
+    item_dict = data.dict(exclude={"checklist_entries"})
+    item = MaintenanceVisitItem(visit_id=visit_id, **item_dict)
     db.add(item)
+    db.flush()
+
+    for entry_data in data.checklist_entries:
+        db.add(MaintenanceVisitChecklistEntry(visit_id=visit_id, item_id=item.id, **entry_data.dict(exclude={"item_id"})))
+
     db.commit()
     db.refresh(item)
     return item
@@ -166,6 +197,7 @@ def add_checklist_entries(
     visit = db.query(MaintenanceVisit).filter(MaintenanceVisit.id == visit_id).first()
     if not visit:
         raise HTTPException(status_code=404, detail="Visita no encontrada")
+    _check_visit_access(visit, current_user)
 
     entries = [MaintenanceVisitChecklistEntry(visit_id=visit_id, **entry.dict()) for entry in data]
     db.add_all(entries)
@@ -186,6 +218,7 @@ def update_visit_item(
     item = db.query(MaintenanceVisitItem).filter(MaintenanceVisitItem.id == item_id).first()
     if not item:
         raise HTTPException(status_code=404, detail="Equipo no encontrado")
+    _check_visit_access(item.visit, current_user)
 
     for key, value in data.dict(exclude_unset=True).items():
         setattr(item, key, value)
@@ -205,6 +238,7 @@ def delete_visit_item(
     item = db.query(MaintenanceVisitItem).filter(MaintenanceVisitItem.id == item_id).first()
     if not item:
         raise HTTPException(status_code=404, detail="Equipo no encontrado")
+    _check_visit_access(item.visit, current_user)
 
     for photo in item.photos:
         file_path = os.path.join(UPLOAD_DIR, os.path.basename(photo.file_path))
@@ -227,6 +261,7 @@ def upload_item_photos(
     item = db.query(MaintenanceVisitItem).filter(MaintenanceVisitItem.id == item_id).first()
     if not item:
         raise HTTPException(status_code=404, detail="Equipo no encontrado")
+    _check_visit_access(item.visit, current_user)
 
     saved_photos = []
     for file in files:
@@ -257,6 +292,7 @@ def delete_photo(
     photo = db.query(MaintenanceVisitPhoto).filter(MaintenanceVisitPhoto.id == photo_id).first()
     if not photo:
         raise HTTPException(status_code=404, detail="Foto no encontrada")
+    _check_visit_access(photo.item.visit, current_user)
 
     file_path = os.path.join(UPLOAD_DIR, os.path.basename(photo.file_path))
     if os.path.exists(file_path):
@@ -278,6 +314,7 @@ def update_checklist_entry(
     entry = db.query(MaintenanceVisitChecklistEntry).filter(MaintenanceVisitChecklistEntry.id == entry_id).first()
     if not entry:
         raise HTTPException(status_code=404, detail="Elemento de checklist no encontrado")
+    _check_visit_access(entry.visit, current_user)
 
     for key, value in data.dict(exclude_unset=True).items():
         setattr(entry, key, value)

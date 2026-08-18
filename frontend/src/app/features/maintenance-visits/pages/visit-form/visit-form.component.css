@@ -170,12 +170,11 @@ input[type="file"] {
 
 .asset-pick-row {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  flex-direction: column;
+  gap: 0.5rem;
   padding: 0.6rem 0.8rem;
   border: 1px solid var(--color-sidebar-border);
   border-radius: var(--radius-sm);
-  cursor: pointer;
   font-size: 0.88rem;
 }
 
@@ -183,8 +182,20 @@ input[type="file"] {
   background: var(--color-bg);
 }
 
-.asset-pick-row input {
+.asset-pick-row-main {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.asset-pick-row-main input {
   width: auto;
+}
+
+.asset-observation-input {
+  font-size: 0.82rem;
+  padding: 0.4rem 0.65rem;
 }
 
 .asset-pick-name {

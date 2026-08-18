@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.branch import Branch
 from app.schemas.branch import BranchCreate, BranchResponse, BranchUpdate
-from app.utils.dependencies import get_current_user
+from app.utils.dependencies import get_current_user, require_roles
 from app.models.user import User
 
 router = APIRouter(prefix="/branches", tags=["Branches"])
@@ -14,13 +14,14 @@ router = APIRouter(prefix="/branches", tags=["Branches"])
 def create_branch(
     data: BranchCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_roles("admin"))
 ):
     branch = Branch(
         name=data.name,
         address=data.address,
         phone=data.phone,
         is_active=data.is_active,
+        maintenance_frequency_days=data.maintenance_frequency_days,
     )
 
     db.add(branch)
@@ -55,7 +56,7 @@ def update_branch(
     branch_id: int,
     data: BranchUpdate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_roles("admin"))
 ):
     branch = db.query(Branch).filter(Branch.id == branch_id).first()
     if not branch:
@@ -74,7 +75,7 @@ def update_branch_status(
     branch_id: int,
     is_active: bool,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_roles("admin"))
 ):
     branch = db.query(Branch).filter(Branch.id == branch_id).first()
     if not branch:

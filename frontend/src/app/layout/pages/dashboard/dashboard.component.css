@@ -293,10 +293,40 @@
 }
 
 .day-detail h3 {
-  margin: 0 0 0.6rem;
+  margin: 0;
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--color-text);
+}
+
+.day-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.day-detail-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.mini-btn {
+  background: var(--color-accent);
+  color: #fff;
+  text-decoration: none;
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.mini-btn:hover {
+  background: var(--color-accent-hover);
 }
 
 .day-detail ul {

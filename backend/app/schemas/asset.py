@@ -12,6 +12,10 @@ class AssetBase(BaseModel):
     status: str = "disponible"
     description: str | None = None
     branch_id: int | None = None
+    ram: str | None = None
+    storage: str | None = None
+    processor: str | None = None
+    operating_system: str | None = None
 
 
 class AssetCreate(AssetBase):
@@ -27,6 +31,10 @@ class AssetUpdate(BaseModel):
     status: Optional[str] = None
     description: Optional[str] = None
     branch_id: Optional[int] = None
+    ram: Optional[str] = None
+    storage: Optional[str] = None
+    processor: Optional[str] = None
+    operating_system: Optional[str] = None
 
 class AssetResponse(AssetBase):
     id: int

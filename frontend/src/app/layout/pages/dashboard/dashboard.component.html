@@ -104,7 +104,13 @@
         </div>
 
         <div class="day-detail" *ngIf="selectedDay">
-          <h3>Visitas del {{ selectedDay.dayNumber }} de {{ calendarLabel }}</h3>
+          <div class="day-detail-header">
+            <h3>Visitas del {{ selectedDay.dayNumber }} de {{ calendarLabel }}</h3>
+            <div class="day-detail-actions">
+              <a class="mini-btn" routerLink="/requests">+ Solicitud</a>
+              <a class="mini-btn" routerLink="/maintenance-visits/schedule" [queryParams]="{ date: selectedDay.date }" *ngIf="isAdmin">+ Visita</a>
+            </div>
+          </div>
           <p *ngIf="selectedDay.items.length === 0" class="empty">No hay visitas programadas este día</p>
           <ul *ngIf="selectedDay.items.length > 0">
             <li *ngFor="let item of selectedDay.items">
@@ -130,6 +136,35 @@
         <p class="empty" *ngIf="activity.length === 0">Sin actividad registrada todavía</p>
       </div>
 
+    </section>
+
+    <section class="card critical-card" *ngIf="overdueVisits.length > 0">
+      <div class="critical-header">
+        <h2>Sucursales con mantenimiento atrasado</h2>
+      </div>
+
+      <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Sucursal</th>
+            <th>Fecha vencida</th>
+            <th>Días de atraso</th>
+            <th>Técnico</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let v of overdueVisits">
+            <td>{{ getBranchName(v.branch_id) }}</td>
+            <td>{{ v.visit_date }}</td>
+            <td><span class="badge badge-alta">{{ daysOverdue(v.visit_date) }} días</span></td>
+            <td>{{ getUserName(v.technician_id) }}</td>
+            <td><a [routerLink]="['/maintenance-visits', v.id, 'edit']">{{ v.technician_id ? 'Ver' : 'Asignar técnico' }}</a></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
     </section>
 
     <section class="card critical-card">

@@ -43,9 +43,9 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
 
-      <div class="search-box">
+      <div class="search-box" *ngIf="showSearch">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-        <input type="text" placeholder="Buscar equipos, solicitudes..." [(ngModel)]="searchTerm" (ngModelChange)="onSearchInput()" />
+        <input type="text" placeholder="Buscar equipos, solicitudes, visitas, sucursales..." [(ngModel)]="searchTerm" (ngModelChange)="onSearchInput()" />
       </div>
 
       <div class="user-area" *ngIf="user">

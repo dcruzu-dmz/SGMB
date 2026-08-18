@@ -8,6 +8,7 @@ export interface Branch {
   address: string,
   phone: string,
   is_active: boolean,
+  maintenance_frequency_days: number | null,
   created_at: string,
 }
 
@@ -16,6 +17,7 @@ export interface BranchCreate {
   address?: string,
   phone?: string,
   is_active?: boolean,
+  maintenance_frequency_days?: number | null,
 }
 
 export interface BranchUpdate {
@@ -23,6 +25,7 @@ export interface BranchUpdate {
   address?: string,
   phone?: string,
   is_active?: boolean,
+  maintenance_frequency_days?: number | null,
 }
 
 @Injectable({

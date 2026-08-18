@@ -85,6 +85,28 @@
         </div>
         <p class="item-notes" *ngIf="item.notes">{{ item.notes }}</p>
 
+        <div class="checklist-view-rows" *ngIf="itemEntriesByCategory(item, 'limpieza').length > 0">
+          <span class="obs-label">Limpieza y mantenimiento</span>
+          <div class="checklist-view-row" *ngFor="let entry of itemEntriesByCategory(item, 'limpieza')">
+            <span class="status-pill small" [class.ok]="entry.checked" [class.bad]="!entry.checked">
+              {{ entry.checked ? '✓' : '✕' }}
+            </span>
+            <span class="entry-label">{{ entry.label }}</span>
+            <span class="entry-comment" *ngIf="entry.comment">{{ entry.comment }}</span>
+          </div>
+        </div>
+
+        <div class="checklist-view-rows" *ngIf="itemEntriesByCategory(item, 'software').length > 0">
+          <span class="obs-label">Software / Aplicaciones instaladas</span>
+          <div class="checklist-view-row" *ngFor="let entry of itemEntriesByCategory(item, 'software')">
+            <span class="status-pill small" [class.ok]="entry.checked" [class.bad]="!entry.checked">
+              {{ entry.checked ? '✓' : '✕' }}
+            </span>
+            <span class="entry-label">{{ entry.label }}</span>
+            <span class="entry-comment" *ngIf="entry.comment">{{ entry.comment }}</span>
+          </div>
+        </div>
+
         <div class="photo-gallery" *ngIf="item.photos.length > 0">
           <a *ngFor="let photo of item.photos" [href]="photoUrl(photo.file_path)" target="_blank">
             <img [src]="photoUrl(photo.file_path)" alt="Foto del equipo">

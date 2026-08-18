@@ -15,6 +15,10 @@ class Asset(Base):
     location = Column(String(100), nullable=True)
     status = Column(String(50), default="activo")
     description = Column(Text, nullable=True)
+    ram = Column(String(50), nullable=True)
+    storage = Column(String(50), nullable=True)
+    processor = Column(String(100), nullable=True)
+    operating_system = Column(String(100), nullable=True)
     branch_id = Column(Integer, ForeignKey("branches.id"), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 

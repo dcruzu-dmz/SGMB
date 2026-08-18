@@ -19,6 +19,7 @@ export interface MaintenanceVisitItem {
   cleaning_done: boolean | null;
   notes: string | null;
   photos: MaintenanceVisitPhoto[];
+  checklist_entries: MaintenanceVisitChecklistEntry[];
 }
 
 export interface MaintenanceVisitItemCreate {
@@ -30,6 +31,7 @@ export interface MaintenanceVisitItemCreate {
   working?: boolean | null;
   cleaning_done?: boolean | null;
   notes?: string | null;
+  checklist_entries?: MaintenanceVisitChecklistEntryCreate[];
 }
 
 export interface MaintenanceVisitChecklistEntry {
@@ -38,6 +40,7 @@ export interface MaintenanceVisitChecklistEntry {
   label: string;
   checked: boolean;
   comment: string | null;
+  item_id: number | null;
 }
 
 export interface MaintenanceVisitChecklistEntryCreate {
@@ -45,12 +48,13 @@ export interface MaintenanceVisitChecklistEntryCreate {
   label: string;
   checked: boolean;
   comment?: string | null;
+  item_id?: number | null;
 }
 
 export interface MaintenanceVisit {
   id: number;
   branch_id: number;
-  technician_id: number;
+  technician_id: number | null;
   visit_date: string;
   entry_time: string | null;
   exit_time: string | null;
@@ -80,7 +84,7 @@ export interface MaintenanceVisit {
 
 export interface MaintenanceVisitCreate {
   branch_id: number;
-  technician_id: number;
+  technician_id?: number | null;
   visit_date: string;
   entry_time?: string | null;
   exit_time?: string | null;

@@ -36,23 +36,6 @@ const VISIT_REASONS = [
 
 const CHECKLIST_TEMPLATE: ChecklistGroup[] = [
   {
-    category: 'limpieza', title: 'Limpieza', entries: [
-      'Case', 'Monitor', 'Mouse', 'Teclado', 'DVR',
-      'Uso de sopladora', 'Limpieza de motherboard', 'Lubricación de partes móviles',
-      'Encender el equipo y verificar que inicie correctamente el sistema operativo',
-    ].map(label => ({ category: 'limpieza', label, checked: false })),
-  },
-  {
-    category: 'software', title: 'Software / Aplicaciones instaladas', entries: [
-      'Sistema de punto de venta', 'Servicio de impresión', '7-Zip',
-      'ESET Antivirus (actualizado)', 'Mozilla Firefox', 'Google Chrome',
-      'TightVNC / VNC', 'OpenOffice', 'Owncloud', 'Spark Chat',
-      'Zimbra Desktop (revisar cuota de correo)', 'Zoiper',
-      'Movimientos de inventario (acceso directo)', 'Pedidos emergentes',
-      'Artículos (acceso directo)', 'Actualiza maestros (acceso directo)',
-    ].map(label => ({ category: 'software', label, checked: false })),
-  },
-  {
     category: 'revision', title: 'Revisión', entries: [
       'DVR y cámaras', 'IP/DNS de servidor y de cada cliente',
       'Tareas programadas', 'Usuario administrador habilitado',
@@ -65,6 +48,51 @@ const CHECKLIST_TEMPLATE: ChecklistGroup[] = [
     ].map(label => ({ category: 'compartido', label, checked: false })),
   },
 ];
+
+const CPU_TYPES = ['CPU Servidor', 'CPU Cliente'];
+
+const SOFTWARE_CHECKLIST_ITEMS = [
+  'Sistema de punto de venta', 'Servicio de impresión', '7-Zip',
+  'ESET Antivirus (actualizado)', 'Mozilla Firefox', 'Google Chrome',
+  'TightVNC / VNC', 'OpenOffice',
+  'Zimbra Desktop (revisar cuota de correo)',
+  'Movimientos de inventario (acceso directo)', 'Pedidos emergentes',
+  'Artículos (acceso directo)', 'Actualiza maestros (acceso directo)',
+];
+
+const CPU_CLEANING_ITEMS = [
+  'Case', 'Uso de sopladora', 'Limpieza de motherboard',
+  'Lubricación de partes móviles', 'Encender el equipo y verificar que inicie correctamente el sistema operativo',
+];
+
+const PRINTER_CLEANING_ITEMS = [
+  'Limpieza externa', 'Limpieza y lubricación de partes móviles', 'Limpieza de rodillos', 'Prueba de impresión',
+];
+
+const CLEANING_CHECKLISTS: Record<string, string[]> = {
+  'CPU Servidor': CPU_CLEANING_ITEMS,
+  'CPU Cliente': CPU_CLEANING_ITEMS,
+  'Monitor': ['Limpieza de pantalla', 'Limpieza de carcasa', 'Verificar cables de video y de poder', 'Encender y verificar que muestre imagen correctamente'],
+  'Teclado': ['Limpieza de teclas', 'Uso de sopladora entre teclas', 'Verificar que todas las teclas respondan'],
+  'Mouse': ['Limpieza de carcasa y sensor', 'Verificar funcionamiento de botones y scroll'],
+  'UPS': ['Limpieza externa', 'Verificar batería / autonomía', 'Verificar conexiones y cableado'],
+  'DVR': ['Limpieza externa', 'Verificar grabación correcta', 'Verificar fecha y hora del sistema', 'Verificar espacio en disco duro'],
+  'Cámaras': ['Limpieza de lente', 'Verificar enfoque e imagen', 'Verificar conexión y cableado'],
+  'Escáner de código de barra': ['Limpieza de lente/cristal', 'Verificar lectura correcta de códigos'],
+  'Switch': ['Limpieza externa', 'Verificar luces y puertos activos', 'Verificar cableado de red'],
+  'Impresora Multifuncional': PRINTER_CLEANING_ITEMS,
+  'Impresora de Facturación': PRINTER_CLEANING_ITEMS,
+  'Impresora Xerox': PRINTER_CLEANING_ITEMS,
+};
+
+function buildChecklistForType(type: string): MaintenanceVisitChecklistEntryCreate[] {
+  const cleaning = (CLEANING_CHECKLISTS[type] || [])
+    .map(label => ({ category: 'limpieza', label, checked: false, comment: '' }));
+  const software = CPU_TYPES.includes(type)
+    ? SOFTWARE_CHECKLIST_ITEMS.map(label => ({ category: 'software', label, checked: false, comment: '' }))
+    : [];
+  return [...cleaning, ...software];
+}
 
 @Component({
   selector: 'app-visit-form',
@@ -96,7 +124,7 @@ export class VisitFormComponent implements OnInit {
 
   header = {
     branch_id: 0,
-    technician_id: 0,
+    technician_id: null as number | null,
     visit_date: new Date().toISOString().slice(0, 10),
     entry_time: '',
     exit_time: '',
@@ -121,6 +149,7 @@ export class VisitFormComponent implements OnInit {
 
   selectedReasons: Record<string, boolean> = {};
   selectedAssetIds: Record<number, boolean> = {};
+  assetObservations: Record<number, string> = {};
   items: DraftItem[] = [];
   checklistGroups: ChecklistGroup[] = CHECKLIST_TEMPLATE.map(g => ({
     ...g,
@@ -180,6 +209,14 @@ export class VisitFormComponent implements OnInit {
     }
   }
 
+  isCpuType(type: string): boolean {
+    return CPU_TYPES.includes(type);
+  }
+
+  entriesByCategory(item: DraftItem, category: string): MaintenanceVisitChecklistEntryCreate[] {
+    return (item.checklist_entries || []).filter(e => e.category === category);
+  }
+
   toggleAsset(asset: Asset): void {
     const checked = !this.selectedAssetIds[asset.id];
     this.selectedAssetIds[asset.id] = checked;
@@ -194,6 +231,7 @@ export class VisitFormComponent implements OnInit {
         working: true,
         cleaning_done: true,
         notes: '',
+        checklist_entries: buildChecklistForType(asset.type),
         _files: [],
         _previews: [],
       });
@@ -207,6 +245,24 @@ export class VisitFormComponent implements OnInit {
     return this.items.find(i => i.asset_id === assetId);
   }
 
+  private buildFlaggedItems(): DraftItem[] {
+    return this.branchAssets
+      .filter(a => !this.selectedAssetIds[a.id] && (this.assetObservations[a.id] || '').trim())
+      .map(a => ({
+        asset_id: a.id,
+        equipment_type: a.type,
+        identification_location: a.location || a.name,
+        serial: a.serial_number,
+        installed: null,
+        working: null,
+        cleaning_done: null,
+        notes: this.assetObservations[a.id].trim(),
+        checklist_entries: [],
+        _files: [],
+        _previews: [],
+      }));
+  }
+
   addManualItem(): void {
     this.items.push({
       asset_id: null,
@@ -217,9 +273,14 @@ export class VisitFormComponent implements OnInit {
       working: true,
       cleaning_done: true,
       notes: '',
+      checklist_entries: buildChecklistForType(this.equipmentTypes[0]),
       _files: [],
       _previews: [],
     });
+  }
+
+  onManualTypeChange(item: DraftItem): void {
+    item.checklist_entries = buildChecklistForType(item.equipment_type);
   }
 
   trackByIndex(index: number): number {
@@ -248,9 +309,9 @@ export class VisitFormComponent implements OnInit {
     item._previews.splice(index, 1);
   }
 
-  private uploadPendingPhotos(savedItems: { id: number }[], onDone: () => void): void {
+  private uploadPendingPhotos(savedItems: { id: number }[], sourceItems: DraftItem[], onDone: () => void): void {
     const uploads = savedItems
-      .map((savedItem, i) => ({ savedItem, files: this.items[i]?._files || [] }))
+      .map((savedItem, i) => ({ savedItem, files: sourceItems[i]?._files || [] }))
       .filter(u => u.files.length > 0);
 
     if (uploads.length === 0) {
@@ -276,6 +337,8 @@ export class VisitFormComponent implements OnInit {
     this.loading = true;
     this.errorMessage = '';
 
+    const allItems = [...this.items, ...this.buildFlaggedItems()];
+
     const reasons = Object.keys(this.selectedReasons).filter(r => this.selectedReasons[r]);
     const checklist_entries: MaintenanceVisitChecklistEntryCreate[] =
       this.checklistGroups.flatMap(g => g.entries);
@@ -295,12 +358,12 @@ export class VisitFormComponent implements OnInit {
         next: () => {
           let itemsSaved = 0;
           const savedItems: { id: number }[] = [];
-          const totalItems = this.items.length;
+          const totalItems = allItems.length;
 
           const afterAllSaved = () => {
             this.visitService.getVisit(id).subscribe({
               next: (full) => {
-                this.uploadPendingPhotos(full.items, () => {
+                this.uploadPendingPhotos(full.items, allItems, () => {
                   this.loading = false;
                   this.router.navigate(['/maintenance-visits', id]);
                 });
@@ -317,7 +380,7 @@ export class VisitFormComponent implements OnInit {
             return;
           }
 
-          this.items.forEach(({ _files, _previews, ...rest }) => {
+          allItems.forEach(({ _files, _previews, ...rest }) => {
             this.visitService.addVisitItem(id, rest).subscribe({
               next: (saved) => {
                 savedItems.push(saved);
@@ -343,13 +406,13 @@ export class VisitFormComponent implements OnInit {
 
     const payload = {
       ...headerPayload,
-      items: this.items.map(({ _files, _previews, ...rest }) => rest),
+      items: allItems.map(({ _files, _previews, ...rest }) => rest),
       checklist_entries,
     };
 
     this.visitService.createVisit(payload).subscribe({
       next: (created) => {
-        this.uploadPendingPhotos(created.items, () => {
+        this.uploadPendingPhotos(created.items, allItems, () => {
           this.loading = false;
           this.router.navigate(['/maintenance-visits', created.id]);
         });

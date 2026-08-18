@@ -4,10 +4,10 @@
     <p>Gestión de solicitudes de mantenimiento correctivo</p>
   </div>
 
-  <div class="corrective-grid">
+  <div class="corrective-grid" [class.no-form]="!canCreate && !isEditing">
 
     <!-- CARD 1: Formulario -->
-    <div class="card form-card">
+    <div class="card form-card" *ngIf="canCreate || isEditing">
       <h2>{{ isEditing ? 'Editar solicitud' : 'Nueva solicitud' }}</h2>
 
       <form (ngSubmit)="submitForm()">
@@ -56,8 +56,8 @@
         </div>
 
         <div class="form-group" *ngIf="isEditing">
-          <label>Solución</label>
-          <textarea [(ngModel)]="form.solution" name="solution" rows="3" placeholder="¿Qué se hizo para resolverla?"></textarea>
+          <label>Solución{{ form.status === 'cerrada' ? ' (requerida para cerrar)' : '' }}</label>
+          <textarea [(ngModel)]="form.solution" name="solution" rows="3" placeholder="¿Qué se hizo para resolverla?" [required]="form.status === 'cerrada'"></textarea>
         </div>
 
         <div class="form-actions">
@@ -107,13 +107,19 @@
                 {{ request.status | label }}
               </span>
             </td>
-            <td class="actions">
-              <button (click)="editRequest(request)">Editar</button>
-              <button class="secondary" (click)="changeStatus(request, 'cerrada')"
-                *ngIf="request.status !== 'cerrada'">
-                Cerrar
-              </button>
+            <td class="actions" *ngIf="isTecnico; else adminActions">
+              <button *ngIf="request.status === 'abierta'" (click)="startReview(request)">En revisión</button>
+              <button class="secondary" *ngIf="request.status === 'en_proceso'" (click)="startClosing(request)">Cerrar</button>
             </td>
+            <ng-template #adminActions>
+              <td class="actions">
+                <button (click)="editRequest(request)">Editar</button>
+                <button class="secondary" (click)="startClosing(request)"
+                  *ngIf="request.status !== 'cerrada'">
+                  Cerrar
+                </button>
+              </td>
+            </ng-template>
           </tr>
         </tbody>
       </table>

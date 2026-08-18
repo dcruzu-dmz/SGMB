@@ -9,7 +9,7 @@ class MaintenanceVisit(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     branch_id = Column(Integer, ForeignKey("branches.id"), nullable=False)
-    technician_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    technician_id = Column(Integer, ForeignKey("users.id"), nullable=True)
 
     visit_date = Column(Date, nullable=False)
     entry_time = Column(Time, nullable=True)
@@ -68,6 +68,7 @@ class MaintenanceVisitItem(Base):
     visit = relationship("MaintenanceVisit", back_populates="items")
     asset = relationship("Asset", foreign_keys=[asset_id])
     photos = relationship("MaintenanceVisitPhoto", back_populates="item", cascade="all, delete-orphan")
+    checklist_entries = relationship("MaintenanceVisitChecklistEntry", back_populates="item", cascade="all, delete-orphan")
 
 
 class MaintenanceVisitChecklistEntry(Base):
@@ -75,13 +76,15 @@ class MaintenanceVisitChecklistEntry(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     visit_id = Column(Integer, ForeignKey("maintenance_visits.id"), nullable=False)
+    item_id = Column(Integer, ForeignKey("maintenance_visit_items.id"), nullable=True)
 
-    category = Column(String(30), nullable=False)  # limpieza | software | revision | compartido
+    category = Column(String(30), nullable=False)  # software (por equipo) | revision | compartido
     label = Column(String(200), nullable=False)
     checked = Column(Boolean, default=False)
     comment = Column(String(200), nullable=True)
 
     visit = relationship("MaintenanceVisit", back_populates="checklist_entries")
+    item = relationship("MaintenanceVisitItem", back_populates="checklist_entries")
 
 
 class MaintenanceVisitPhoto(Base):

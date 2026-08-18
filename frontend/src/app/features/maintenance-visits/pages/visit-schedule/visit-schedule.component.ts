@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BranchesService, Branch } from '../../../../core/services/branches.service';
 import { UsersService, User } from '../../../../core/services/users.service';
 import { MaintenanceVisitService } from '../../../../core/services/maintenance-visit.service';
@@ -18,6 +18,7 @@ export class VisitScheduleComponent implements OnInit {
   private usersService = inject(UsersService);
   private visitService = inject(MaintenanceVisitService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   branches: Branch[] = [];
   technicians: User[] = [];
@@ -36,6 +37,11 @@ export class VisitScheduleComponent implements OnInit {
     this.usersService.getUsers().subscribe({
       next: res => this.technicians = res.filter(u => u.role === 'tecnico' || u.role === 'admin'),
     });
+
+    const dateParam = this.route.snapshot.queryParamMap.get('date');
+    if (dateParam) {
+      this.form.visit_date = dateParam;
+    }
   }
 
   submit(): void {
