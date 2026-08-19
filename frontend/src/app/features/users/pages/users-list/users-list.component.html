@@ -1,12 +1,59 @@
 <div class="users-container">
   <div class="users-header">
-    <h1>Usuarios</h1>
-    <p>Gestión de usuarios del sistema</p>
+    <div>
+      <h1>Usuarios</h1>
+      <p>Gestión de usuarios del sistema</p>
+    </div>
+    <button type="button" class="cta-btn" (click)="openCreateModal()">+ Nuevo usuario</button>
   </div>
 
-  <div class="users-grid">
-    <div class="card form-card">
-      <h2>{{ isEditing ? 'Editar usuario' : 'Nuevo usuario' }}</h2>
+  <div class="card table-card">
+    <h2>Listado de usuarios</h2>
+
+    <p *ngIf="loading">Cargando usuarios...</p>
+
+    <div class="table-scroll" *ngIf="!loading">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th>Rol</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.role }}</td>
+          <td>
+            <span class="badge" [class.badge-activo]="user.is_active" [class.badge-cerrada]="!user.is_active">
+              {{ user.is_active ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td class="actions">
+            <button (click)="openEditModal(user)">Editar</button>
+            <button class="secondary" (click)="toggleStatus(user)">
+              {{ user.is_active ? 'Desactivar' : 'Activar' }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="showFormModal" (click)="closeFormModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ isEditing ? 'Editar usuario' : 'Nuevo usuario' }}</h2>
+        <button type="button" class="modal-close" (click)="closeFormModal()" aria-label="Cerrar">&times;</button>
+      </div>
 
       <form (ngSubmit)="submitForm()">
         <div class="form-group">
@@ -45,54 +92,13 @@
             {{ isEditing ? 'Actualizar' : 'Crear usuario' }}
           </button>
 
-          <button type="button" class="secondary" (click)="resetForm()" *ngIf="isEditing">
+          <button type="button" class="secondary" (click)="closeFormModal()">
             Cancelar
           </button>
         </div>
       </form>
 
       <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
-    </div>
-
-    <div class="card table-card">
-      <h2>Listado de usuarios</h2>
-
-      <p *ngIf="loading">Cargando usuarios...</p>
-
-      <div class="table-scroll" *ngIf="!loading">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Correo</th>
-            <th>Rol</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr *ngFor="let user of users">
-            <td>{{ user.id }}</td>
-            <td>{{ user.name }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.role }}</td>
-            <td>
-              <span class="badge" [class.badge-activo]="user.is_active" [class.badge-cerrada]="!user.is_active">
-                {{ user.is_active ? 'Activo' : 'Inactivo' }}
-              </span>
-            </td>
-            <td class="actions">
-              <button (click)="editUser(user)">Editar</button>
-              <button class="secondary" (click)="toggleStatus(user)">
-                {{ user.is_active ? 'Desactivar' : 'Activar' }}
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      </div>
     </div>
   </div>
 </div>

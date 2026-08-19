@@ -33,6 +33,7 @@ export class AssetsListComponent implements OnInit {
 
   isEditing = false;
   selectedAssetId: number | null = null;
+  showFormModal = false;
 
   form = {
     name: '',
@@ -102,8 +103,24 @@ export class AssetsListComponent implements OnInit {
     };
     this.isEditing = false;
     this.selectedAssetId = null;
+    this.errorMessage = '';
   }
-  
+
+  openCreateModal(): void {
+    this.resetForm();
+    this.showFormModal = true;
+  }
+
+  openEditModal(asset: Asset): void {
+    this.editAsset(asset);
+    this.showFormModal = true;
+  }
+
+  closeFormModal(): void {
+    this.showFormModal = false;
+    this.resetForm();
+  }
+
   submitForm(): void {
     if (this.isEditing && this.selectedAssetId !== null) {
       const updateData: AssetUpdate = {
@@ -124,7 +141,7 @@ export class AssetsListComponent implements OnInit {
       this.assetsService.updateAsset(this.selectedAssetId, updateData).subscribe({
         next: () => {
           this.loadAssets();
-          this.resetForm();
+          this.closeFormModal();
         },
         error: () => {
           this.errorMessage = 'No se pudo actualizar el equipo';
@@ -153,7 +170,7 @@ export class AssetsListComponent implements OnInit {
     this.assetsService.createAsset(createData).subscribe({
       next: () => {
         this.loadAssets();
-        this.resetForm();
+        this.closeFormModal();
       },
       error: () => {
         this.errorMessage = 'No se pudo crear el equipo';

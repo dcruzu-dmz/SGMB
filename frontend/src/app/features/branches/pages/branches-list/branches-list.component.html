@@ -1,11 +1,58 @@
 <div class="branches-container">
     <div class="branches-header">
-        <h1>Sucursales</h1>
-        <p>Gestión de sucursales del sistema</p>
+        <div>
+          <h1>Sucursales</h1>
+          <p>Gestión de sucursales del sistema</p>
+        </div>
+        <button type="button" class="cta-btn" (click)="openCreateModal()">+ Nueva sucursal</button>
     </div>
-    <div class="branches-grid">
-        <div class="card form-card">
-            <h2>{{ isEditing ? 'Editar sucursal' : 'Nueva sucursal' }}</h2>
+
+    <div class="card list-card">
+        <h2>Lista de sucursales</h2>
+        <p *ngIf="loading">Cargando sucursales...</p>
+        <div class="table-scroll" *ngIf="!loading">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>Frecuencia</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let branch of visibleBranches">
+                    <td>{{ branch.name }}</td>
+                    <td>{{ branch.address }}</td>
+                    <td>{{ branch.phone }}</td>
+                    <td>{{ branch.maintenance_frequency_days ? 'Cada ' + branch.maintenance_frequency_days + ' días' : 'Sin definir' }}</td>
+                    <td>
+                        <span class="badge" [class.badge-activo]="branch.is_active" [class.badge-cerrada]="!branch.is_active">
+                            {{ branch.is_active ? 'Activo' : 'Inactivo' }}
+                        </span>
+                    </td>
+                    <td class="actions">
+                        <button (click)="openEditModal(branch)">Editar</button>
+                        <button class="secondary" (click)="showAssets(branch)">Ver equipos</button>
+                        <button class="secondary" (click)="toggleStatus(branch)">{{ branch.is_active ? 'Desactivar' : 'Activar' }}</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+        <p class="empty" *ngIf="!loading && visibleBranches.length === 0">
+          {{ searchTerm ? 'Sin resultados para "' + searchTerm + '"' : 'No hay sucursales registradas' }}
+        </p>
+    </div>
+
+    <div class="modal-backdrop" *ngIf="showFormModal" (click)="closeFormModal()">
+        <div class="modal-card" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>{{ isEditing ? 'Editar sucursal' : 'Nueva sucursal' }}</h2>
+                <button type="button" class="modal-close" (click)="closeFormModal()" aria-label="Cerrar">&times;</button>
+            </div>
 
             <form (ngSubmit)="submitForm()">
                 <div class="form-group">
@@ -35,53 +82,12 @@
                     <button type="submit">
                         {{ isEditing ? 'Actualizar' : 'Crear sucursal' }}
                     </button>
-                    <button type="button" class="secondary" (click)="resetForm()" *ngIf="isEditing">
+                    <button type="button" class="secondary" (click)="closeFormModal()">
                         Cancelar
                     </button>
                 </div>
             </form>
             <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
-        
-        </div>
-
-        <div class="card list-card">
-            <h2>Lista de sucursales</h2>
-            <p *ngIf="loading">Cargando sucursales...</p>
-            <div class="table-scroll" *ngIf="!loading">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Dirección</th>
-                        <th>Teléfono</th>
-                        <th>Frecuencia</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let branch of visibleBranches">
-                        <td>{{ branch.name }}</td>
-                        <td>{{ branch.address }}</td>
-                        <td>{{ branch.phone }}</td>
-                        <td>{{ branch.maintenance_frequency_days ? 'Cada ' + branch.maintenance_frequency_days + ' días' : 'Sin definir' }}</td>
-                        <td>
-                            <span class="badge" [class.badge-activo]="branch.is_active" [class.badge-cerrada]="!branch.is_active">
-                                {{ branch.is_active ? 'Activo' : 'Inactivo' }}
-                            </span>
-                        </td>
-                        <td class="actions">
-                            <button (click)="editBranch(branch)">Editar</button>
-                            <button class="secondary" (click)="showAssets(branch)">Ver equipos</button>
-                            <button class="secondary" (click)="toggleStatus(branch)">{{ branch.is_active ? 'Desactivar' : 'Activar' }}</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            </div>
-            <p class="empty" *ngIf="!loading && visibleBranches.length === 0">
-              {{ searchTerm ? 'Sin resultados para "' + searchTerm + '"' : 'No hay sucursales registradas' }}
-            </p>
         </div>
     </div>
 

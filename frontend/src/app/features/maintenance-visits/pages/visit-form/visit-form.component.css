@@ -219,6 +219,18 @@ input[type="file"] {
   padding: 0;
 }
 
+.signed-report-view {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.signed-report-view a {
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
 .photo-preview-row {
   display: flex;
   flex-wrap: wrap;

@@ -1,0 +1,84 @@
+<div class="print-page">
+  <div class="no-print toolbar">
+    <a routerLink="/maintenance-visits/{{ visit?.id }}">&larr; Volver a la visita</a>
+    <button type="button" (click)="print()">Imprimir informe</button>
+  </div>
+
+  <p *ngIf="loading">Cargando informe...</p>
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <div class="report" *ngIf="visit && !loading">
+    <div class="report-header">
+      <img src="/logo-bofasa-icon.png" alt="BOFASA" class="report-logo">
+      <div>
+        <h1>Informe de Visita de Mantenimiento</h1>
+        <p>Sistema de Gestión de Mantenimiento (SGMB)</p>
+      </div>
+    </div>
+
+    <section class="report-section">
+      <h2>Datos generales</h2>
+      <div class="info-grid">
+        <div><span>Sucursal</span><strong>{{ branchName }}</strong></div>
+        <div><span>Técnico</span><strong>{{ technicianName }}</strong></div>
+        <div><span>Fecha de visita</span><strong>{{ visit.visit_date }}</strong></div>
+        <div><span>Hora de entrada</span><strong>{{ visit.entry_time || '—' }}</strong></div>
+        <div><span>Hora de salida</span><strong>{{ visit.exit_time || '—' }}</strong></div>
+        <div><span>Motivo</span><strong>{{ reasons.length > 0 ? reasons.join(', ') : '—' }}</strong></div>
+        <div><span>Encargado de sucursal</span><strong>{{ visit.branch_contact_name || '—' }}</strong></div>
+        <div><span>Código de empleado</span><strong>{{ visit.branch_contact_employee_code || '—' }}</strong></div>
+      </div>
+    </section>
+
+    <section class="report-section">
+      <h2>Equipos atendidos ({{ visit.items.length }})</h2>
+      <table *ngIf="visit.items.length > 0">
+        <thead>
+          <tr>
+            <th>Equipo</th>
+            <th>Ubicación</th>
+            <th>Instalado</th>
+            <th>Funciona</th>
+            <th>Limpieza</th>
+            <th>Observaciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of visit.items">
+            <td>{{ item.equipment_type }}</td>
+            <td>{{ item.identification_location || '—' }}</td>
+            <td>{{ statusLabel(item, item.installed) }}</td>
+            <td>{{ statusLabel(item, item.working) }}</td>
+            <td>{{ statusLabel(item, item.cleaning_done) }}</td>
+            <td>{{ itemSummary(item) }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="empty" *ngIf="visit.items.length === 0">No se registraron equipos atendidos.</p>
+    </section>
+
+    <section class="report-section" *ngIf="visit.general_observations || visit.supervisor_observations">
+      <h2>Observaciones</h2>
+      <p *ngIf="visit.general_observations"><strong>Generales:</strong> {{ visit.general_observations }}</p>
+      <p *ngIf="visit.supervisor_observations"><strong>Del encargado:</strong> {{ visit.supervisor_observations }}</p>
+    </section>
+
+    <section class="report-section signatures">
+      <h2>Firmas de conformidad</h2>
+      <div class="signature-grid">
+        <div class="signature-block">
+          <div class="signature-line"></div>
+          <strong>{{ technicianName }}</strong>
+          <span>Técnico responsable</span>
+          <span>Fecha: {{ today() }}</span>
+        </div>
+        <div class="signature-block">
+          <div class="signature-line"></div>
+          <strong>{{ visit.branch_contact_name || 'Encargado de sucursal' }}</strong>
+          <span>Encargado de sucursal (visto bueno)</span>
+          <span>Fecha: {{ today() }}</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

@@ -14,6 +14,7 @@ class CorrectiveRequest(Base):
     priority = Column(String(50), nullable=False)
     status = Column(String(50), default="abierta")
     solution = Column(Text, nullable=True)
+    signed_report_path = Column(String(300), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     closed_at = Column(DateTime(timezone=True), nullable=True)
 

@@ -11,6 +11,7 @@ export interface CorrectiveRequest {
   priority: string,
   status: string,
   solution: string | null,
+  signed_report_path: string | null,
   created_at: string,
   closed_at: string | null,
 }
@@ -55,6 +56,16 @@ export class CorrectiveRequestService {
   }
   changeStatus(id: number, status: string): Observable<CorrectiveRequest>{
     return this.http.patch<CorrectiveRequest>(`${this.apiUrl}/${id}/?status=${status}`,{});
+  }
+
+  uploadSignedReport(id: number, file: File): Observable<CorrectiveRequest> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<CorrectiveRequest>(`${this.apiUrl}/${id}/signed-report`, formData);
+  }
+
+  deleteSignedReport(id: number): Observable<CorrectiveRequest> {
+    return this.http.delete<CorrectiveRequest>(`${this.apiUrl}/${id}/signed-report`);
   }
 
 }

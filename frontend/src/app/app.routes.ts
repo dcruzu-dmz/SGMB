@@ -13,6 +13,8 @@ import { VisitFormComponent } from './features/maintenance-visits/pages/visit-fo
 import { VisitDetailComponent } from './features/maintenance-visits/pages/visit-detail/visit-detail.component';
 import { VisitScheduleComponent } from './features/maintenance-visits/pages/visit-schedule/visit-schedule.component';
 import { BulkBranchAssetsComponent } from './features/assets/pages/bulk-branch-assets/bulk-branch-assets.component';
+import { VisitPrintComponent } from './features/maintenance-visits/pages/visit-print/visit-print.component';
+import { CorrectiveRequestPrintComponent } from './features/corrective-requests/pages/corrective-request-print/corrective-request-print.component';
 
 
 export const routes: Routes = [
@@ -38,5 +40,15 @@ export const routes: Routes = [
       { path: 'maintenance-visits/:id/edit', component: VisitFormComponent },
       { path: 'maintenance-visits/:id', component: VisitDetailComponent },
     ]
+  },
+  {
+    path: 'maintenance-visits/:id/print',
+    component: VisitPrintComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'requests/:id/print',
+    component: CorrectiveRequestPrintComponent,
+    canActivate: [authGuard],
   }
 ];

@@ -151,6 +151,62 @@ tbody td {
   text-transform: capitalize;
 }
 
+.reasons-cell {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+}
+
+.filters-row .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 160px;
+}
+
+.filters-row label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6b7280;
+}
+
+.filters-row select,
+.filters-row input {
+  padding: 0.55rem 0.7rem;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: #1a1b22;
+  background: #f9fafb;
+}
+
+.clear-filters-btn {
+  padding: 0.55rem 0.9rem;
+  background: #f3f4f6;
+  color: #374151;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  height: fit-content;
+}
+
+.clear-filters-btn:hover {
+  background: #e5e7eb;
+}
+
 .error {
   color: #dc2626;
   font-size: 0.85rem;

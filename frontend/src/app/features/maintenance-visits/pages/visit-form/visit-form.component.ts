@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { BranchesService, Branch } from '../../../../core/services/branches.service';
 import { UsersService, User } from '../../../../core/services/users.service';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -97,7 +97,7 @@ function buildChecklistForType(type: string): MaintenanceVisitChecklistEntryCrea
 @Component({
   selector: 'app-visit-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './visit-form.component.html',
   styleUrl: './visit-form.component.css',
 })
@@ -121,6 +121,9 @@ export class VisitFormComponent implements OnInit {
 
   loading = false;
   errorMessage = '';
+  signedReportPath: string | null = null;
+  uploadingReport = false;
+  reportErrorMessage = '';
 
   header = {
     branch_id: 0,
@@ -193,6 +196,7 @@ export class VisitFormComponent implements OnInit {
           this.header.camera_review_time = visit.camera_review_time || '';
           this.header.general_observations = visit.general_observations || '';
           this.header.supervisor_observations = visit.supervisor_observations || '';
+          this.signedReportPath = visit.signed_report_path;
 
           if (visit.visit_reasons) {
             try {
@@ -328,14 +332,59 @@ export class VisitFormComponent implements OnInit {
     });
   }
 
+  onSignedReportSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file || !this.visitId) return;
+
+    this.uploadingReport = true;
+    this.reportErrorMessage = '';
+    this.visitService.uploadSignedReport(this.visitId, file).subscribe({
+      next: (updated) => {
+        this.signedReportPath = updated.signed_report_path;
+        this.uploadingReport = false;
+        input.value = '';
+      },
+      error: () => {
+        this.reportErrorMessage = 'No se pudo subir la hoja firmada';
+        this.uploadingReport = false;
+        input.value = '';
+      },
+    });
+  }
+
+  removeSignedReport(): void {
+    if (!this.visitId) return;
+    this.visitService.deleteSignedReport(this.visitId).subscribe({
+      next: (updated) => this.signedReportPath = updated.signed_report_path,
+      error: () => this.reportErrorMessage = 'No se pudo eliminar la hoja firmada',
+    });
+  }
+
+  photoUrl(path: string): string {
+    return this.visitService.photoUrl(path);
+  }
+
   submitVisit(status: 'borrador' | 'completado'): void {
     if (!this.header.branch_id || !this.header.technician_id) {
       this.errorMessage = 'Selecciona sucursal y técnico';
       return;
     }
 
+    if (status === 'completado' && !this.signedReportPath) {
+      this.errorMessage = 'Debes subir la hoja firmada por el encargado antes de finalizar la visita';
+      return;
+    }
+
     this.loading = true;
     this.errorMessage = '';
+
+    const navigateAfterSave = (id: number) => {
+      const path = status === 'completado'
+        ? ['/maintenance-visits', id, 'print']
+        : ['/maintenance-visits', id];
+      this.router.navigate(path);
+    };
 
     const allItems = [...this.items, ...this.buildFlaggedItems()];
 
@@ -365,12 +414,12 @@ export class VisitFormComponent implements OnInit {
               next: (full) => {
                 this.uploadPendingPhotos(full.items, allItems, () => {
                   this.loading = false;
-                  this.router.navigate(['/maintenance-visits', id]);
+                  navigateAfterSave(id);
                 });
               },
               error: () => {
                 this.loading = false;
-                this.router.navigate(['/maintenance-visits', id]);
+                navigateAfterSave(id);
               },
             });
           };
@@ -414,7 +463,7 @@ export class VisitFormComponent implements OnInit {
       next: (created) => {
         this.uploadPendingPhotos(created.items, allItems, () => {
           this.loading = false;
-          this.router.navigate(['/maintenance-visits', created.id]);
+          navigateAfterSave(created.id);
         });
       },
       error: () => {

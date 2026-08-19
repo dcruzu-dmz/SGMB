@@ -40,6 +40,8 @@ class MaintenanceVisit(Base):
     general_observations = Column(Text, nullable=True)
     supervisor_observations = Column(Text, nullable=True)
 
+    signed_report_path = Column(String(300), nullable=True)
+
     status = Column(String(20), default="borrador")  # borrador | completado
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 

@@ -76,6 +76,7 @@ export interface MaintenanceVisit {
   delivered_model: string | null;
   general_observations: string | null;
   supervisor_observations: string | null;
+  signed_report_path: string | null;
   status: string;
   created_at: string;
   items: MaintenanceVisitItem[];
@@ -154,6 +155,16 @@ export class MaintenanceVisitService {
 
   deletePhoto(photoId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/photos/${photoId}`);
+  }
+
+  uploadSignedReport(visitId: number, file: File): Observable<MaintenanceVisit> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<MaintenanceVisit>(`${this.apiUrl}/${visitId}/signed-report`, formData);
+  }
+
+  deleteSignedReport(visitId: number): Observable<MaintenanceVisit> {
+    return this.http.delete<MaintenanceVisit>(`${this.apiUrl}/${visitId}/signed-report`);
   }
 
   photoUrl(path: string): string {

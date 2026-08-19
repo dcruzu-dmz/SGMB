@@ -26,6 +26,7 @@ class CorrectiveRequestUpdate(BaseModel):
 
 class CorrectiveRequestResponse(CorrectiveRequestBase):
     id: int
+    signed_report_path: Optional[str] = None
     created_at: datetime
     closed_at: Optional[datetime] = None
 

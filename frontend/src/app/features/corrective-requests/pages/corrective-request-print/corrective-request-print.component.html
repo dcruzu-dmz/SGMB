@@ -1,0 +1,61 @@
+<div class="print-page">
+  <div class="no-print toolbar">
+    <a routerLink="/requests">&larr; Volver a solicitudes</a>
+    <button type="button" (click)="print()">Imprimir informe</button>
+  </div>
+
+  <p *ngIf="loading">Cargando informe...</p>
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <div class="report" *ngIf="request && !loading">
+    <div class="report-header">
+      <img src="/logo-bofasa-icon.png" alt="BOFASA" class="report-logo">
+      <div>
+        <h1>Informe de Solicitud Correctiva</h1>
+        <p>Sistema de Gestión de Mantenimiento (SGMB)</p>
+      </div>
+    </div>
+
+    <section class="report-section">
+      <h2>Datos generales</h2>
+      <div class="info-grid">
+        <div><span>Sucursal</span><strong>{{ branchName }}</strong></div>
+        <div><span>Equipo</span><strong>{{ asset?.name || '—' }}</strong></div>
+        <div><span>Fecha de solicitud</span><strong>{{ request.created_at | slice:0:10 }}</strong></div>
+        <div><span>Prioridad</span><strong>{{ request.priority }}</strong></div>
+        <div><span>Estado</span><strong>{{ request.status }}</strong></div>
+        <div><span>Solicitante</span><strong>{{ requesterName }}</strong></div>
+        <div><span>Técnico asignado</span><strong>{{ technicianName }}</strong></div>
+        <div><span>Fecha de cierre</span><strong>{{ request.closed_at ? (request.closed_at | slice:0:10) : '—' }}</strong></div>
+      </div>
+    </section>
+
+    <section class="report-section">
+      <h2>Descripción del problema</h2>
+      <p>{{ request.description }}</p>
+    </section>
+
+    <section class="report-section" *ngIf="request.solution">
+      <h2>Solución aplicada</h2>
+      <p>{{ request.solution }}</p>
+    </section>
+
+    <section class="report-section signatures">
+      <h2>Firmas de conformidad</h2>
+      <div class="signature-grid">
+        <div class="signature-block">
+          <div class="signature-line"></div>
+          <strong>{{ technicianName }}</strong>
+          <span>Técnico responsable</span>
+          <span>Fecha: {{ today() }}</span>
+        </div>
+        <div class="signature-block">
+          <div class="signature-line"></div>
+          <strong>Encargado de sucursal</strong>
+          <span>Visto bueno</span>
+          <span>Fecha: {{ today() }}</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

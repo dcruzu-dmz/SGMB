@@ -21,6 +21,9 @@
         <a class="complete-btn" *ngIf="visit.status === 'programada'" [routerLink]="['/maintenance-visits', visit.id, 'edit']">
           Completar visita
         </a>
+        <a class="print-btn" [routerLink]="['/maintenance-visits', visit.id, 'print']" target="_blank">
+          Imprimir informe
+        </a>
       </div>
     </div>
 
@@ -138,6 +141,23 @@
         <span class="obs-label">Observación del encargado</span>
         <p>{{ visit.supervisor_observations }}</p>
       </div>
+    </section>
+
+    <section class="card">
+      <h2>Hoja firmada</h2>
+      <p class="hint">Imprime el informe, hazlo firmar por el encargado de sucursal, escanéalo y súbelo aquí.</p>
+
+      <div class="signed-report-view" *ngIf="visit.signed_report_path">
+        <a [href]="photoUrl(visit.signed_report_path)" target="_blank">Ver hoja firmada</a>
+        <button type="button" class="link-danger" (click)="removeSignedReport()">Quitar</button>
+      </div>
+
+      <div class="form-group" *ngIf="!visit.signed_report_path">
+        <input type="file" accept="image/*,.pdf" (change)="onSignedReportSelected($event)" [disabled]="uploadingReport">
+        <p class="hint" *ngIf="uploadingReport">Subiendo...</p>
+      </div>
+
+      <p class="error" *ngIf="reportErrorMessage">{{ reportErrorMessage }}</p>
     </section>
 
   </ng-container>

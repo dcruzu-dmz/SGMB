@@ -1,4 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException
+import os
+import uuid
+
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import func
 
@@ -9,6 +12,9 @@ from app.utils.dependencies import get_current_user, require_roles
 from app.models.user import User
 
 router = APIRouter(prefix="/correctiverequest", tags=["CorrectiveRequest"])
+
+REPORTS_UPLOAD_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "uploads", "request-reports")
+os.makedirs(REPORTS_UPLOAD_DIR, exist_ok=True)
 
 
 def _check_request_access(request: CorrectiveRequest, current_user: User) -> None:
@@ -85,6 +91,60 @@ def update_corrective_request(
     db.commit()
     db.refresh(corrective_request)
     return corrective_request
+
+# Subir la hoja de firma escaneada
+@router.post("/{corrective_request_id}/signed-report", response_model=CorrectiveRequestResponse)
+def upload_signed_report(
+    corrective_request_id: int,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    corrective_request = db.query(CorrectiveRequest).filter(CorrectiveRequest.id == corrective_request_id).first()
+    if not corrective_request:
+        raise HTTPException(status_code=404, detail="Solicitud no encontrada")
+    _check_request_access(corrective_request, current_user)
+
+    if corrective_request.signed_report_path:
+        old_path = os.path.join(REPORTS_UPLOAD_DIR, os.path.basename(corrective_request.signed_report_path))
+        if os.path.exists(old_path):
+            os.remove(old_path)
+
+    extension = os.path.splitext(file.filename or "")[1] or ".pdf"
+    filename = f"{uuid.uuid4().hex}{extension}"
+    destination = os.path.join(REPORTS_UPLOAD_DIR, filename)
+
+    with open(destination, "wb") as out:
+        out.write(file.file.read())
+
+    corrective_request.signed_report_path = f"/uploads/request-reports/{filename}"
+    db.commit()
+    db.refresh(corrective_request)
+    return corrective_request
+
+
+# Eliminar la hoja de firma escaneada
+@router.delete("/{corrective_request_id}/signed-report", response_model=CorrectiveRequestResponse)
+def delete_signed_report(
+    corrective_request_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    corrective_request = db.query(CorrectiveRequest).filter(CorrectiveRequest.id == corrective_request_id).first()
+    if not corrective_request:
+        raise HTTPException(status_code=404, detail="Solicitud no encontrada")
+    _check_request_access(corrective_request, current_user)
+
+    if corrective_request.signed_report_path:
+        file_path = os.path.join(REPORTS_UPLOAD_DIR, os.path.basename(corrective_request.signed_report_path))
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        corrective_request.signed_report_path = None
+        db.commit()
+        db.refresh(corrective_request)
+
+    return corrective_request
+
 
 # Cambiar estado de la solicitud
 @router.patch("/{corrective_request_id}", response_model=CorrectiveRequestResponse)

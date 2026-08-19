@@ -6,31 +6,23 @@ import { BranchesService, Branch } from '../../../../core/services/branches.serv
 import { UsersService, User } from '../../../../core/services/users.service';
 
 @Component({
-  selector: 'app-visit-detail',
+  selector: 'app-visit-print',
   standalone: true,
   imports: [CommonModule, RouterLink],
-  templateUrl: './visit-detail.component.html',
-  styleUrl: './visit-detail.component.css',
+  templateUrl: './visit-print.component.html',
+  styleUrl: './visit-print.component.css',
 })
-export class VisitDetailComponent implements OnInit {
+export class VisitPrintComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private visitService = inject(MaintenanceVisitService);
   private branchesService = inject(BranchesService);
   private usersService = inject(UsersService);
-
-  categoryTitles: Record<string, string> = {
-    revision: 'Revisión',
-    compartido: 'Recursos compartidos',
-  };
-  categories = ['revision', 'compartido'];
 
   visit: MaintenanceVisit | null = null;
   branches: Branch[] = [];
   technicians: User[] = [];
   loading = false;
   errorMessage = '';
-  uploadingReport = false;
-  reportErrorMessage = '';
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -70,44 +62,23 @@ export class VisitDetailComponent implements OnInit {
     }
   }
 
-  checklistByCategory(category: string) {
-    return this.visit?.checklist_entries.filter(e => e.category === category && !e.item_id) || [];
+  statusLabel(item: MaintenanceVisitItem, value: boolean | null): string {
+    return value === null ? 'N/A' : (value ? 'Sí' : 'No');
   }
 
-  itemEntriesByCategory(item: MaintenanceVisitItem, category: string) {
-    return item.checklist_entries.filter(e => e.category === category);
+  itemSummary(item: MaintenanceVisitItem): string {
+    const notes = (item.checklist_entries || [])
+      .filter(e => e.comment)
+      .map(e => e.comment)
+      .join('; ');
+    return [item.notes, notes].filter(Boolean).join(' — ') || '—';
   }
 
-  photoUrl(path: string): string {
-    return this.visitService.photoUrl(path);
+  today(): string {
+    return new Date().toISOString().slice(0, 10);
   }
 
-  onSignedReportSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-    if (!file || !this.visit) return;
-
-    this.uploadingReport = true;
-    this.reportErrorMessage = '';
-    this.visitService.uploadSignedReport(this.visit.id, file).subscribe({
-      next: (updated) => {
-        this.visit = updated;
-        this.uploadingReport = false;
-        input.value = '';
-      },
-      error: () => {
-        this.reportErrorMessage = 'No se pudo subir la hoja firmada';
-        this.uploadingReport = false;
-        input.value = '';
-      },
-    });
-  }
-
-  removeSignedReport(): void {
-    if (!this.visit) return;
-    this.visitService.deleteSignedReport(this.visit.id).subscribe({
-      next: (updated) => this.visit = updated,
-      error: () => this.reportErrorMessage = 'No se pudo eliminar la hoja firmada',
-    });
+  print(): void {
+    window.print();
   }
 }

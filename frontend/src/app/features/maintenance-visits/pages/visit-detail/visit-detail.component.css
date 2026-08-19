@@ -238,3 +238,55 @@
   border: 1px solid #fecaca;
   border-radius: var(--radius-sm);
 }
+
+.print-btn {
+  background: var(--color-neutral-bg);
+  color: var(--color-text);
+  text-decoration: none;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.print-btn:hover {
+  background: #e5e7eb;
+}
+
+.hint {
+  color: var(--color-text-faint);
+  font-size: 0.82rem;
+  margin: 0 0 0.85rem;
+}
+
+.form-group input[type="file"] {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1.5px dashed var(--color-sidebar-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  background: var(--color-bg);
+}
+
+.signed-report-view {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.signed-report-view a {
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.link-danger {
+  background: none;
+  border: none;
+  color: var(--color-danger);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}

@@ -1,5 +1,7 @@
 import { Component, OnInit, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { RouterLink } from "@angular/router";
 import { forkJoin } from "rxjs";
 import { AssetsService, Asset } from "../../../../core/services/assets.service";
 import { BranchesService, Branch } from "../../../../core/services/branches.service";
@@ -17,7 +19,7 @@ interface CountEntry {
 @Component({
   selector: 'app-reports-dashboard',
   standalone: true,
-  imports: [CommonModule, LabelPipe],
+  imports: [CommonModule, FormsModule, RouterLink, LabelPipe],
   templateUrl: './reports-dashboard.component.html',
   styleUrl: './reports-dashboard.component.css',
 })
@@ -43,6 +45,11 @@ export class ReportsDashboardComponent implements OnInit {
   assetsByStatus: CountEntry[] = [];
 
   upcomingVisits: MaintenanceVisit[] = [];
+  completedVisits: MaintenanceVisit[] = [];
+
+  filterBranchId: number | null = null;
+  filterDateFrom = '';
+  filterDateTo = '';
 
   ngOnInit(): void {
     this.loading = true;
@@ -71,6 +78,10 @@ export class ReportsDashboardComponent implements OnInit {
           .sort((a, b) => a.visit_date.localeCompare(b.visit_date))
           .slice(0, 5);
 
+        this.completedVisits = this.visits
+          .filter(v => v.status === 'completado')
+          .sort((a, b) => b.visit_date.localeCompare(a.visit_date));
+
         this.loading = false;
       },
       error: () => {
@@ -98,6 +109,36 @@ export class ReportsDashboardComponent implements OnInit {
 
   getBranchName(id: number): string {
     return this.branches.find(b => b.id === id)?.name || 'Desconocida';
+  }
+
+  getTechnicianName(id: number | null): string {
+    if (!id) return 'Sin asignar';
+    return this.users.find(u => u.id === id)?.name || 'Desconocido';
+  }
+
+  getReasons(raw: string | null): string {
+    if (!raw) return '—';
+    try {
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) && parsed.length > 0 ? parsed.join(', ') : '—';
+    } catch {
+      return raw;
+    }
+  }
+
+  get filteredCompletedVisits(): MaintenanceVisit[] {
+    return this.completedVisits.filter(v => {
+      if (this.filterBranchId && v.branch_id !== this.filterBranchId) return false;
+      if (this.filterDateFrom && v.visit_date < this.filterDateFrom) return false;
+      if (this.filterDateTo && v.visit_date > this.filterDateTo) return false;
+      return true;
+    });
+  }
+
+  clearFilters(): void {
+    this.filterBranchId = null;
+    this.filterDateFrom = '';
+    this.filterDateTo = '';
   }
 
   get openRequestsCount(): number {

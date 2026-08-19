@@ -28,6 +28,7 @@ export class BranchesListComponent implements OnInit{
 
   isEditing = false;
   selectedBranchId: number | null = null;
+  showFormModal = false;
 
   assetsModalBranch: Branch | null = null;
 
@@ -91,6 +92,22 @@ ngOnInit(): void {
     };
     this.isEditing = false;
     this.selectedBranchId = null;
+    this.errorMessage = '';
+  }
+
+  openCreateModal(): void {
+    this.resetForm();
+    this.showFormModal = true;
+  }
+
+  openEditModal(branch: Branch): void {
+    this.editBranch(branch);
+    this.showFormModal = true;
+  }
+
+  closeFormModal(): void {
+    this.showFormModal = false;
+    this.resetForm();
   }
 
   submitForm(): void {
@@ -105,7 +122,7 @@ ngOnInit(): void {
       this.branchesService.updateBranch(this.selectedBranchId, updatedBranch).subscribe({
         next: () => {
           this.loadBranches();
-          this.resetForm();
+          this.closeFormModal();
         },
         error: () => {
           this.errorMessage = 'No se pudo actualizar la sucursal';
@@ -123,7 +140,7 @@ ngOnInit(): void {
   this.branchesService.createBranch(createData).subscribe({
     next: () => {
       this.loadBranches();
-      this.resetForm();
+      this.closeFormModal();
     },
     error: () => {
       this.errorMessage = 'No se pudo crear la sucursal';

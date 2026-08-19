@@ -4,15 +4,58 @@
           <h1>Equipos</h1>
           <p>Gestión de equipos del sistema</p>
         </div>
-        <a class="cta-btn" routerLink="/assets/bulk" *ngIf="canManage">+ Registrar equipos de sucursal</a>
+        <div class="header-actions">
+          <a class="cta-btn secondary-btn" routerLink="/assets/bulk" *ngIf="canManage">+ Registrar equipos de sucursal</a>
+          <button type="button" class="cta-btn" *ngIf="canManage" (click)="openCreateModal()">+ Nuevo equipo</button>
+        </div>
 </div>
 
-<div class="assets-grid">
-    <div class="card form-card" *ngIf="canManage || isEditing">
-        <h2>{{ isEditing ? 'Editar equipo' : 'Nuevo equipo' }}</h2>
+<div class="card table-card">
+    <h2>Listado de equipos</h2>
+    <p *ngIf="loading">Cargando equipos...</p>
+    <div class="table-scroll" *ngIf="!loading">
+    <table>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Marca</th>
+            <th>Ubicación</th>
+            <th>Sucursal</th>
+            <th>Estado</th>
+            <th *ngIf="canManage">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let asset of visibleAssets">
+            <td>{{ asset.name }}</td>
+            <td>{{ asset.type }}</td>
+            <td>{{ asset.brand }}</td>
+            <td>{{ asset.location }}</td>
+            <td>{{ getBranchName(asset.branch_id) }}</td>
+            <td><span [class]="'badge badge-' + asset.status">{{ asset.status | label }}</span></td>
+            <td class="actions" *ngIf="canManage">
+                <button (click)="openEditModal(asset)">Editar</button>
+                <button class="secondary" (click)="toggleStatus(asset)">{{ asset.status === 'dado_de_baja' ? 'Reactivar' : 'Dar de baja' }}</button>
+            </td>
+        </tr>
+    </tbody>
+    </table>
+    </div>
+    <p class="empty" *ngIf="!loading && visibleAssets.length === 0">
+      {{ searchTerm ? 'Sin resultados para "' + searchTerm + '"' : 'No hay equipos registrados' }}
+    </p>
+</div>
+
+<div class="modal-backdrop" *ngIf="showFormModal" (click)="closeFormModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>{{ isEditing ? 'Editar equipo' : 'Nuevo equipo' }}</h2>
+            <button type="button" class="modal-close" (click)="closeFormModal()" aria-label="Cerrar">&times;</button>
+        </div>
 
     <form (ngSubmit)="submitForm()">
-        
+
             <div class="form-group">
                 <label>Nombre</label>
                 <input type="text" [(ngModel)]="form.name" name="name" required />
@@ -68,7 +111,7 @@
                     <option value="en_mantenimiento">En mantenimiento</option>
                     <option value="dado_de_baja">Dado de baja</option>
                 </select>
-            </div> 
+            </div>
             <div class="form-group">
                 <label>Descripción</label>
                 <textarea [(ngModel)]="form.description" name="description"></textarea>
@@ -77,7 +120,7 @@
           <button type="submit">
             {{ isEditing ? 'Actualizar' : 'Crear equipo' }}
           </button>
-          <button type="button" class="secondary" (click)="resetForm()" *ngIf="isEditing">
+          <button type="button" class="secondary" (click)="closeFormModal()">
             Cancelar
           </button>
         </div>
@@ -85,41 +128,4 @@
 
       <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
     </div>
-
-        <div class="card table-card">
-            <h2>Listado de equipos</h2>
-            <p *ngIf="loading">Cargando equipos...</p>
-            <div class="table-scroll" *ngIf="!loading">
-            <table>
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Tipo</th>
-                    <th>Marca</th>
-                    <th>Ubicación</th>
-                    <th>Sucursal</th>
-                    <th>Estado</th>
-                    <th *ngIf="canManage">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let asset of visibleAssets">
-                    <td>{{ asset.name }}</td>
-                    <td>{{ asset.type }}</td>
-                    <td>{{ asset.brand }}</td>
-                    <td>{{ asset.location }}</td>
-                    <td>{{ getBranchName(asset.branch_id) }}</td>
-                    <td><span [class]="'badge badge-' + asset.status">{{ asset.status | label }}</span></td>
-                    <td class="actions" *ngIf="canManage">
-                        <button (click)="editAsset(asset)">Editar</button>
-                        <button class="secondary" (click)="toggleStatus(asset)">{{ asset.status === 'dado_de_baja' ? 'Reactivar' : 'Dar de baja' }}</button>
-                    </td>
-                </tr>
-            </tbody>
-            </table>
-            </div>
-            <p class="empty" *ngIf="!loading && visibleAssets.length === 0">
-              {{ searchTerm ? 'Sin resultados para "' + searchTerm + '"' : 'No hay equipos registrados' }}
-            </p>
-        </div>
-    </div>
+</div>

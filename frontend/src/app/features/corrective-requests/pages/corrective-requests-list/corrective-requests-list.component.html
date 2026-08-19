@@ -1,25 +1,98 @@
 <div class="corrective-container">
   <div class="corrective-header">
-    <h1>Solicitudes Correctivas</h1>
-    <p>Gestión de solicitudes de mantenimiento correctivo</p>
+    <div>
+      <h1>Solicitudes Correctivas</h1>
+      <p>Gestión de solicitudes de mantenimiento correctivo</p>
+    </div>
+    <button type="button" class="cta-btn" *ngIf="canCreate" (click)="openCreateModal()">+ Nueva solicitud</button>
   </div>
 
-  <div class="corrective-grid" [class.no-form]="!canCreate && !isEditing">
+  <!-- CARD: Tabla -->
+  <div class="card table-card">
+      <h2>Listado de solicitudes</h2>
 
-    <!-- CARD 1: Formulario -->
-    <div class="card form-card" *ngIf="canCreate || isEditing">
-      <h2>{{ isEditing ? 'Editar solicitud' : 'Nueva solicitud' }}</h2>
+      <p *ngIf="loading">Cargando solicitudes...</p>
+
+      <div class="table-scroll" *ngIf="!loading">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Equipo</th>
+            <th>Técnico</th>
+            <th>Prioridad</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let request of visibleRequests">
+            <td>{{ request.id }}</td>
+            <td>{{ getAssetName(request.asset_id) }}</td>
+            <td>{{ getTechnicianName(request.assigned_id) }}</td>
+            <td>
+              <span [class]="'badge badge-' + request.priority">
+                {{ request.priority }}
+              </span>
+            </td>
+            <td>
+              <span [class]="'badge badge-' + request.status">
+                {{ request.status | label }}
+              </span>
+            </td>
+            <td class="actions" *ngIf="isTecnico; else adminActions">
+              <button *ngIf="request.status === 'abierta'" (click)="startReview(request)">En revisión</button>
+              <button class="secondary" *ngIf="request.status === 'en_proceso'" (click)="openCloseModal(request)">Cerrar</button>
+              <a class="print-link" [routerLink]="['/requests', request.id, 'print']" target="_blank">Imprimir</a>
+            </td>
+            <ng-template #adminActions>
+              <td class="actions">
+                <button (click)="openEditModal(request)">Editar</button>
+                <button class="secondary" (click)="openCloseModal(request)"
+                  *ngIf="request.status !== 'cerrada'">
+                  Cerrar
+                </button>
+                <a class="print-link" [routerLink]="['/requests', request.id, 'print']" target="_blank">Imprimir</a>
+              </td>
+            </ng-template>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p class="empty" *ngIf="!loading && visibleRequests.length === 0">
+        {{ searchTerm ? 'Sin resultados para "' + searchTerm + '"' : 'No hay solicitudes registradas' }}
+      </p>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="showFormModal" (click)="closeFormModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ isEditing ? 'Editar solicitud' : 'Nueva solicitud' }}</h2>
+        <button type="button" class="modal-close" (click)="closeFormModal()" aria-label="Cerrar">&times;</button>
+      </div>
 
       <form (ngSubmit)="submitForm()">
+
+        <div class="form-group">
+          <label>Sucursal</label>
+          <select [(ngModel)]="filterBranchId" name="filter_branch_id" (ngModelChange)="onFilterBranchChange()">
+            <option [ngValue]="null">Todas las sucursales</option>
+            <option *ngFor="let branch of branches" [ngValue]="branch.id">
+              {{ branch.name }}
+            </option>
+          </select>
+        </div>
 
         <div class="form-group">
           <label>Equipo</label>
           <select [(ngModel)]="form.asset_id" name="asset_id" required>
             <option [ngValue]="0" disabled>Selecciona un equipo</option>
-            <option *ngFor="let asset of assets" [ngValue]="asset.id">
+            <option *ngFor="let asset of assetsForForm" [ngValue]="asset.id">
               {{ asset.name }}
             </option>
           </select>
+          <p class="hint" *ngIf="filterBranchId && assetsForForm.length === 0">Esta sucursal no tiene equipos registrados.</p>
         </div>
 
         <div class="form-group">
@@ -60,11 +133,31 @@
           <textarea [(ngModel)]="form.solution" name="solution" rows="3" placeholder="¿Qué se hizo para resolverla?" [required]="form.status === 'cerrada'"></textarea>
         </div>
 
+        <div class="form-group signed-report-group" *ngIf="isEditing">
+          <label>Hoja firmada</label>
+          <p class="hint">Imprime el informe, hazlo firmar por el encargado, escanéalo y súbelo aquí. Es obligatorio para poder cerrar la solicitud.</p>
+          <a class="print-link" [routerLink]="['/requests', selectedRequestId, 'print']" target="_blank">Imprimir informe</a>
+
+          <div class="signed-report-view" *ngIf="selectedRequest?.signed_report_path">
+            <a [href]="reportUrl(selectedRequest!.signed_report_path!)" target="_blank">Ver hoja firmada</a>
+            <button type="button" class="link-danger" (click)="removeSignedReport()">Quitar</button>
+          </div>
+
+          <div *ngIf="!selectedRequest?.signed_report_path">
+            <input type="file" accept="image/*,.pdf" (change)="onSignedReportSelected($event)" [disabled]="uploadingReport">
+            <p class="hint" *ngIf="uploadingReport">Subiendo...</p>
+          </div>
+
+          <p class="error" *ngIf="reportErrorMessage">{{ reportErrorMessage }}</p>
+        </div>
+
         <div class="form-actions">
-          <button type="submit">
+          <button type="submit"
+            [disabled]="form.status === 'cerrada' && !hasSignedReport"
+            [title]="form.status === 'cerrada' && !hasSignedReport ? 'Sube la hoja firmada por el encargado antes de cerrar' : ''">
             {{ isEditing ? 'Actualizar' : 'Crear solicitud' }}
           </button>
-          <button type="button" class="secondary" (click)="resetForm()" *ngIf="isEditing">
+          <button type="button" class="secondary" (click)="closeFormModal()">
             Cancelar
           </button>
         </div>
@@ -73,62 +166,5 @@
 
       <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
     </div>
-
-    <!-- CARD 2: Tabla -->
-    <div class="card table-card">
-      <h2>Listado de solicitudes</h2>
-
-      <p *ngIf="loading">Cargando solicitudes...</p>
-
-      <div class="table-scroll" *ngIf="!loading">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Equipo</th>
-            <th>Técnico</th>
-            <th>Prioridad</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let request of visibleRequests">
-            <td>{{ request.id }}</td>
-            <td>{{ getAssetName(request.asset_id) }}</td>
-            <td>{{ getTechnicianName(request.assigned_id) }}</td>
-            <td>
-              <span [class]="'badge badge-' + request.priority">
-                {{ request.priority }}
-              </span>
-            </td>
-            <td>
-              <span [class]="'badge badge-' + request.status">
-                {{ request.status | label }}
-              </span>
-            </td>
-            <td class="actions" *ngIf="isTecnico; else adminActions">
-              <button *ngIf="request.status === 'abierta'" (click)="startReview(request)">En revisión</button>
-              <button class="secondary" *ngIf="request.status === 'en_proceso'" (click)="startClosing(request)">Cerrar</button>
-            </td>
-            <ng-template #adminActions>
-              <td class="actions">
-                <button (click)="editRequest(request)">Editar</button>
-                <button class="secondary" (click)="startClosing(request)"
-                  *ngIf="request.status !== 'cerrada'">
-                  Cerrar
-                </button>
-              </td>
-            </ng-template>
-          </tr>
-        </tbody>
-      </table>
-      </div>
-
-      <p class="empty" *ngIf="!loading && visibleRequests.length === 0">
-        {{ searchTerm ? 'Sin resultados para "' + searchTerm + '"' : 'No hay solicitudes registradas' }}
-      </p>
-    </div>
-
   </div>
 </div>

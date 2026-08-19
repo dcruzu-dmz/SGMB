@@ -9,6 +9,14 @@
   gap: 1rem;
 }
 
+.corrective-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
 .corrective-header h1 {
   font-size: 1.75rem;
   font-weight: 700;
@@ -21,15 +29,20 @@
   font-size: 0.9rem;
 }
 
-.corrective-grid {
-  display: grid;
-  grid-template-columns: 360px minmax(0, 1fr);
-  gap: 1.25rem;
-  align-items: start;
+.cta-btn {
+  background: var(--color-accent);
+  color: #fff;
+  border: none;
+  padding: 0.65rem 1.1rem;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
-.corrective-grid.no-form {
-  grid-template-columns: minmax(0, 1fr);
+.cta-btn:hover {
+  background: var(--color-accent-hover);
 }
 
 .card {
@@ -99,8 +112,13 @@ button[type="submit"] {
   transition: background 0.2s;
 }
 
-button[type="submit"]:hover {
+button[type="submit"]:hover:not(:disabled) {
   background: var(--color-accent-hover);
+}
+
+button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 button.secondary {
@@ -183,8 +201,107 @@ tbody tr:hover {
   border-radius: 8px;
 }
 
-@media (max-width: 1000px) {
-  .corrective-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
+.hint {
+  color: #9ca3af;
+  font-size: 0.82rem;
+  margin: 0 0 0.6rem;
+}
+
+.signed-report-group {
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 10px;
+}
+
+.signed-report-group input[type="file"] {
+  padding: 0.5rem;
+  background: white;
+}
+
+.print-link {
+  display: inline-block;
+  color: var(--color-accent);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-decoration: none;
+  margin-bottom: 0.75rem;
+}
+
+.signed-report-view {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.signed-report-view a {
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.link-danger {
+  background: none;
+  border: none;
+  color: #dc2626;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.actions .print-link {
+  margin-bottom: 0;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 100;
+}
+
+.modal-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 560px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a1b22;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+}
+
+.modal-close:hover {
+  color: #1a1b22;
 }

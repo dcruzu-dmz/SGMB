@@ -32,6 +32,9 @@ router = APIRouter(prefix="/maintenance-visits", tags=["MaintenanceVisits"])
 UPLOAD_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "uploads", "visit-photos")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
+REPORTS_UPLOAD_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "uploads", "visit-reports")
+os.makedirs(REPORTS_UPLOAD_DIR, exist_ok=True)
+
 VISIT_LOAD_OPTIONS = [
     joinedload(MaintenanceVisit.items).joinedload(MaintenanceVisitItem.photos),
     joinedload(MaintenanceVisit.items).joinedload(MaintenanceVisitItem.checklist_entries),
@@ -138,6 +141,58 @@ def update_visit(
     return _get_visit_or_404(visit_id, db)
 
 
+# Subir la hoja de firma escaneada
+@router.post("/{visit_id}/signed-report", response_model=MaintenanceVisitResponse)
+def upload_signed_report(
+    visit_id: int,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    visit = db.query(MaintenanceVisit).filter(MaintenanceVisit.id == visit_id).first()
+    if not visit:
+        raise HTTPException(status_code=404, detail="Visita no encontrada")
+    _check_visit_access(visit, current_user)
+
+    if visit.signed_report_path:
+        old_path = os.path.join(REPORTS_UPLOAD_DIR, os.path.basename(visit.signed_report_path))
+        if os.path.exists(old_path):
+            os.remove(old_path)
+
+    extension = os.path.splitext(file.filename or "")[1] or ".pdf"
+    filename = f"{uuid.uuid4().hex}{extension}"
+    destination = os.path.join(REPORTS_UPLOAD_DIR, filename)
+
+    with open(destination, "wb") as out:
+        out.write(file.file.read())
+
+    visit.signed_report_path = f"/uploads/visit-reports/{filename}"
+    db.commit()
+    return _get_visit_or_404(visit_id, db)
+
+
+# Eliminar la hoja de firma escaneada
+@router.delete("/{visit_id}/signed-report", response_model=MaintenanceVisitResponse)
+def delete_signed_report(
+    visit_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    visit = db.query(MaintenanceVisit).filter(MaintenanceVisit.id == visit_id).first()
+    if not visit:
+        raise HTTPException(status_code=404, detail="Visita no encontrada")
+    _check_visit_access(visit, current_user)
+
+    if visit.signed_report_path:
+        file_path = os.path.join(REPORTS_UPLOAD_DIR, os.path.basename(visit.signed_report_path))
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        visit.signed_report_path = None
+        db.commit()
+
+    return _get_visit_or_404(visit_id, db)
+
+
 # Eliminar visita
 @router.delete("/{visit_id}")
 def delete_visit(
@@ -154,6 +209,11 @@ def delete_visit(
             file_path = os.path.join(UPLOAD_DIR, os.path.basename(photo.file_path))
             if os.path.exists(file_path):
                 os.remove(file_path)
+
+    if visit.signed_report_path:
+        report_path = os.path.join(REPORTS_UPLOAD_DIR, os.path.basename(visit.signed_report_path))
+        if os.path.exists(report_path):
+            os.remove(report_path)
 
     db.delete(visit)
     db.commit()

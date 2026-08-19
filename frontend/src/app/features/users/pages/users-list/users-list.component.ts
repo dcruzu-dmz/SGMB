@@ -19,6 +19,7 @@ export class UsersListComponent implements OnInit {
 
   isEditing = false;
   selectedUserId: number | null = null;
+  showFormModal = false;
 
   form = {
     name: '',
@@ -56,6 +57,22 @@ export class UsersListComponent implements OnInit {
     };
     this.isEditing = false;
     this.selectedUserId = null;
+    this.errorMessage = '';
+  }
+
+  openCreateModal(): void {
+    this.resetForm();
+    this.showFormModal = true;
+  }
+
+  openEditModal(user: User): void {
+    this.editUser(user);
+    this.showFormModal = true;
+  }
+
+  closeFormModal(): void {
+    this.showFormModal = false;
+    this.resetForm();
   }
 
   submitForm(): void {
@@ -70,7 +87,7 @@ export class UsersListComponent implements OnInit {
       this.usersService.updateUser(this.selectedUserId, updateData).subscribe({
         next: () => {
           this.loadUsers();
-          this.resetForm();
+          this.closeFormModal();
         },
         error: (err) => {
           this.errorMessage = err?.error?.detail || 'No se pudo actualizar el usuario';
@@ -91,7 +108,7 @@ export class UsersListComponent implements OnInit {
     this.usersService.createUser(createData).subscribe({
       next: () => {
         this.loadUsers();
-        this.resetForm();
+        this.closeFormModal();
       },
       error: (err) => {
         this.errorMessage = err?.error?.detail || 'No se pudo crear el usuario';

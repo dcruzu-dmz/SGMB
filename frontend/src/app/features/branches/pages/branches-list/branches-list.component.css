@@ -9,6 +9,14 @@
   gap: 1rem;
 }
 
+.branches-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
 .branches-header h1 {
   margin: 0 0 4px;
   font-size: 1.6rem;
@@ -22,11 +30,20 @@
   font-size: 0.9rem;
 }
 
-.branches-grid {
-  display: grid;
-  grid-template-columns: 360px minmax(0, 1fr);
-  gap: 1.25rem;
-  align-items: start;
+.cta-btn {
+  background: var(--color-accent);
+  color: #fff;
+  border: none;
+  padding: 0.65rem 1.1rem;
+  border-radius: var(--radius-md, var(--radius-sm));
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.cta-btn:hover {
+  background: var(--color-accent-hover);
 }
 
 .form-card h2,
@@ -149,12 +166,6 @@ tbody tr:hover {
   background: var(--color-danger-bg);
   border: 1px solid #fecaca;
   border-radius: var(--radius-sm);
-}
-
-@media (max-width: 1000px) {
-  .branches-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 
 .modal-backdrop {

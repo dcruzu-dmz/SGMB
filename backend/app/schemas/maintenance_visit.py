@@ -133,6 +133,7 @@ class MaintenanceVisitUpdate(BaseModel):
 class MaintenanceVisitResponse(MaintenanceVisitBase):
     id: int
     created_at: datetime
+    signed_report_path: Optional[str] = None
     items: list[MaintenanceVisitItemResponse] = []
     checklist_entries: list[MaintenanceVisitChecklistEntryResponse] = []
 

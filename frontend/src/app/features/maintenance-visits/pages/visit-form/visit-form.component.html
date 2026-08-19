@@ -316,9 +316,35 @@
     </div>
   </section>
 
+  <!-- Hoja firmada -->
+  <section class="card">
+    <h2>Hoja firmada</h2>
+
+    <p class="hint" *ngIf="!isCompleting">Guarda primero como borrador para poder imprimir el informe y subir la hoja firmada.</p>
+
+    <ng-container *ngIf="isCompleting">
+      <p class="hint">
+        <a [routerLink]="['/maintenance-visits', visitId, 'print']" target="_blank">Imprimir informe</a>,
+        hazlo firmar por el encargado de sucursal, escanéalo y súbelo aquí antes de finalizar.
+      </p>
+
+      <div class="signed-report-view" *ngIf="signedReportPath">
+        <a [href]="photoUrl(signedReportPath)" target="_blank">Ver hoja firmada</a>
+        <button type="button" class="link-danger" (click)="removeSignedReport()">Quitar</button>
+      </div>
+
+      <div class="form-group" *ngIf="!signedReportPath">
+        <input type="file" accept="image/*,.pdf" (change)="onSignedReportSelected($event)" [disabled]="uploadingReport">
+        <p class="hint" *ngIf="uploadingReport">Subiendo...</p>
+      </div>
+    </ng-container>
+
+    <p class="error" *ngIf="reportErrorMessage">{{ reportErrorMessage }}</p>
+  </section>
+
   <div class="form-actions-bar">
     <button type="button" class="secondary" [disabled]="loading" (click)="submitVisit('borrador')">Guardar como borrador</button>
-    <button type="button" class="primary" [disabled]="loading" (click)="submitVisit('completado')">
+    <button type="button" class="primary" [disabled]="loading || !signedReportPath" (click)="submitVisit('completado')" [title]="!signedReportPath ? 'Sube la hoja firmada antes de finalizar' : ''">
       {{ loading ? 'Guardando...' : 'Finalizar visita' }}
     </button>
   </div>

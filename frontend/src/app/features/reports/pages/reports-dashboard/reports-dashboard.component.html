@@ -87,6 +87,55 @@
       </div>
 
       <div class="card wide">
+        <h2>Mantenimientos realizados</h2>
+
+        <div class="filters-row">
+          <div class="form-group">
+            <label>Sucursal</label>
+            <select [(ngModel)]="filterBranchId" name="filterBranchId">
+              <option [ngValue]="null">Todas</option>
+              <option *ngFor="let b of branches" [ngValue]="b.id">{{ b.name }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Desde</label>
+            <input type="date" [(ngModel)]="filterDateFrom" name="filterDateFrom">
+          </div>
+          <div class="form-group">
+            <label>Hasta</label>
+            <input type="date" [(ngModel)]="filterDateTo" name="filterDateTo">
+          </div>
+          <button type="button" class="clear-filters-btn" (click)="clearFilters()">Limpiar filtros</button>
+        </div>
+
+        <div class="table-scroll" *ngIf="filteredCompletedVisits.length > 0">
+        <table>
+          <thead>
+            <tr>
+              <th>Sucursal</th>
+              <th>Técnico</th>
+              <th>Fecha</th>
+              <th>Equipos atendidos</th>
+              <th>Motivo</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let v of filteredCompletedVisits">
+              <td>{{ getBranchName(v.branch_id) }}</td>
+              <td>{{ getTechnicianName(v.technician_id) }}</td>
+              <td>{{ v.visit_date }}</td>
+              <td>{{ v.items.length }}</td>
+              <td class="reasons-cell">{{ getReasons(v.visit_reasons) }}</td>
+              <td><a [routerLink]="['/maintenance-visits', v.id]">Ver detalle</a></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="empty" *ngIf="filteredCompletedVisits.length === 0">No hay mantenimientos que coincidan con el filtro</p>
+      </div>
+
+      <div class="card wide">
         <h2>Próximas visitas de mantenimiento</h2>
         <div class="table-scroll" *ngIf="upcomingVisits.length > 0">
         <table>
