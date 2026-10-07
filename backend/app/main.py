@@ -7,9 +7,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
-from app.database import Base, engine
 from app.routers import auth, users, asset, branch, corrective_request, maintenance_visit, assigned_task
 from app.services.preventive_scheduler import preventive_check_loop
+# Registra todos los modelos: las relaciones entre ellos se resuelven por nombre.
+# El esquema de la base lo crean y actualizan las migraciones (alembic upgrade head).
 from app.models.user import User
 from app.models.asset import Asset
 from app.models.branch import Branch
@@ -21,9 +22,6 @@ from app.models.maintenance_visit import (
     MaintenanceVisitPhoto,
 )
 from app.models.assigned_task import AssignedTask
-
-
-Base.metadata.create_all(bind=engine)
 
 
 @asynccontextmanager
