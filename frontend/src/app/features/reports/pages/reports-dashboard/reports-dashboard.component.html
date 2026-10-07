@@ -11,26 +11,31 @@
 
     <div class="stat-grid">
       <div class="card stat-card">
+        <div class="stat-icon equipos">🖥</div>
         <span class="stat-title">Equipos</span>
         <strong class="stat-value">{{ assets.length }}</strong>
         <small>Registrados en el sistema</small>
       </div>
       <div class="card stat-card">
+        <div class="stat-icon solicitudes">🛠</div>
         <span class="stat-title">Solicitudes abiertas</span>
         <strong class="stat-value">{{ openRequestsCount }}</strong>
         <small>de {{ correctiveRequests.length }} solicitudes totales</small>
       </div>
       <div class="card stat-card">
+        <div class="stat-icon visitas">🗓</div>
         <span class="stat-title">Visitas pendientes</span>
         <strong class="stat-value">{{ pendingVisitsCount }}</strong>
         <small>de {{ visits.length }} registradas</small>
       </div>
       <div class="card stat-card">
+        <div class="stat-icon sucursales">🏬</div>
         <span class="stat-title">Sucursales activas</span>
         <strong class="stat-value">{{ activeBranchesCount }}</strong>
         <small>de {{ branches.length }} registradas</small>
       </div>
       <div class="card stat-card">
+        <div class="stat-icon usuarios">👤</div>
         <span class="stat-title">Usuarios activos</span>
         <strong class="stat-value">{{ activeUsersCount }}</strong>
         <small>de {{ users.length }} registrados</small>
@@ -127,7 +132,7 @@
               <td>{{ v.visit_date }}</td>
               <td>{{ v.items.length }}</td>
               <td class="reasons-cell">{{ getReasons(v.visit_reasons) }}</td>
-              <td><a [routerLink]="['/maintenance-visits', v.id]">Ver detalle</a></td>
+              <td><a class="action-btn link" [routerLink]="['/maintenance-visits', v.id]"><span class="icon">👁</span> Ver detalle</a></td>
             </tr>
           </tbody>
         </table>

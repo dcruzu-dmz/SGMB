@@ -1,0 +1,10 @@
+<div class="pagination" *ngIf="total > 0">
+  <span class="pagination-info">
+    {{ (page - 1) * pageSize + 1 }}–{{ Math.min(page * pageSize, total) }} de {{ total }}
+  </span>
+  <div class="pagination-controls">
+    <button type="button" class="action-btn link" [disabled]="page <= 1" (click)="goTo(page - 1)">‹ Anterior</button>
+    <span class="pagination-page">Página {{ page }} de {{ totalPages }}</span>
+    <button type="button" class="action-btn link" [disabled]="page >= totalPages" (click)="goTo(page + 1)">Siguiente ›</button>
+  </div>
+</div>

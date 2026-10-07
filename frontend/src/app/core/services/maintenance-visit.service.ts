@@ -1,6 +1,7 @@
 import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { API_BASE_URL } from "../config/api-config";
 
 export interface MaintenanceVisitPhoto {
   id: number;
@@ -117,7 +118,7 @@ export interface MaintenanceVisitCreate {
 })
 export class MaintenanceVisitService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://127.0.0.1:8000/maintenance-visits';
+  private apiUrl = `${API_BASE_URL}/maintenance-visits`;
 
   getVisits(): Observable<MaintenanceVisit[]> {
     return this.http.get<MaintenanceVisit[]>(this.apiUrl);
@@ -168,6 +169,6 @@ export class MaintenanceVisitService {
   }
 
   photoUrl(path: string): string {
-    return `http://127.0.0.1:8000${path}`;
+    return `${API_BASE_URL}${path}`;
   }
 }

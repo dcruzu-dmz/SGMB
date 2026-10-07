@@ -10,11 +10,14 @@ import { BranchesService, Branch } from "../../../../core/services/branches.serv
 import { AuthService } from "../../../../core/services/auth.service";
 import { LabelPipe } from "../../../../core/pipes/label.pipe";
 import { SearchService } from "../../../../core/services/search.service";
+import { API_BASE_URL } from "../../../../core/config/api-config";
+import { ToastService } from "../../../../core/services/toast.service";
+import { PaginationComponent } from "../../../../shared/pagination/pagination.component";
 
 @Component({
   selector: 'app-corrective-requests-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, LabelPipe],
+  imports: [CommonModule, FormsModule, RouterLink, LabelPipe, PaginationComponent],
   templateUrl: './corrective-requests-list.component.html',
   styleUrl: './corrective-requests-list.component.css',
 })
@@ -26,6 +29,7 @@ export class CorrectiveRequestListComponent implements OnInit {
   private authService = inject(AuthService);
   private searchService = inject(SearchService);
   private destroyRef = inject(DestroyRef);
+  private toast = inject(ToastService);
 
   correctiveRequests: CorrectiveRequest[] = [];
   assets: Asset[] = [];
@@ -43,6 +47,8 @@ export class CorrectiveRequestListComponent implements OnInit {
   uploadingReport = false;
   reportErrorMessage = '';
   showFormModal = false;
+  page = 1;
+  pageSize = 10;
 
   form = {
     asset_id: 0,
@@ -60,7 +66,10 @@ export class CorrectiveRequestListComponent implements OnInit {
     this.loadTechnicians();
     this.loadBranches();
     this.loadCurrentUser();
-    this.searchService.term.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(term => this.searchTerm = term);
+    this.searchService.term.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(term => {
+      this.searchTerm = term;
+      this.page = 1;
+    });
   }
 
   get assetsForForm(): Asset[] {
@@ -82,6 +91,15 @@ export class CorrectiveRequestListComponent implements OnInit {
       r.description?.toLowerCase().includes(this.searchTerm) ||
       this.getAssetName(r.asset_id).toLowerCase().includes(this.searchTerm)
     );
+  }
+
+  get pagedRequests(): CorrectiveRequest[] {
+    const start = (this.page - 1) * this.pageSize;
+    return this.visibleRequests.slice(start, start + this.pageSize);
+  }
+
+  onPageChange(page: number): void {
+    this.page = page;
   }
 
   loadCurrentUser(): void {
@@ -201,6 +219,7 @@ export class CorrectiveRequestListComponent implements OnInit {
         next: () => {
           this.loadCorrectiveRequests();
           this.closeFormModal();
+          this.toast.success(this.form.status === 'cerrada' ? 'Solicitud cerrada correctamente' : 'Solicitud actualizada correctamente');
         },
         error: () => this.errorMessage = 'No se pudo actualizar la solicitud'
       });
@@ -220,6 +239,7 @@ export class CorrectiveRequestListComponent implements OnInit {
       next: () => {
         this.loadCorrectiveRequests();
         this.closeFormModal();
+        this.toast.success('Solicitud creada correctamente');
       },
       error: () => this.errorMessage = 'No se pudo crear la solicitud'
     });
@@ -246,8 +266,11 @@ export class CorrectiveRequestListComponent implements OnInit {
 
   startReview(request: CorrectiveRequest): void {
     this.correctiveRequestsService.changeStatus(request.id, 'en_proceso').subscribe({
-      next: () => this.loadCorrectiveRequests(),
-      error: () => this.errorMessage = 'No se pudo poner en revisión la solicitud'
+      next: () => {
+        this.loadCorrectiveRequests();
+        this.toast.success('Solicitud puesta en revisión');
+      },
+      error: () => this.toast.error('No se pudo poner en revisión la solicitud')
     });
   }
 
@@ -261,7 +284,7 @@ export class CorrectiveRequestListComponent implements OnInit {
   }
 
   reportUrl(path: string): string {
-    return `http://127.0.0.1:8000${path}`;
+    return `${API_BASE_URL}${path}`;
   }
 
   onSignedReportSelected(event: Event): void {
@@ -276,6 +299,7 @@ export class CorrectiveRequestListComponent implements OnInit {
         this.correctiveRequests = this.correctiveRequests.map(r => r.id === updated.id ? updated : r);
         this.uploadingReport = false;
         input.value = '';
+        this.toast.success('Hoja firmada subida correctamente');
       },
       error: () => {
         this.reportErrorMessage = 'No se pudo subir la hoja firmada';
@@ -288,7 +312,10 @@ export class CorrectiveRequestListComponent implements OnInit {
   removeSignedReport(): void {
     if (this.selectedRequestId === null) return;
     this.correctiveRequestsService.deleteSignedReport(this.selectedRequestId).subscribe({
-      next: (updated) => this.correctiveRequests = this.correctiveRequests.map(r => r.id === updated.id ? updated : r),
+      next: (updated) => {
+        this.correctiveRequests = this.correctiveRequests.map(r => r.id === updated.id ? updated : r);
+        this.toast.success('Hoja firmada eliminada');
+      },
       error: () => this.reportErrorMessage = 'No se pudo eliminar la hoja firmada',
     });
   }

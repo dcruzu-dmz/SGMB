@@ -1,0 +1,14 @@
+<div class="modal-backdrop" *ngIf="confirmService.state() as state" (click)="confirmService.respond(false)">
+  <div class="confirm-card" (click)="$event.stopPropagation()">
+    <h3>{{ state.title || 'Confirmar acción' }}</h3>
+    <p>{{ state.message }}</p>
+    <div class="confirm-actions">
+      <button type="button" class="action-btn link" (click)="confirmService.respond(false)">
+        {{ state.cancelText || 'Cancelar' }}
+      </button>
+      <button type="button" class="action-btn" [class.warning]="state.danger" [class.accent]="!state.danger" (click)="confirmService.respond(true)">
+        {{ state.confirmText || 'Confirmar' }}
+      </button>
+    </div>
+  </div>
+</div>

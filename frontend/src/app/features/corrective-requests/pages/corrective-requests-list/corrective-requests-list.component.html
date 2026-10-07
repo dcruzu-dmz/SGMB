@@ -26,7 +26,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let request of visibleRequests">
+          <tr *ngFor="let request of pagedRequests">
             <td>{{ request.id }}</td>
             <td>{{ getAssetName(request.asset_id) }}</td>
             <td>{{ getTechnicianName(request.assigned_id) }}</td>
@@ -41,18 +41,18 @@
               </span>
             </td>
             <td class="actions" *ngIf="isTecnico; else adminActions">
-              <button *ngIf="request.status === 'abierta'" (click)="startReview(request)">En revisión</button>
-              <button class="secondary" *ngIf="request.status === 'en_proceso'" (click)="openCloseModal(request)">Cerrar</button>
-              <a class="print-link" [routerLink]="['/requests', request.id, 'print']" target="_blank">Imprimir</a>
+              <button class="action-btn info" *ngIf="request.status === 'abierta'" (click)="startReview(request)"><span class="icon">🔍</span> En revisión</button>
+              <button class="action-btn accent" *ngIf="request.status === 'en_proceso'" (click)="openCloseModal(request)"><span class="icon">✓</span> Cerrar</button>
+              <a class="action-btn link" [routerLink]="['/requests', request.id, 'print']" target="_blank"><span class="icon">⎙</span> Imprimir</a>
             </td>
             <ng-template #adminActions>
               <td class="actions">
-                <button (click)="openEditModal(request)">Editar</button>
-                <button class="secondary" (click)="openCloseModal(request)"
+                <button class="action-btn edit" (click)="openEditModal(request)"><span class="icon">✎</span> Editar</button>
+                <button class="action-btn accent" (click)="openCloseModal(request)"
                   *ngIf="request.status !== 'cerrada'">
-                  Cerrar
+                  <span class="icon">✓</span> Cerrar
                 </button>
-                <a class="print-link" [routerLink]="['/requests', request.id, 'print']" target="_blank">Imprimir</a>
+                <a class="action-btn link" [routerLink]="['/requests', request.id, 'print']" target="_blank"><span class="icon">⎙</span> Imprimir</a>
               </td>
             </ng-template>
           </tr>
@@ -63,6 +63,7 @@
       <p class="empty" *ngIf="!loading && visibleRequests.length === 0">
         {{ searchTerm ? 'Sin resultados para "' + searchTerm + '"' : 'No hay solicitudes registradas' }}
       </p>
+      <app-pagination [page]="page" [pageSize]="pageSize" [total]="visibleRequests.length" (pageChange)="onPageChange($event)"></app-pagination>
   </div>
 
   <div class="modal-backdrop" *ngIf="showFormModal" (click)="closeFormModal()">
@@ -74,6 +75,7 @@
 
       <form (ngSubmit)="submitForm()">
 
+        <div class="form-grid">
         <div class="form-group">
           <label>Sucursal</label>
           <select [(ngModel)]="filterBranchId" name="filter_branch_id" (ngModelChange)="onFilterBranchChange()">
@@ -121,6 +123,7 @@
             <option value="en_proceso">En proceso</option>
             <option value="cerrada">Cerrada</option>
           </select>
+        </div>
         </div>
 
         <div class="form-group">

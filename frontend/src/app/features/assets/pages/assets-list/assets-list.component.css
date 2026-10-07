@@ -59,7 +59,7 @@
 }
 
 .cta-btn.secondary-btn:hover {
-  background: #e5e7eb;
+  background: var(--color-sidebar-border);
 }
 
 .form-card h2,
@@ -137,7 +137,7 @@ button.secondary {
 }
 
 button.secondary:hover {
-  background: #e5e7eb;
+  background: var(--color-sidebar-border);
 }
 
 table {
@@ -169,13 +169,8 @@ tbody tr:hover {
 
 .actions {
   display: flex;
-  gap: 0.5rem;
-}
-
-.actions button {
-  padding: 0.4rem 0.75rem;
-  font-size: 0.8rem;
-  border-radius: 6px;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
 .empty {
@@ -190,7 +185,7 @@ tbody tr:hover {
   font-size: 0.85rem;
   padding: 0.65rem 1rem;
   background: var(--color-danger-bg);
-  border: 1px solid #fecaca;
+  border: 1px solid var(--color-danger);
   border-radius: var(--radius-sm);
 }
 
@@ -210,10 +205,22 @@ tbody tr:hover {
   border-radius: var(--radius-md, 16px);
   padding: 1.5rem;
   width: 100%;
-  max-width: 560px;
-  max-height: 80vh;
+  max-width: 740px;
+  max-height: 85vh;
   overflow-y: auto;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 1rem;
+}
+
+@media (max-width: 620px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .modal-header {

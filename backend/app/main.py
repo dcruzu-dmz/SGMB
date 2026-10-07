@@ -26,7 +26,12 @@ app = FastAPI(title="SGMB API", version="1.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],
+    allow_origins=[
+        "http://localhost:4200",
+        "http://127.0.0.1:4200",
+        "http://10.153.1.251:4200",
+        "http://MacBook-Pro.local:4200",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

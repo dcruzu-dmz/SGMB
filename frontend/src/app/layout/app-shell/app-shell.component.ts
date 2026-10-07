@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationStart, NavigationEnd } from '@angular/router';
 import { AuthService, CurrentUser } from '../../core/services/auth.service';
 import { SearchService } from '../../core/services/search.service';
+import { ThemeService } from '../../core/services/theme.service';
 
 interface NavItem {
   label: string;
@@ -40,6 +41,7 @@ export class AppShellComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private searchService = inject(SearchService);
+  themeService = inject(ThemeService);
 
   user: CurrentUser | null = null;
   searchTerm = '';

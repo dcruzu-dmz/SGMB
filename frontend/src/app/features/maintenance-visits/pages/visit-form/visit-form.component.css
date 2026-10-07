@@ -161,6 +161,26 @@ input[type="file"] {
   margin: 0 0 0.75rem;
 }
 
+.pending-banner {
+  color: var(--color-warning);
+  background: var(--color-warning-bg);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--radius-sm);
+  margin: 0 0 0.75rem;
+}
+
+.pending-ok {
+  color: var(--color-success);
+  background: var(--color-success-bg);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--radius-sm);
+  margin: 0 0 0.75rem;
+}
+
 .asset-pick-list {
   display: flex;
   flex-direction: column;
@@ -333,7 +353,7 @@ button.secondary {
 }
 
 button.secondary:hover:not(:disabled) {
-  background: #e5e7eb;
+  background: var(--color-sidebar-border);
 }
 
 .error {
@@ -341,12 +361,48 @@ button.secondary:hover:not(:disabled) {
   font-size: 0.85rem;
   padding: 0.65rem 1rem;
   background: var(--color-danger-bg);
-  border: 1px solid #fecaca;
+  border: 1px solid var(--color-danger);
   border-radius: var(--radius-sm);
 }
 
 @media (max-width: 640px) {
   .checklist-row {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Objetivos táctiles más grandes para técnicos usando el celular en campo */
+  .checkbox-chip {
+    padding: 0.65rem 1rem;
+    font-size: 0.9rem;
+    gap: 0.55rem;
+  }
+
+  .checkbox-chip input[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .tri-checks {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tri-checks .checkbox-chip {
+    justify-content: flex-start;
+  }
+
+  .form-actions-bar {
+    flex-direction: column-reverse;
+    gap: 0.6rem;
+  }
+
+  .form-actions-bar button {
+    width: 100%;
+    padding: 0.9rem 1.25rem;
+    font-size: 0.95rem;
+  }
+
+  .item-card {
+    padding: 0.9rem;
   }
 }

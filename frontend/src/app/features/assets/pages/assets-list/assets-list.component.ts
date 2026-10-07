@@ -8,12 +8,15 @@ import { LabelPipe } from '../../../../core/pipes/label.pipe';
 import { SearchService } from '../../../../core/services/search.service';
 import { BranchesService, Branch } from '../../../../core/services/branches.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { ToastService } from '../../../../core/services/toast.service';
+import { ConfirmService } from '../../../../core/services/confirm.service';
+import { PaginationComponent } from '../../../../shared/pagination/pagination.component';
 
 
 @Component({
   selector: 'app-assets-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, LabelPipe, RouterLink],
+  imports: [CommonModule, FormsModule, LabelPipe, RouterLink, PaginationComponent],
   templateUrl: './assets-list.component.html',
   styleUrl: './assets-list.component.css',
 })
@@ -23,6 +26,8 @@ export class AssetsListComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private branchesService = inject(BranchesService);
   private authService = inject(AuthService);
+  private toast = inject(ToastService);
+  private confirmService = inject(ConfirmService);
 
   assets: Asset[] = [];
   branches: Branch[] = [];
@@ -30,6 +35,8 @@ export class AssetsListComponent implements OnInit {
   loading = false;
   errorMessage = '';
   canManage = false;
+  page = 1;
+  pageSize = 10;
 
   isEditing = false;
   selectedAssetId: number | null = null;
@@ -55,7 +62,10 @@ export class AssetsListComponent implements OnInit {
     this.loadAssets();
     this.branchesService.getBranches().subscribe({ next: res => this.branches = res });
     this.authService.getMe().subscribe({ next: res => this.canManage = res.role === 'admin' });
-    this.searchService.term.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(term => this.searchTerm = term);
+    this.searchService.term.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(term => {
+      this.searchTerm = term;
+      this.page = 1;
+    });
   }
 
   getBranchName(id: number | null): string {
@@ -70,6 +80,15 @@ export class AssetsListComponent implements OnInit {
       a.type?.toLowerCase().includes(this.searchTerm) ||
       a.location?.toLowerCase().includes(this.searchTerm)
     );
+  }
+
+  get pagedAssets(): Asset[] {
+    const start = (this.page - 1) * this.pageSize;
+    return this.visibleAssets.slice(start, start + this.pageSize);
+  }
+
+  onPageChange(page: number): void {
+    this.page = page;
   }
 
   loadAssets(): void {
@@ -142,6 +161,7 @@ export class AssetsListComponent implements OnInit {
         next: () => {
           this.loadAssets();
           this.closeFormModal();
+          this.toast.success('Equipo actualizado correctamente');
         },
         error: () => {
           this.errorMessage = 'No se pudo actualizar el equipo';
@@ -171,6 +191,7 @@ export class AssetsListComponent implements OnInit {
       next: () => {
         this.loadAssets();
         this.closeFormModal();
+        this.toast.success('Equipo creado correctamente');
       },
       error: () => {
         this.errorMessage = 'No se pudo crear el equipo';
@@ -197,12 +218,27 @@ export class AssetsListComponent implements OnInit {
     this.form.operating_system = asset.operating_system || '';
   }
 
-  toggleStatus(asset: Asset): void {
-    const nextStatus = asset.status === 'dado_de_baja' ? 'disponible' : 'dado_de_baja';
+  async toggleStatus(asset: Asset): Promise<void> {
+    const reactivating = asset.status === 'dado_de_baja';
+    const nextStatus = reactivating ? 'disponible' : 'dado_de_baja';
+
+    if (!reactivating) {
+      const confirmed = await this.confirmService.confirm({
+        title: 'Dar de baja equipo',
+        message: `¿Seguro que deseas dar de baja "${asset.name}"? Podrás reactivarlo cuando quieras.`,
+        confirmText: 'Dar de baja',
+        danger: true,
+      });
+      if (!confirmed) return;
+    }
+
     this.assetsService.changeStatus(asset.id, nextStatus).subscribe({
-      next: () => this.loadAssets(),
+      next: () => {
+        this.loadAssets();
+        this.toast.success(reactivating ? 'Equipo reactivado' : 'Equipo dado de baja');
+      },
       error: () => {
-        this.errorMessage = 'No se pudo cambiar el estado del equipo';
+        this.toast.error('No se pudo cambiar el estado del equipo');
       }
     });
   }

@@ -11,6 +11,7 @@ import {
   MaintenanceVisitItemCreate,
   MaintenanceVisitChecklistEntryCreate,
 } from '../../../../core/services/maintenance-visit.service';
+import { ToastService } from '../../../../core/services/toast.service';
 
 interface DraftItem extends MaintenanceVisitItemCreate {
   _files: File[];
@@ -107,6 +108,7 @@ export class VisitFormComponent implements OnInit {
   private authService = inject(AuthService);
   private assetsService = inject(AssetsService);
   private visitService = inject(MaintenanceVisitService);
+  private toast = inject(ToastService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
@@ -162,6 +164,27 @@ export class VisitFormComponent implements OnInit {
   get branchAssets(): Asset[] {
     if (!this.header.branch_id) return [];
     return this.allAssets.filter(a => a.branch_id === this.header.branch_id);
+  }
+
+  /** Equipos activos de la sucursal que todavía no fueron marcados como
+   * atendidos ni justificados con una observación. Los equipos dados de
+   * baja no se exigen porque ya no están en operación. */
+  get pendingAssets(): Asset[] {
+    return this.branchAssets.filter(a =>
+      a.status !== 'dado_de_baja' &&
+      !this.selectedAssetIds[a.id] &&
+      !(this.assetObservations[a.id] || '').trim()
+    );
+  }
+
+  /** Razón por la que "Finalizar visita" está deshabilitado, o cadena
+   * vacía si ya se puede finalizar. */
+  get finalizeBlockedReason(): string {
+    if (!this.signedReportPath) return 'Sube la hoja firmada antes de finalizar';
+    if (this.pendingAssets.length > 0) {
+      return `Marca o justifica ${this.pendingAssets.length} equipo(s) antes de finalizar`;
+    }
+    return '';
   }
 
   get manualItems(): DraftItem[] {
@@ -368,11 +391,20 @@ export class VisitFormComponent implements OnInit {
   submitVisit(status: 'borrador' | 'completado'): void {
     if (!this.header.branch_id || !this.header.technician_id) {
       this.errorMessage = 'Selecciona sucursal y técnico';
+      this.toast.error(this.errorMessage);
       return;
     }
 
     if (status === 'completado' && !this.signedReportPath) {
       this.errorMessage = 'Debes subir la hoja firmada por el encargado antes de finalizar la visita';
+      this.toast.error(this.errorMessage);
+      return;
+    }
+
+    if (status === 'completado' && this.pendingAssets.length > 0) {
+      const names = this.pendingAssets.map(a => a.name).join(', ');
+      this.errorMessage = `Marca como atendidos o justifica con una observación estos equipos antes de finalizar: ${names}`;
+      this.toast.error(`Faltan ${this.pendingAssets.length} equipo(s) por marcar o justificar`);
       return;
     }
 

@@ -117,7 +117,7 @@ button.secondary {
 }
 
 button.secondary:hover {
-  background: #e5e7eb;
+  background: var(--color-sidebar-border);
 }
 
 table {
@@ -149,13 +149,8 @@ tbody tr:hover {
 
 .actions {
   display: flex;
-  gap: 0.5rem;
-}
-
-.actions button {
-  padding: 0.4rem 0.75rem;
-  font-size: 0.8rem;
-  border-radius: 6px;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
 .error {
@@ -164,7 +159,7 @@ tbody tr:hover {
   font-size: 0.85rem;
   padding: 0.65rem 1rem;
   background: var(--color-danger-bg);
-  border: 1px solid #fecaca;
+  border: 1px solid var(--color-danger);
   border-radius: var(--radius-sm);
 }
 

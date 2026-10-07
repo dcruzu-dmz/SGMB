@@ -5,6 +5,7 @@ import { CorrectiveRequestService, CorrectiveRequest } from '../../../../core/se
 import { AssetsService, Asset } from '../../../../core/services/assets.service';
 import { BranchesService, Branch } from '../../../../core/services/branches.service';
 import { UsersService, User } from '../../../../core/services/users.service';
+import { API_BASE_URL } from '../../../../core/config/api-config';
 
 @Component({
   selector: 'app-corrective-request-print',
@@ -65,7 +66,7 @@ export class CorrectiveRequestPrintComponent implements OnInit {
   }
 
   reportUrl(path: string): string {
-    return `http://127.0.0.1:8000${path}`;
+    return `${API_BASE_URL}${path}`;
   }
 
   today(): string {

@@ -141,6 +141,13 @@
     <p class="hint" *ngIf="!header.branch_id">Selecciona una sucursal para ver sus equipos registrados</p>
     <p class="hint" *ngIf="header.branch_id && branchAssets.length === 0">Esta sucursal no tiene equipos registrados todavía. Puedes agregarlos desde el módulo de Equipos, o registrar uno no catalogado abajo.</p>
 
+    <p class="pending-banner" *ngIf="pendingAssets.length > 0">
+      ⚠ {{ pendingAssets.length }} de {{ branchAssets.length }} equipos aún sin marcar como atendidos ni justificar
+    </p>
+    <p class="pending-ok" *ngIf="header.branch_id && branchAssets.length > 0 && pendingAssets.length === 0">
+      ✓ Todos los equipos de esta sucursal están marcados o justificados
+    </p>
+
     <div class="asset-pick-list" *ngIf="branchAssets.length > 0">
       <ng-container *ngFor="let asset of branchAssets">
       <div class="asset-pick-row">
@@ -344,7 +351,7 @@
 
   <div class="form-actions-bar">
     <button type="button" class="secondary" [disabled]="loading" (click)="submitVisit('borrador')">Guardar como borrador</button>
-    <button type="button" class="primary" [disabled]="loading || !signedReportPath" (click)="submitVisit('completado')" [title]="!signedReportPath ? 'Sube la hoja firmada antes de finalizar' : ''">
+    <button type="button" class="primary" [disabled]="loading || !!finalizeBlockedReason" (click)="submitVisit('completado')" [title]="finalizeBlockedReason">
       {{ loading ? 'Guardando...' : 'Finalizar visita' }}
     </button>
   </div>

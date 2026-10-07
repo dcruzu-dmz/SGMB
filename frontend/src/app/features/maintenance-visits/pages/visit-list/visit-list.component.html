@@ -42,9 +42,9 @@
                 {{ visit.status }}
               </span>
             </td>
-            <td>
-              <a [routerLink]="['/maintenance-visits', visit.id]">Ver</a>
-              <a *ngIf="visit.status === 'programada'" [routerLink]="['/maintenance-visits', visit.id, 'edit']" class="complete-link">Completar</a>
+            <td class="actions">
+              <a class="action-btn link" [routerLink]="['/maintenance-visits', visit.id]"><span class="icon">👁</span> Ver</a>
+              <a class="action-btn accent" *ngIf="visit.status === 'programada'" [routerLink]="['/maintenance-visits', visit.id, 'edit']"><span class="icon">✓</span> Completar</a>
             </td>
           </tr>
         </tbody>

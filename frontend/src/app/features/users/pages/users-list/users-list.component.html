@@ -26,7 +26,7 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let user of users">
+        <tr *ngFor="let user of pagedUsers">
           <td>{{ user.id }}</td>
           <td>{{ user.name }}</td>
           <td>{{ user.email }}</td>
@@ -37,8 +37,11 @@
             </span>
           </td>
           <td class="actions">
-            <button (click)="openEditModal(user)">Editar</button>
-            <button class="secondary" (click)="toggleStatus(user)">
+            <button class="action-btn edit" (click)="openEditModal(user)">
+              <span class="icon">✎</span> Editar
+            </button>
+            <button class="action-btn" [class.warning]="user.is_active" [class.success]="!user.is_active" (click)="toggleStatus(user)">
+              <span class="icon">{{ user.is_active ? '⏻' : '✓' }}</span>
               {{ user.is_active ? 'Desactivar' : 'Activar' }}
             </button>
           </td>
@@ -46,6 +49,7 @@
       </tbody>
     </table>
     </div>
+    <app-pagination [page]="page" [pageSize]="pageSize" [total]="users.length" (pageChange)="onPageChange($event)"></app-pagination>
   </div>
 
   <div class="modal-backdrop" *ngIf="showFormModal" (click)="closeFormModal()">

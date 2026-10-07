@@ -37,6 +37,39 @@
   --font-brand: Georgia, "Times New Roman", serif;
 }
 
+:root[data-theme="dark"] {
+  --color-bg: #0f1420;
+  --color-surface: #1a2030;
+  --color-sidebar: #161b28;
+  --color-sidebar-border: #2a3142;
+  --color-text: #e5e9f2;
+  --color-text-muted: #9aa3b8;
+  --color-text-faint: #6b7385;
+
+  --color-primary: #6d97f2;
+  --color-primary-dark: #4c78d6;
+  --color-primary-light: #1e2942;
+
+  --color-accent: #4cc16a;
+  --color-accent-hover: #3da858;
+
+  --color-danger: #f87171;
+  --color-danger-bg: #3a1e22;
+  --color-warning: #fbbf24;
+  --color-warning-bg: #3a2e14;
+  --color-success: #4ade80;
+  --color-success-bg: #16321f;
+  --color-info: #60a5fa;
+  --color-info-bg: #16283f;
+  --color-neutral-bg: #232a3a;
+
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+:root[data-theme="dark"] body {
+  color-scheme: dark;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -90,4 +123,62 @@ html, body {
   border-radius: var(--radius-lg);
   padding: 1.5rem;
   box-shadow: var(--shadow-card);
+  transition: box-shadow 0.15s ease;
+}
+
+/* Shared compact "pill" action buttons for table rows (Editar/Activar/etc.) */
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 20px;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  line-height: 1.2;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease;
+  background: var(--color-neutral-bg);
+  color: var(--color-text);
+}
+
+.action-btn .icon {
+  font-size: 0.95em;
+  line-height: 1;
+}
+
+.action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.12);
+}
+
+.action-btn.edit { background: var(--color-primary-light); color: var(--color-primary); }
+.action-btn.success { background: var(--color-success-bg); color: var(--color-success); }
+.action-btn.warning { background: var(--color-warning-bg); color: var(--color-warning); }
+.action-btn.info { background: var(--color-info-bg); color: var(--color-info); }
+.action-btn.accent { background: var(--color-accent); color: #fff; }
+.action-btn.accent:hover { background: var(--color-accent-hover); }
+.action-btn.link { background: transparent; border-color: var(--color-sidebar-border); color: var(--color-text-muted); }
+.action-btn.link:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+/* Objetivos táctiles más grandes en móvil (técnicos usando el sistema en campo) */
+@media (max-width: 640px) {
+  .action-btn {
+    padding: 0.55rem 0.9rem;
+    font-size: 0.85rem;
+  }
+
+  input, select, textarea {
+    font-size: 16px; /* evita el zoom automático de iOS al enfocar un campo */
+  }
 }

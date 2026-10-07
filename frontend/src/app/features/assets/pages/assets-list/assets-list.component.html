@@ -27,7 +27,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let asset of visibleAssets">
+        <tr *ngFor="let asset of pagedAssets">
             <td>{{ asset.name }}</td>
             <td>{{ asset.type }}</td>
             <td>{{ asset.brand }}</td>
@@ -35,8 +35,11 @@
             <td>{{ getBranchName(asset.branch_id) }}</td>
             <td><span [class]="'badge badge-' + asset.status">{{ asset.status | label }}</span></td>
             <td class="actions" *ngIf="canManage">
-                <button (click)="openEditModal(asset)">Editar</button>
-                <button class="secondary" (click)="toggleStatus(asset)">{{ asset.status === 'dado_de_baja' ? 'Reactivar' : 'Dar de baja' }}</button>
+                <button class="action-btn edit" (click)="openEditModal(asset)"><span class="icon">✎</span> Editar</button>
+                <button class="action-btn" [class.warning]="asset.status !== 'dado_de_baja'" [class.success]="asset.status === 'dado_de_baja'" (click)="toggleStatus(asset)">
+                  <span class="icon">{{ asset.status === 'dado_de_baja' ? '✓' : '⏻' }}</span>
+                  {{ asset.status === 'dado_de_baja' ? 'Reactivar' : 'Dar de baja' }}
+                </button>
             </td>
         </tr>
     </tbody>
@@ -45,6 +48,7 @@
     <p class="empty" *ngIf="!loading && visibleAssets.length === 0">
       {{ searchTerm ? 'Sin resultados para "' + searchTerm + '"' : 'No hay equipos registrados' }}
     </p>
+    <app-pagination [page]="page" [pageSize]="pageSize" [total]="visibleAssets.length" (pageChange)="onPageChange($event)"></app-pagination>
 </div>
 
 <div class="modal-backdrop" *ngIf="showFormModal" (click)="closeFormModal()">
@@ -56,6 +60,7 @@
 
     <form (ngSubmit)="submitForm()">
 
+        <div class="form-grid">
             <div class="form-group">
                 <label>Nombre</label>
                 <input type="text" [(ngModel)]="form.name" name="name" required />
@@ -112,6 +117,7 @@
                     <option value="dado_de_baja">Dado de baja</option>
                 </select>
             </div>
+        </div>
             <div class="form-group">
                 <label>Descripción</label>
                 <textarea [(ngModel)]="form.description" name="description"></textarea>

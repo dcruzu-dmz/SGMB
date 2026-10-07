@@ -1,6 +1,7 @@
 import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { API_BASE_URL } from "../config/api-config";
 
 export interface CorrectiveRequest {
   id: number,
@@ -40,7 +41,7 @@ export interface CorrectiveRequestUpdate{
 })
 export class CorrectiveRequestService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://127.0.0.1:8000/correctiverequest';
+  private apiUrl = `${API_BASE_URL}/correctiverequest`;
 
   getCorrectiveRequest(): Observable<CorrectiveRequest[]> {
     return this.http.get<CorrectiveRequest[]>(this.apiUrl);

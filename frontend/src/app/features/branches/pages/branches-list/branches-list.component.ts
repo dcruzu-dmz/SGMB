@@ -6,11 +6,14 @@ import { BranchesService, Branch, BranchCreate, BranchUpdate } from '../../../..
 import { AssetsService, Asset } from '../../../../core/services/assets.service';
 import { LabelPipe } from '../../../../core/pipes/label.pipe';
 import { SearchService } from '../../../../core/services/search.service';
+import { ToastService } from '../../../../core/services/toast.service';
+import { ConfirmService } from '../../../../core/services/confirm.service';
+import { PaginationComponent } from '../../../../shared/pagination/pagination.component';
 
 @Component({
   selector: 'app-branches-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, LabelPipe],
+  imports: [CommonModule, FormsModule, LabelPipe, PaginationComponent],
   templateUrl: './branches-list.component.html',
   styleUrl: './branches-list.component.css',
 })
@@ -19,12 +22,16 @@ export class BranchesListComponent implements OnInit{
   private assetsService = inject(AssetsService);
   private searchService = inject(SearchService);
   private destroyRef = inject(DestroyRef);
+  private toast = inject(ToastService);
+  private confirmService = inject(ConfirmService);
 
   branches: Branch[] = [];
   assets: Asset[] = [];
   loading = false;
   errorMessage = '';
   searchTerm = '';
+  page = 1;
+  pageSize = 10;
 
   isEditing = false;
   selectedBranchId: number | null = null;
@@ -43,7 +50,10 @@ export class BranchesListComponent implements OnInit{
 ngOnInit(): void {
     this.loadBranches();
     this.assetsService.getAssets().subscribe({ next: res => this.assets = res });
-    this.searchService.term.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(term => this.searchTerm = term);
+    this.searchService.term.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(term => {
+      this.searchTerm = term;
+      this.page = 1;
+    });
   }
 
   get visibleBranches(): Branch[] {
@@ -53,6 +63,15 @@ ngOnInit(): void {
       b.address?.toLowerCase().includes(this.searchTerm) ||
       b.phone?.toLowerCase().includes(this.searchTerm)
     );
+  }
+
+  get pagedBranches(): Branch[] {
+    const start = (this.page - 1) * this.pageSize;
+    return this.visibleBranches.slice(start, start + this.pageSize);
+  }
+
+  onPageChange(page: number): void {
+    this.page = page;
   }
 
   get assetsForModal(): Asset[] {
@@ -123,6 +142,7 @@ ngOnInit(): void {
         next: () => {
           this.loadBranches();
           this.closeFormModal();
+          this.toast.success('Sucursal actualizada correctamente');
         },
         error: () => {
           this.errorMessage = 'No se pudo actualizar la sucursal';
@@ -141,6 +161,7 @@ ngOnInit(): void {
     next: () => {
       this.loadBranches();
       this.closeFormModal();
+      this.toast.success('Sucursal creada correctamente');
     },
     error: () => {
       this.errorMessage = 'No se pudo crear la sucursal';
@@ -159,11 +180,26 @@ editBranch(branch: Branch): void {
     this.form.maintenance_frequency_days = branch.maintenance_frequency_days;
   }
 
-  toggleStatus(branch: Branch): void {
-    this.branchesService.changeBranchStatus(branch.id, !branch.is_active).subscribe({
-      next: () => { this.loadBranches(); },
+  async toggleStatus(branch: Branch): Promise<void> {
+    const activating = !branch.is_active;
+
+    if (!activating) {
+      const confirmed = await this.confirmService.confirm({
+        title: 'Desactivar sucursal',
+        message: `¿Seguro que deseas desactivar "${branch.name}"? Podrás reactivarla cuando quieras.`,
+        confirmText: 'Desactivar',
+        danger: true,
+      });
+      if (!confirmed) return;
+    }
+
+    this.branchesService.changeBranchStatus(branch.id, activating).subscribe({
+      next: () => {
+        this.loadBranches();
+        this.toast.success(activating ? 'Sucursal activada' : 'Sucursal desactivada');
+      },
       error: () => {
-        this.errorMessage = 'No se pudo cambiar el estado de la sucursal';
+        this.toast.error('No se pudo cambiar el estado de la sucursal');
       }
     });
   }

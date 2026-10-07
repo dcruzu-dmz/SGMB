@@ -23,7 +23,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let branch of visibleBranches">
+                <tr *ngFor="let branch of pagedBranches">
                     <td>{{ branch.name }}</td>
                     <td>{{ branch.address }}</td>
                     <td>{{ branch.phone }}</td>
@@ -34,9 +34,12 @@
                         </span>
                     </td>
                     <td class="actions">
-                        <button (click)="openEditModal(branch)">Editar</button>
-                        <button class="secondary" (click)="showAssets(branch)">Ver equipos</button>
-                        <button class="secondary" (click)="toggleStatus(branch)">{{ branch.is_active ? 'Desactivar' : 'Activar' }}</button>
+                        <button class="action-btn edit" (click)="openEditModal(branch)"><span class="icon">✎</span> Editar</button>
+                        <button class="action-btn info" (click)="showAssets(branch)"><span class="icon">▤</span> Ver equipos</button>
+                        <button class="action-btn" [class.warning]="branch.is_active" [class.success]="!branch.is_active" (click)="toggleStatus(branch)">
+                          <span class="icon">{{ branch.is_active ? '⏻' : '✓' }}</span>
+                          {{ branch.is_active ? 'Desactivar' : 'Activar' }}
+                        </button>
                     </td>
                 </tr>
             </tbody>
@@ -45,6 +48,7 @@
         <p class="empty" *ngIf="!loading && visibleBranches.length === 0">
           {{ searchTerm ? 'Sin resultados para "' + searchTerm + '"' : 'No hay sucursales registradas' }}
         </p>
+        <app-pagination [page]="page" [pageSize]="pageSize" [total]="visibleBranches.length" (pageChange)="onPageChange($event)"></app-pagination>
     </div>
 
     <div class="modal-backdrop" *ngIf="showFormModal" (click)="closeFormModal()">

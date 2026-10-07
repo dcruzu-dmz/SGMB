@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { API_BASE_URL } from '../config/api-config';
 
 export interface LoginRequest {
   email: string;
@@ -26,7 +27,7 @@ export interface CurrentUser {
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://127.0.0.1:8000';
+  private apiUrl = API_BASE_URL;
 
   login(data: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, data).pipe(
