@@ -1,24 +1,24 @@
 # Graph Report - SGMB  (2026-10-07)
 
 ## Corpus Check
-- 119 files · ~71,776 words
+- 120 files · ~72,844 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 34 file(s) not represented in the graph (top: .css 21, (none) 6, .log 3)
 
 ## Summary
-- 1053 nodes · 2394 edges · 65 communities (42 shown, 23 thin omitted)
+- 1065 nodes · 2405 edges · 66 communities (41 shown, 25 thin omitted)
 - Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 214 edges (avg confidence: 0.92)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f0704633`
+- Built from commit: `f3beed80`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - routers/branch.py
 - CorrectiveRequestListComponent
-- ToastService
+- @angular/core
 - package.json
 - app.routes.ts
 - User
@@ -26,11 +26,11 @@
 - main.py
 - corrective-requests-list.component.ts
 - assigned-tasks-list.component.ts
-- typing
+- routers/corrective_request.py
 - UsersListComponent
 - AssignedTasksListComponent
 - AssetsListComponent
-- test_units.py
+- test_authz.py
 - routers/asset.py
 - VisitFormComponent
 - ReportsDashboardComponent
@@ -41,7 +41,7 @@
 - Asset
 - Capítulo V Análisis de Resultados SGMB
 - MaintenanceVisitService
-- dashboard.component.ts
+- CorrectiveRequestService
 - backend requirements.txt
 - Resultados de Pruebas Unitarias v2
 - Branch
@@ -49,16 +49,17 @@
 - routers/auth.py
 - Flujo DESPUES - Dashboard de Reportes en SGMB
 - generar_capitulo5.py
-- test_authz.py
+- Spec: rendimiento de los listados (auditoría, punto 15)
 - routers/assigned_task.py
 - CorrectiveRequestPrintComponent
-- User
+- @angular/common
 - VisitPrintComponent
 - AppShell layout template
 - Dashboard template
 - tsconfig.app.json
 - Average Duration per Test (10 tests) Chart
 - auth_headers
+- isCpuType
 - App root template
 - Visit Detail Template
 - Spec: Endurecer autorización y subida de archivos (auditoría, puntos 1–4)
@@ -72,7 +73,7 @@
 - Pagination template
 - BulkBranchAssetsComponent
 - CLAUDE.md
-- @angular/core
+- app.ts
 - VisitListComponent
 - assets-list.component.ts
 - VisitScheduleComponent
@@ -117,63 +118,63 @@
 - **Per-module unit test duration charts** — backend_pruebas_screenshots_graf_dur_auth_auth_duration_chart, backend_pruebas_screenshots_graf_dur_solicitudes_solicitudes_duration_chart, backend_pruebas_screenshots_graf_dur_visitas_visitas_duration_chart [INFERRED 0.95]
 - **Per-module unit test success charts (5 reps, 100% OK)** — backend_pruebas_screenshots_graf_ok_auth_auth_success_chart, backend_pruebas_screenshots_graf_ok_solicitudes_solicitudes_success_chart, backend_pruebas_screenshots_graf_ok_visitas_visitas_success_chart [INFERRED 0.95]
 
-## Communities (65 total, 23 thin omitted)
+## Communities (66 total, 25 thin omitted)
 
 ### Community 0 - "routers/branch.py"
-Cohesion: 0.12
-Nodes (14): Branch, create_branch(), get_branch(), get_branches(), update_branch(), update_branch_status(), BranchBase, BranchCreate (+6 more)
+Cohesion: 0.18
+Nodes (11): Branch, create_branch(), get_branch(), get_branches(), update_branch(), update_branch_status(), BranchBase, BranchCreate (+3 more)
 
 ### Community 1 - "CorrectiveRequestListComponent"
 Cohesion: 0.06
 Nodes (3): CorrectiveRequest, CorrectiveRequestListComponent, DashboardComponent
 
-### Community 2 - "ToastService"
-Cohesion: 0.29
-Nodes (3): Toast, ToastService, ToastType
+### Community 2 - "@angular/core"
+Cohesion: 0.10
+Nodes (3): LoginComponent, Login Template, @angular/core
 
 ### Community 3 - "package.json"
-Cohesion: 0.04
-Nodes (42): dependencies, @angular/common, @angular/compiler, @angular/core, @angular/forms, @angular/platform-browser, @angular/router, rxjs (+34 more)
+Cohesion: 0.05
+Nodes (39): dependencies, @angular/common, @angular/compiler, @angular/core, @angular/forms, @angular/platform-browser, @angular/router, rxjs (+31 more)
 
 ### Community 4 - "app.routes.ts"
-Cohesion: 0.21
-Nodes (9): routes, authGuard(), roleGuard(), authInterceptor(), withReadableDetail(), LoginComponent, Login Template, @angular/common (+1 more)
+Cohesion: 0.23
+Nodes (9): appConfig, routes, authGuard(), roleGuard(), authInterceptor(), withReadableDetail(), @angular/platform-browser, @angular/router (+1 more)
 
 ### Community 5 - "User"
-Cohesion: 0.05
-Nodes (69): CorrectiveRequest, MaintenanceVisit, MaintenanceVisitChecklistEntry, MaintenanceVisitItem, User, me(), _can_read_request(), change_corrective_request_status() (+61 more)
+Cohesion: 0.10
+Nodes (45): MaintenanceVisit, MaintenanceVisitChecklistEntry, MaintenanceVisitItem, MaintenanceVisitPhoto, User, me(), add_checklist_entries(), add_visit_item() (+37 more)
 
 ### Community 6 - "frontend"
 Cohesion: 0.05
 Nodes (38): build, serve, test, builder, configurations, defaultConfiguration, options, cli (+30 more)
 
 ### Community 7 - "main.py"
-Cohesion: 0.29
-Nodes (3): lifespan(), read_root(), preventive_check_loop()
+Cohesion: 0.17
+Nodes (5): lifespan(), read_root(), preventive_check_loop(), run_preventive_check(), test_U03_preventive_check_crea_visita_programada_si_vencida()
 
 ### Community 8 - "corrective-requests-list.component.ts"
 Cohesion: 0.12
-Nodes (12): API_BASE_URL, LabelPipe, AssetsService, BRANCH_CHAINS, BranchCreate, BranchesService, BranchUpdate, CorrectiveRequestCreate (+4 more)
+Nodes (11): API_BASE_URL, AssetsService, BRANCH_CHAINS, BranchCreate, BranchesService, BranchUpdate, CorrectiveRequestCreate, CorrectiveRequestUpdate (+3 more)
 
 ### Community 9 - "assigned-tasks-list.component.ts"
-Cohesion: 0.09
+Cohesion: 0.10
 Nodes (15): AssignedTaskCreate, AssignedTasksService, TASK_TYPE_INVENTORY, TASK_TYPE_LABELS, AuthService, CurrentUser, LoginRequest, LoginResponse (+7 more)
 
-### Community 10 - "typing"
-Cohesion: 0.29
-Nodes (3): upgrade(), downgrade(), upgrade()
+### Community 10 - "routers/corrective_request.py"
+Cohesion: 0.07
+Nodes (26): upgrade(), downgrade(), upgrade(), CorrectiveRequest, _can_read_request(), change_corrective_request_status(), _check_request_read(), _check_request_work() (+18 more)
 
 ### Community 12 - "AssignedTasksListComponent"
 Cohesion: 0.12
 Nodes (3): AssignedTask, AssignedTasksListComponent, AppShellComponent
 
 ### Community 13 - "AssetsListComponent"
-Cohesion: 0.10
-Nodes (4): isCpuType(), isDvrType(), isMonitorType(), AssetsListComponent
+Cohesion: 0.11
+Nodes (3): isDvrType(), isMonitorType(), AssetsListComponent
 
-### Community 15 - "test_units.py"
-Cohesion: 0.18
-Nodes (4): run_migrations_offline(), run_migrations_online(), MaintenanceVisitPhoto, test_INT01_login_valido_devuelve_token()
+### Community 15 - "test_authz.py"
+Cohesion: 0.10
+Nodes (6): run_migrations_offline(), run_migrations_online(), Settings, hash_password(), test_subida_hoja_firmada_valida_tipo_y_tamano(), test_INT01_login_valido_devuelve_token()
 
 ### Community 16 - "routers/asset.py"
 Cohesion: 0.16
@@ -188,12 +189,12 @@ Cohesion: 0.12
 Nodes (19): create_user(), _ensure_admin_access_kept(), get_user(), get_users(), reset_user_password(), toggle_user_status(), update_user(), _visible_user() (+11 more)
 
 ### Community 20 - "visit-form.component.ts"
-Cohesion: 0.14
-Nodes (15): MaintenanceVisitChecklistEntry, MaintenanceVisitChecklistEntryCreate, MaintenanceVisitCreate, MaintenanceVisitItemCreate, MaintenanceVisitPhoto, CHECKLIST_TEMPLATE, ChecklistGroup, CLEANING_CHECKLISTS (+7 more)
+Cohesion: 0.11
+Nodes (15): MaintenanceVisitChecklistEntryCreate, MaintenanceVisitItemCreate, Toast, ToastService, ToastType, CHECKLIST_TEMPLATE, ChecklistGroup, CLEANING_CHECKLISTS (+7 more)
 
 ### Community 21 - "test_units_v2.py"
-Cohesion: 0.14
-Nodes (8): Settings, hash_password(), verify_password(), verify_token(), test_U01_hash_and_verify_password_roundtrip(), test_AUTH_U01_hash_and_verify_password_roundtrip(), test_AUTH_U02_verify_password_rejects_wrong_password(), test_AUTH_U03_verify_token_returns_none_for_invalid_token()
+Cohesion: 0.12
+Nodes (8): require_roles(), verify_password(), test_U01_hash_and_verify_password_roundtrip(), test_U02_require_roles_denies_non_matching_role(), test_AUTH_U01_hash_and_verify_password_roundtrip(), test_AUTH_U02_verify_password_rejects_wrong_password(), test_AUTH_U03_verify_token_returns_none_for_invalid_token(), test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida()
 
 ### Community 22 - "Resultados de Pruebas SGMB"
 Cohesion: 0.22
@@ -202,10 +203,6 @@ Nodes (15): ACEP01 Technician closes request with signed PDF, Deprecation findin
 ### Community 24 - "Capítulo V Análisis de Resultados SGMB"
 Cohesion: 0.23
 Nodes (14): BOFASA, Capítulo V Análisis de Resultados SGMB, Flujo 3 Reportes dashboard, Flujo 1 Solicitudes Correctivas, Flujo 2 Visitas Preventivo, Hipótesis: SGMB reduce tiempos, errores e insumos, Métricas TP, TE, Personal, Insumos, Módulo Auth / Control de Acceso (+6 more)
-
-### Community 26 - "dashboard.component.ts"
-Cohesion: 0.12
-Nodes (6): CorrectiveRequestService, MaintenanceVisit, ActivityEntry, CalendarDay, MONTH_NAMES, WEEKDAYS
 
 ### Community 27 - "backend requirements.txt"
 Cohesion: 0.15
@@ -220,24 +217,24 @@ Cohesion: 0.50
 Nodes (3): Checkpoint, Fase 1, Tareas: endurecer el contrato de usuarios
 
 ### Community 31 - "routers/auth.py"
-Cohesion: 0.20
-Nodes (6): login(), _recent_failures(), LoginRequest, Token, TokenData, create_access_token()
+Cohesion: 0.13
+Nodes (9): get_db(), login(), _recent_failures(), LoginRequest, Token, TokenData, get_current_user(), create_access_token() (+1 more)
 
 ### Community 32 - "Flujo DESPUES - Dashboard de Reportes en SGMB"
 Cohesion: 0.20
 Nodes (12): Flujo ANTES - Reporte consolidado manual (Reportes), Flujo DESPUES - Dashboard de Reportes en SGMB, Flujo ANTES - Reporte de falla manual (Solicitudes Correctivas), Hoja firmada digital de cierre, Flujo DESPUES - Solicitud correctiva en SGMB, Flujo ANTES - Mantenimiento preventivo manual (Visitas), Programacion automatica de mantenimiento preventivo por frecuencia, Flujo DESPUES - Visita preventiva automatica en SGMB (+4 more)
 
-### Community 34 - "test_authz.py"
-Cohesion: 0.12
-Nodes (3): get_db(), get_current_user(), test_subida_hoja_firmada_valida_tipo_y_tamano()
+### Community 34 - "Spec: rendimiento de los listados (auditoría, punto 15)"
+Cohesion: 0.17
+Nodes (11): Alcance, Comandos, Criterios de éxito, Estilo de código, Estrategia de verificación, Estructura y archivos afectados, Límites, Objetivo (+3 more)
 
 ### Community 35 - "routers/assigned_task.py"
 Cohesion: 0.16
 Nodes (6): AssignedTask, close_assigned_task(), create_assigned_task(), get_assigned_tasks(), AssignedTaskCreate, AssignedTaskResponse
 
-### Community 37 - "User"
-Cohesion: 0.20
-Nodes (5): User, UserCreate, UsersService, UserUpdate, @angular/forms
+### Community 37 - "@angular/common"
+Cohesion: 0.15
+Nodes (13): MaintenanceVisit, MaintenanceVisitChecklistEntry, MaintenanceVisitCreate, MaintenanceVisitPhoto, User, UserCreate, UsersService, UserUpdate (+5 more)
 
 ### Community 39 - "AppShell layout template"
 Cohesion: 0.25
@@ -279,33 +276,33 @@ Nodes (3): Logo BOFASA 40 anos (Distribuyendo Bienestar desde 1986), Icono BOFAS
 Cohesion: 0.22
 Nodes (8): Asset Decommission (Baja) Approval, Modal CRUD Form Pattern, Assets List Template (Equipos), Bulk Branch Assets Template, Assigned Tasks List Template, Branches List Template (Sucursales), Users List Template, PaginationComponent
 
-### Community 62 - "@angular/core"
-Cohesion: 0.07
-Nodes (8): App, ConfirmOptions, ConfirmService, ConfirmState, ThemeService, ConfirmDialogComponent, ToastContainerComponent, @angular/core
+### Community 62 - "app.ts"
+Cohesion: 0.11
+Nodes (7): App, ConfirmOptions, ConfirmService, ConfirmState, ThemeService, ConfirmDialogComponent, ToastContainerComponent
 
 ### Community 64 - "assets-list.component.ts"
-Cohesion: 0.27
-Nodes (7): AssetUpdate, CATEGORY_KEYWORDS, EQUIPMENT_CATEGORY_ORDER, EQUIPMENT_DEFAULT_TYPE, equipmentCategory(), groupByEquipmentCategory(), EquipmentIconComponent
+Cohesion: 0.20
+Nodes (9): LabelPipe, AssetUpdate, CATEGORY_KEYWORDS, EQUIPMENT_CATEGORY_ORDER, EQUIPMENT_DEFAULT_TYPE, equipmentCategory(), groupByEquipmentCategory(), CountEntry (+1 more)
 
 ## Knowledge Gaps
-- **142 isolated node(s):** `$schema`, `version`, `packageManager`, `analytics`, `newProjectRoot` (+137 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 432 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **23 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **152 isolated node(s):** `$schema`, `version`, `packageManager`, `analytics`, `newProjectRoot` (+147 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 443 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **25 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `UserRole` connect `assigned-tasks-list.component.ts` to `users.py`, `UsersListComponent`, `User`?**
-  _High betweenness centrality (0.338) - this node is a cross-community bridge._
+- **Why does `UserRole` connect `assigned-tasks-list.component.ts` to `users.py`, `UsersListComponent`, `@angular/common`?**
+  _High betweenness centrality (0.325) - this node is a cross-community bridge._
 - **Are the 57 inferred relationships involving `User` (e.g. with `_can_create_in_branch()` and `_can_edit_asset()`) actually correct?**
   _`User` has 57 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `$schema`, `version`, `packageManager` to the rest of the system?**
-  _142 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `routers/branch.py` be split into smaller, more focused modules?**
-  _Cohesion score 0.12433862433862433 - nodes in this community are weakly interconnected._
-- **Why does `Fuera de alcance` connect `users.py` to `assigned-tasks-list.component.ts`?**
-  _High betweenness centrality (0.336) - this node is a cross-community bridge._
+  _152 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `CorrectiveRequestListComponent` be split into smaller, more focused modules?**
-  _Cohesion score 0.06313497822931785 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.061495457721872815 - nodes in this community are weakly interconnected._
+- **Why does `Fuera de alcance` connect `users.py` to `assigned-tasks-list.component.ts`?**
+  _High betweenness centrality (0.324) - this node is a cross-community bridge._
+- **Should `@angular/core` be split into smaller, more focused modules?**
+  _Cohesion score 0.09523809523809523 - nodes in this community are weakly interconnected._
 - **Should `package.json` be split into smaller, more focused modules?**
-  _Cohesion score 0.044444444444444446 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.047619047619047616 - nodes in this community are weakly interconnected._

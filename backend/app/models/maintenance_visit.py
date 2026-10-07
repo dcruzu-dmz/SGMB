@@ -47,8 +47,9 @@ class MaintenanceVisit(Base):
 
     branch = relationship("Branch", foreign_keys=[branch_id])
     technician = relationship("User", foreign_keys=[technician_id])
-    items = relationship("MaintenanceVisitItem", back_populates="visit", cascade="all, delete-orphan")
-    checklist_entries = relationship("MaintenanceVisitChecklistEntry", back_populates="visit", cascade="all, delete-orphan")
+    # order_by=id: equipos, fotos y checklist se devuelven en el orden en que se crearon
+    items = relationship("MaintenanceVisitItem", back_populates="visit", cascade="all, delete-orphan", order_by="MaintenanceVisitItem.id")
+    checklist_entries = relationship("MaintenanceVisitChecklistEntry", back_populates="visit", cascade="all, delete-orphan", order_by="MaintenanceVisitChecklistEntry.id")
 
 
 class MaintenanceVisitItem(Base):
@@ -69,8 +70,8 @@ class MaintenanceVisitItem(Base):
 
     visit = relationship("MaintenanceVisit", back_populates="items")
     asset = relationship("Asset", foreign_keys=[asset_id])
-    photos = relationship("MaintenanceVisitPhoto", back_populates="item", cascade="all, delete-orphan")
-    checklist_entries = relationship("MaintenanceVisitChecklistEntry", back_populates="item", cascade="all, delete-orphan")
+    photos = relationship("MaintenanceVisitPhoto", back_populates="item", cascade="all, delete-orphan", order_by="MaintenanceVisitPhoto.id")
+    checklist_entries = relationship("MaintenanceVisitChecklistEntry", back_populates="item", cascade="all, delete-orphan", order_by="MaintenanceVisitChecklistEntry.id")
 
 
 class MaintenanceVisitChecklistEntry(Base):
