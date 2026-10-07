@@ -174,8 +174,8 @@ export class UsersListComponent implements OnInit {
         this.loadUsers();
         this.toast.success(activating ? 'Usuario activado' : 'Usuario desactivado');
       },
-      error: () => {
-        this.toast.error('No se pudo cambiar el estado del usuario');
+      error: (err) => {
+        this.toast.error(err?.error?.detail || 'No se pudo cambiar el estado del usuario');
       }
     });
   }

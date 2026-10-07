@@ -1,8 +1,11 @@
-from pydantic import BaseModel, EmailStr, Field, ConfigDict
+from pydantic import AfterValidator, BaseModel, EmailStr, Field, ConfigDict
 from datetime import datetime
-from typing import Literal
+from typing import Annotated, Literal
 
 UserRole = Literal["admin", "tecnico", "solicitante"]
+
+# Los correos se guardan y comparan en minusculas: Juan@x.com y juan@x.com son el mismo
+Email = Annotated[EmailStr, AfterValidator(str.lower)]
 
 
 class UserBase(BaseModel):
@@ -13,6 +16,7 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
+    email: Email
     role: UserRole
     password: str = Field(min_length=8)
 
@@ -22,7 +26,7 @@ class PasswordReset(BaseModel):
 
 class UserUpdate(BaseModel):
     name: str
-    email: EmailStr
+    email: Email
     role: UserRole
     is_active: bool
     

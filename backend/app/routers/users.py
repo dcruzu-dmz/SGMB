@@ -18,6 +18,23 @@ def _visible_user(user: User, current_user: User) -> UserResponse:
     return data
 
 
+def _ensure_admin_access_kept(user: User, new_role: str, new_active: bool, current_user: User, db: Session) -> None:
+    """Evita que un admin se bloquee a si mismo o que el sistema quede sin admins activos."""
+    if user.id == current_user.id:
+        if not new_active:
+            raise HTTPException(status_code=409, detail="No puedes desactivar tu propia cuenta")
+        if new_role != user.role:
+            raise HTTPException(status_code=409, detail="No puedes cambiar tu propio rol")
+
+    loses_admin = user.role == "admin" and user.is_active and (new_role != "admin" or not new_active)
+    if loses_admin:
+        other_admins = db.query(User).filter(
+            User.role == "admin", User.is_active.is_(True), User.id != user.id
+        ).count()
+        if other_admins == 0:
+            raise HTTPException(status_code=409, detail="Debe quedar al menos un administrador activo")
+
+
 # Crear usuario
 @router.post("/", response_model=UserResponse)
 def create_user(
@@ -81,6 +98,8 @@ def update_user(
     if existing:
         raise HTTPException(status_code=400, detail="El correo ya está en uso")
 
+    _ensure_admin_access_kept(user, data.role, data.is_active, current_user, db)
+
     user.name = data.name
     user.email = data.email
     user.role = data.role
@@ -102,6 +121,8 @@ def toggle_user_status(
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    _ensure_admin_access_kept(user, user.role, is_active, current_user, db)
 
     user.is_active = is_active
     db.commit()
