@@ -1468,11 +1468,50 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 7,
-      "community_name": "@angular/core",
+      "community_name": "app.ts",
       "file_type": "code",
       "norm_label": "app",
       "source_file": "frontend/src/app/app.ts",
       "source_location": "L14"
+    },
+    {
+      "id": "frontend_src_app_core_services_confirm_service_confirmoptions",
+      "label": "ConfirmOptions",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "app.ts",
+      "file_type": "code",
+      "norm_label": "confirmoptions",
+      "source_file": "frontend/src/app/core/services/confirm.service.ts",
+      "source_location": "L3"
+    },
+    {
+      "id": "frontend_src_app_core_services_confirm_service_confirmservice",
+      "label": "ConfirmService",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "app.ts",
+      "file_type": "code",
+      "norm_label": "confirmservice",
+      "source_file": "frontend/src/app/core/services/confirm.service.ts",
+      "source_location": "L16"
+    },
+    {
+      "id": "frontend_src_app_core_services_confirm_service_confirmstate",
+      "label": "ConfirmState",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "app.ts",
+      "file_type": "code",
+      "norm_label": "confirmstate",
+      "source_file": "frontend/src/app/core/services/confirm.service.ts",
+      "source_location": "L11"
     },
     {
       "id": "frontend_src_app_core_services_theme_service_themeservice",
@@ -1481,7 +1520,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 7,
-      "community_name": "@angular/core",
+      "community_name": "app.ts",
       "file_type": "code",
       "norm_label": "themeservice",
       "source_file": "frontend/src/app/core/services/theme.service.ts",
@@ -1494,7 +1533,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 7,
-      "community_name": "@angular/core",
+      "community_name": "app.ts",
       "file_type": "code",
       "norm_label": "confirmdialogcomponent",
       "source_file": "frontend/src/app/shared/confirm-dialog/confirm-dialog.component.ts",
@@ -1507,50 +1546,11 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 7,
-      "community_name": "@angular/core",
+      "community_name": "app.ts",
       "file_type": "code",
       "norm_label": "toastcontainercomponent",
       "source_file": "frontend/src/app/shared/toast-container/toast-container.component.ts",
       "source_location": "L12"
-    },
-    {
-      "id": "frontend_src_app_core_services_confirm_service_confirmoptions",
-      "label": "ConfirmOptions",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "assets-list.component.ts",
-      "file_type": "code",
-      "norm_label": "confirmoptions",
-      "source_file": "frontend/src/app/core/services/confirm.service.ts",
-      "source_location": "L3"
-    },
-    {
-      "id": "frontend_src_app_core_services_confirm_service_confirmservice",
-      "label": "ConfirmService",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "assets-list.component.ts",
-      "file_type": "code",
-      "norm_label": "confirmservice",
-      "source_file": "frontend/src/app/core/services/confirm.service.ts",
-      "source_location": "L16"
-    },
-    {
-      "id": "frontend_src_app_core_services_confirm_service_confirmstate",
-      "label": "ConfirmState",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "assets-list.component.ts",
-      "file_type": "code",
-      "norm_label": "confirmstate",
-      "source_file": "frontend/src/app/core/services/confirm.service.ts",
-      "source_location": "L11"
     },
     {
       "id": "frontend_src_app_core_services_users_service_user",
@@ -4876,18 +4876,6 @@
       "source_location": "L16"
     },
     {
-      "id": "frontend_src_app_core_interceptors_auth_interceptor_authinterceptor",
-      "label": "authInterceptor()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "app.routes.ts",
-      "file_type": "code",
-      "norm_label": "authinterceptor()",
-      "source_file": "frontend/src/app/core/interceptors/auth-interceptor.ts",
-      "source_location": "L3"
-    },
-    {
       "id": "frontend_src_app_features_auth_pages_login_login_component_logincomponent_onsubmit",
       "label": ".onSubmit()",
       "_callable": true,
@@ -5989,7 +5977,7 @@
       "file_type": "code",
       "norm_label": "require_roles()",
       "source_file": "backend/app/utils/dependencies.py",
-      "source_location": "L42"
+      "source_location": "L49"
     },
     {
       "id": "backend_app_utils_dependencies_require_roles_dependency",
@@ -6001,7 +5989,7 @@
       "file_type": "code",
       "norm_label": "dependency()",
       "source_file": "backend/app/utils/dependencies.py",
-      "source_location": "L43"
+      "source_location": "L50"
     },
     {
       "id": "backend_tests_test_units_test_u02_require_roles_denies_non_matching_role",
@@ -6016,12 +6004,48 @@
       "source_location": "L38"
     },
     {
+      "id": "frontend_src_app_core_interceptors_auth_interceptor_authinterceptor",
+      "label": "authInterceptor()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 62,
+      "community_name": "@angular/core",
+      "file_type": "code",
+      "norm_label": "authinterceptor()",
+      "source_file": "frontend/src/app/core/interceptors/auth-interceptor.ts",
+      "source_location": "L6"
+    },
+    {
+      "id": "frontend_src_app_core_services_confirm_service_confirmservice_confirm",
+      "label": ".confirm()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "app.ts",
+      "file_type": "code",
+      "norm_label": ".confirm()",
+      "source_file": "frontend/src/app/core/services/confirm.service.ts",
+      "source_location": "L19"
+    },
+    {
+      "id": "frontend_src_app_core_services_confirm_service_confirmservice_respond",
+      "label": ".respond()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "app.ts",
+      "file_type": "code",
+      "norm_label": ".respond()",
+      "source_file": "frontend/src/app/core/services/confirm.service.ts",
+      "source_location": "L25"
+    },
+    {
       "id": "frontend_src_app_core_services_theme_service_themeservice_constructor",
       "label": ".constructor()",
       "_callable": true,
       "_origin": "ast",
       "community": 7,
-      "community_name": "@angular/core",
+      "community_name": "app.ts",
       "file_type": "code",
       "norm_label": ".constructor()",
       "source_file": "frontend/src/app/core/services/theme.service.ts",
@@ -6033,7 +6057,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 7,
-      "community_name": "@angular/core",
+      "community_name": "app.ts",
       "file_type": "code",
       "norm_label": ".readstored()",
       "source_file": "frontend/src/app/core/services/theme.service.ts",
@@ -6045,7 +6069,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 7,
-      "community_name": "@angular/core",
+      "community_name": "app.ts",
       "file_type": "code",
       "norm_label": ".toggle()",
       "source_file": "frontend/src/app/core/services/theme.service.ts",
@@ -6057,35 +6081,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 7,
-      "community_name": "@angular/core",
+      "community_name": "app.ts",
       "file_type": "code",
       "norm_label": ".iconfor()",
       "source_file": "frontend/src/app/shared/toast-container/toast-container.component.ts",
       "source_location": "L15"
-    },
-    {
-      "id": "frontend_src_app_core_services_confirm_service_confirmservice_confirm",
-      "label": ".confirm()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "assets-list.component.ts",
-      "file_type": "code",
-      "norm_label": ".confirm()",
-      "source_file": "frontend/src/app/core/services/confirm.service.ts",
-      "source_location": "L19"
-    },
-    {
-      "id": "frontend_src_app_core_services_confirm_service_confirmservice_respond",
-      "label": ".respond()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "assets-list.component.ts",
-      "file_type": "code",
-      "norm_label": ".respond()",
-      "source_file": "frontend/src/app/core/services/confirm.service.ts",
-      "source_location": "L25"
     },
     {
       "id": "frontend_src_app_core_services_users_service_usersservice_changestatus",
@@ -8279,17 +8279,6 @@
       "source_location": "L1"
     },
     {
-      "id": "frontend_src_app_app_config",
-      "label": "app.config.ts",
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "app.routes.ts",
-      "file_type": "code",
-      "norm_label": "app.config.ts",
-      "source_file": "frontend/src/app/app.config.ts",
-      "source_location": "L1"
-    },
-    {
       "id": "frontend_src_app_app_routes",
       "label": "app.routes.ts",
       "_origin": "ast",
@@ -8299,17 +8288,6 @@
       "norm_label": "app.routes.ts",
       "source_file": "frontend/src/app/app.routes.ts",
       "source_location": "L1"
-    },
-    {
-      "id": "frontend_src_app_app_routes_routes",
-      "label": "routes",
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "app.routes.ts",
-      "file_type": "code",
-      "norm_label": "routes",
-      "source_file": "frontend/src/app/app.routes.ts",
-      "source_location": "L21"
     },
     {
       "id": "frontend_src_app_core_guards_auth_guard",
@@ -8331,28 +8309,6 @@
       "file_type": "code",
       "norm_label": "auth.guard.spec.ts",
       "source_file": "frontend/src/app/core/guards/auth.guard.spec.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "frontend_src_app_core_interceptors_auth_interceptor",
-      "label": "auth-interceptor.ts",
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "app.routes.ts",
-      "file_type": "code",
-      "norm_label": "auth-interceptor.ts",
-      "source_file": "frontend/src/app/core/interceptors/auth-interceptor.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "frontend_src_app_core_interceptors_auth_interceptor_spec",
-      "label": "auth-interceptor.spec.ts",
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "app.routes.ts",
-      "file_type": "code",
-      "norm_label": "auth-interceptor.spec.ts",
-      "source_file": "frontend/src/app/core/interceptors/auth-interceptor.spec.ts",
       "source_location": "L1"
     },
     {
@@ -8398,17 +8354,6 @@
       "norm_label": "visit-schedule.component.ts",
       "source_file": "frontend/src/app/features/maintenance-visits/pages/visit-schedule/visit-schedule.component.ts",
       "source_location": "L1"
-    },
-    {
-      "id": "ref_angular_common",
-      "label": "@angular/common",
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "app.routes.ts",
-      "file_type": "concept",
-      "norm_label": "@angular/common",
-      "source_file": "frontend/package.json",
-      "source_location": "L14"
     },
     {
       "id": "ref_angular_forms",
@@ -8772,17 +8717,6 @@
       "norm_label": "weekdays",
       "source_file": "frontend/src/app/layout/pages/dashboard/dashboard.component.ts",
       "source_location": "L28"
-    },
-    {
-      "id": "frontend_src_app_shared_pagination_pagination_component",
-      "label": "pagination.component.ts",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "reports-dashboard.component.ts",
-      "file_type": "code",
-      "norm_label": "pagination.component.ts",
-      "source_file": "frontend/src/app/shared/pagination/pagination.component.ts",
-      "source_location": "L1"
     },
     {
       "id": "pipe",
@@ -9695,43 +9629,54 @@
       "source_location": "L1"
     },
     {
-      "id": "frontend_src_app_app",
-      "label": "app.ts",
+      "id": "frontend_src_app_app_config",
+      "label": "app.config.ts",
       "_origin": "ast",
-      "community": 7,
+      "community": 62,
       "community_name": "@angular/core",
       "file_type": "code",
-      "norm_label": "app.ts",
-      "source_file": "frontend/src/app/app.ts",
+      "norm_label": "app.config.ts",
+      "source_file": "frontend/src/app/app.config.ts",
       "source_location": "L1"
     },
     {
-      "id": "frontend_src_app_app_spec",
-      "label": "app.spec.ts",
+      "id": "frontend_src_app_app_routes_routes",
+      "label": "routes",
       "_origin": "ast",
-      "community": 7,
+      "community": 62,
       "community_name": "@angular/core",
       "file_type": "code",
-      "norm_label": "app.spec.ts",
-      "source_file": "frontend/src/app/app.spec.ts",
+      "norm_label": "routes",
+      "source_file": "frontend/src/app/app.routes.ts",
+      "source_location": "L21"
+    },
+    {
+      "id": "frontend_src_app_core_interceptors_auth_interceptor",
+      "label": "auth-interceptor.ts",
+      "_origin": "ast",
+      "community": 62,
+      "community_name": "@angular/core",
+      "file_type": "code",
+      "norm_label": "auth-interceptor.ts",
+      "source_file": "frontend/src/app/core/interceptors/auth-interceptor.ts",
       "source_location": "L1"
     },
     {
-      "id": "frontend_src_app_app_ts_component",
-      "label": "Component",
+      "id": "frontend_src_app_core_interceptors_auth_interceptor_spec",
+      "label": "auth-interceptor.spec.ts",
       "_origin": "ast",
-      "community": 7,
+      "community": 62,
       "community_name": "@angular/core",
       "file_type": "code",
-      "norm_label": "component",
-      "source_file": "",
-      "source_location": ""
+      "norm_label": "auth-interceptor.spec.ts",
+      "source_file": "frontend/src/app/core/interceptors/auth-interceptor.spec.ts",
+      "source_location": "L1"
     },
     {
       "id": "frontend_src_app_core_services_assets_service_spec",
       "label": "assets.service.spec.ts",
       "_origin": "ast",
-      "community": 7,
+      "community": 62,
       "community_name": "@angular/core",
       "file_type": "code",
       "norm_label": "assets.service.spec.ts",
@@ -9742,7 +9687,7 @@
       "id": "frontend_src_app_core_services_branches_spec",
       "label": "branches.spec.ts",
       "_origin": "ast",
-      "community": 7,
+      "community": 62,
       "community_name": "@angular/core",
       "file_type": "code",
       "norm_label": "branches.spec.ts",
@@ -9750,32 +9695,10 @@
       "source_location": "L1"
     },
     {
-      "id": "frontend_src_app_core_services_theme_service",
-      "label": "theme.service.ts",
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "@angular/core",
-      "file_type": "code",
-      "norm_label": "theme.service.ts",
-      "source_file": "frontend/src/app/core/services/theme.service.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "frontend_src_app_core_services_theme_service_ts_injectable",
-      "label": "Injectable",
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "@angular/core",
-      "file_type": "code",
-      "norm_label": "injectable",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
       "id": "frontend_src_app_core_services_users_service_spec",
       "label": "users.service.spec.ts",
       "_origin": "ast",
-      "community": 7,
+      "community": 62,
       "community_name": "@angular/core",
       "file_type": "code",
       "norm_label": "users.service.spec.ts",
@@ -9786,7 +9709,7 @@
       "id": "frontend_src_app_features_assets_pages_assets_list_assets_list_spec",
       "label": "assets-list.spec.ts",
       "_origin": "ast",
-      "community": 7,
+      "community": 62,
       "community_name": "@angular/core",
       "file_type": "code",
       "norm_label": "assets-list.spec.ts",
@@ -9797,7 +9720,7 @@
       "id": "frontend_src_app_features_auth_pages_login_login_spec",
       "label": "login.spec.ts",
       "_origin": "ast",
-      "community": 7,
+      "community": 62,
       "community_name": "@angular/core",
       "file_type": "code",
       "norm_label": "login.spec.ts",
@@ -9808,7 +9731,7 @@
       "id": "frontend_src_app_features_branches_pages_branches_list_branches_list_spec",
       "label": "branches-list.spec.ts",
       "_origin": "ast",
-      "community": 7,
+      "community": 62,
       "community_name": "@angular/core",
       "file_type": "code",
       "norm_label": "branches-list.spec.ts",
@@ -9819,7 +9742,7 @@
       "id": "frontend_src_app_features_corrective_requests_pages_corrective_requests_list_corrective_requests_list_spec",
       "label": "corrective-requests-list.spec.ts",
       "_origin": "ast",
-      "community": 7,
+      "community": 62,
       "community_name": "@angular/core",
       "file_type": "code",
       "norm_label": "corrective-requests-list.spec.ts",
@@ -9830,7 +9753,7 @@
       "id": "frontend_src_app_layout_pages_dashboard_dashboard_spec",
       "label": "dashboard.spec.ts",
       "_origin": "ast",
-      "community": 7,
+      "community": 62,
       "community_name": "@angular/core",
       "file_type": "code",
       "norm_label": "dashboard.spec.ts",
@@ -9838,11 +9761,99 @@
       "source_location": "L1"
     },
     {
+      "id": "ref_angular_core",
+      "label": "@angular/core",
+      "_origin": "ast",
+      "community": 62,
+      "community_name": "@angular/core",
+      "file_type": "concept",
+      "norm_label": "@angular/core",
+      "source_file": "frontend/package.json",
+      "source_location": "L16"
+    },
+    {
+      "id": "frontend_src_app_app",
+      "label": "app.ts",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "app.ts",
+      "file_type": "code",
+      "norm_label": "app.ts",
+      "source_file": "frontend/src/app/app.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "frontend_src_app_app_spec",
+      "label": "app.spec.ts",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "app.ts",
+      "file_type": "code",
+      "norm_label": "app.spec.ts",
+      "source_file": "frontend/src/app/app.spec.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "frontend_src_app_app_ts_component",
+      "label": "Component",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "app.ts",
+      "file_type": "code",
+      "norm_label": "component",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "frontend_src_app_core_services_confirm_service",
+      "label": "confirm.service.ts",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "app.ts",
+      "file_type": "code",
+      "norm_label": "confirm.service.ts",
+      "source_file": "frontend/src/app/core/services/confirm.service.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "frontend_src_app_core_services_confirm_service_ts_injectable",
+      "label": "Injectable",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "app.ts",
+      "file_type": "code",
+      "norm_label": "injectable",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "frontend_src_app_core_services_theme_service",
+      "label": "theme.service.ts",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "app.ts",
+      "file_type": "code",
+      "norm_label": "theme.service.ts",
+      "source_file": "frontend/src/app/core/services/theme.service.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "frontend_src_app_core_services_theme_service_ts_injectable",
+      "label": "Injectable",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "app.ts",
+      "file_type": "code",
+      "norm_label": "injectable",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "frontend_src_app_shared_confirm_dialog_confirm_dialog_component",
       "label": "confirm-dialog.component.ts",
       "_origin": "ast",
       "community": 7,
-      "community_name": "@angular/core",
+      "community_name": "app.ts",
       "file_type": "code",
       "norm_label": "confirm-dialog.component.ts",
       "source_file": "frontend/src/app/shared/confirm-dialog/confirm-dialog.component.ts",
@@ -9853,7 +9864,7 @@
       "label": "Component",
       "_origin": "ast",
       "community": 7,
-      "community_name": "@angular/core",
+      "community_name": "app.ts",
       "file_type": "code",
       "norm_label": "component",
       "source_file": "",
@@ -9864,7 +9875,7 @@
       "label": "toast-container.component.ts",
       "_origin": "ast",
       "community": 7,
-      "community_name": "@angular/core",
+      "community_name": "app.ts",
       "file_type": "code",
       "norm_label": "toast-container.component.ts",
       "source_file": "frontend/src/app/shared/toast-container/toast-container.component.ts",
@@ -9875,42 +9886,9 @@
       "label": "Component",
       "_origin": "ast",
       "community": 7,
-      "community_name": "@angular/core",
+      "community_name": "app.ts",
       "file_type": "code",
       "norm_label": "component",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "ref_angular_core",
-      "label": "@angular/core",
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "@angular/core",
-      "file_type": "concept",
-      "norm_label": "@angular/core",
-      "source_file": "frontend/package.json",
-      "source_location": "L16"
-    },
-    {
-      "id": "frontend_src_app_core_services_confirm_service",
-      "label": "confirm.service.ts",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "assets-list.component.ts",
-      "file_type": "code",
-      "norm_label": "confirm.service.ts",
-      "source_file": "frontend/src/app/core/services/confirm.service.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "frontend_src_app_core_services_confirm_service_ts_injectable",
-      "label": "Injectable",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "assets-list.component.ts",
-      "file_type": "code",
-      "norm_label": "injectable",
       "source_file": "",
       "source_location": ""
     },
@@ -10034,6 +10012,28 @@
       "norm_label": "equipment-icon.component.ts",
       "source_file": "frontend/src/app/shared/equipment-icon/equipment-icon.component.ts",
       "source_location": "L1"
+    },
+    {
+      "id": "frontend_src_app_shared_pagination_pagination_component",
+      "label": "pagination.component.ts",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "assets-list.component.ts",
+      "file_type": "code",
+      "norm_label": "pagination.component.ts",
+      "source_file": "frontend/src/app/shared/pagination/pagination.component.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "ref_angular_common",
+      "label": "@angular/common",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "assets-list.component.ts",
+      "file_type": "concept",
+      "norm_label": "@angular/common",
+      "source_file": "frontend/package.json",
+      "source_location": "L14"
     },
     {
       "id": "frontend_src_app_core_services_assigned_tasks_service",
@@ -12271,6 +12271,18 @@
       "type": "external"
     },
     {
+      "id": "getpass",
+      "label": "getpass",
+      "_origin": "semantic",
+      "community": 31,
+      "community_name": "test_authz.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "getpass",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "sqlalchemy",
       "label": "sqlalchemy",
       "_origin": "semantic",
@@ -12291,6 +12303,18 @@
       "external": true,
       "file_type": "concept",
       "norm_label": "sqlalchemy_orm",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "sqlalchemy_pool",
+      "label": "sqlalchemy_pool",
+      "_origin": "semantic",
+      "community": 31,
+      "community_name": "test_authz.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "sqlalchemy_pool",
       "source_file": "",
       "type": "external"
     },
@@ -12382,7 +12406,7 @@
       "id": "frontend_src_app_features_auth_pages_login_login_component_login",
       "label": "frontend_src_app_features_auth_pages_login_login_component_login",
       "_origin": "semantic",
-      "community": 7,
+      "community": 62,
       "community_name": "@angular/core",
       "external": true,
       "file_type": "concept",
@@ -12394,7 +12418,7 @@
       "id": "frontend_src_app_layout_pages_dashboard_dashboard_component_dashboard",
       "label": "frontend_src_app_layout_pages_dashboard_dashboard_component_dashboard",
       "_origin": "semantic",
-      "community": 7,
+      "community": 62,
       "community_name": "@angular/core",
       "external": true,
       "file_type": "concept",
@@ -12406,7 +12430,7 @@
       "id": "ref_assets",
       "label": "ref_assets",
       "_origin": "semantic",
-      "community": 7,
+      "community": 62,
       "community_name": "@angular/core",
       "external": true,
       "file_type": "concept",
@@ -12418,7 +12442,7 @@
       "id": "ref_assets_list",
       "label": "ref_assets_list",
       "_origin": "semantic",
-      "community": 7,
+      "community": 62,
       "community_name": "@angular/core",
       "external": true,
       "file_type": "concept",
@@ -12430,7 +12454,7 @@
       "id": "ref_branches",
       "label": "ref_branches",
       "_origin": "semantic",
-      "community": 7,
+      "community": 62,
       "community_name": "@angular/core",
       "external": true,
       "file_type": "concept",
@@ -12442,7 +12466,7 @@
       "id": "ref_branches_list",
       "label": "ref_branches_list",
       "_origin": "semantic",
-      "community": 7,
+      "community": 62,
       "community_name": "@angular/core",
       "external": true,
       "file_type": "concept",
@@ -12454,7 +12478,7 @@
       "id": "ref_corrective_requests_list",
       "label": "ref_corrective_requests_list",
       "_origin": "semantic",
-      "community": 7,
+      "community": 62,
       "community_name": "@angular/core",
       "external": true,
       "file_type": "concept",
@@ -12466,33 +12490,11 @@
       "id": "ref_users",
       "label": "ref_users",
       "_origin": "semantic",
-      "community": 7,
+      "community": 62,
       "community_name": "@angular/core",
       "external": true,
       "file_type": "concept",
       "norm_label": "ref_users",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "getpass",
-      "label": "getpass",
-      "community": 31,
-      "community_name": "test_authz.py",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "getpass",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "sqlalchemy_pool",
-      "label": "sqlalchemy_pool",
-      "community": 31,
-      "community_name": "test_authz.py",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "sqlalchemy_pool",
       "source_file": "",
       "type": "external"
     }
@@ -23791,6 +23793,42 @@
       "weight": 1.0
     },
     {
+      "source": "frontend_src_app_core_interceptors_auth_interceptor",
+      "target": "ref_angular_core",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "frontend/src/app/core/interceptors/auth-interceptor.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "frontend_src_app_core_interceptors_auth_interceptor",
+      "target": "ref_angular_router",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "frontend/src/app/core/interceptors/auth-interceptor.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "frontend_src_app_core_interceptors_auth_interceptor",
+      "target": "ref_rxjs",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "frontend/src/app/core/interceptors/auth-interceptor.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
       "source": "frontend_src_app_core_interceptors_auth_interceptor_spec",
       "target": "ref_angular_core",
       "relation": "imports_from",
@@ -29158,7 +29196,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "backend/app/utils/dependencies.py",
-      "source_location": "L42",
+      "source_location": "L49",
       "weight": 1.0
     },
     {
@@ -30423,7 +30461,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "frontend/src/app/core/interceptors/auth-interceptor.ts",
-      "source_location": "L3",
+      "source_location": "L6",
       "weight": 1.0
     },
     {
@@ -35454,7 +35492,7 @@
       "confidence_score": 0.85,
       "context": "return",
       "source_file": "backend/app/utils/dependencies.py",
-      "source_location": "L50",
+      "source_location": "L57",
       "weight": 1.0
     },
     {
@@ -36831,7 +36869,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.95,
       "source_file": "backend/app/utils/dependencies.py",
-      "source_location": "L43",
+      "source_location": "L50",
       "weight": 0.8
     },
     {
@@ -39311,5 +39349,5 @@
       "source_file": "backend/pruebas/screenshots/graf_ok_auth.png"
     }
   ],
-  "built_at_commit": "fe1b7637ef6f04254dbbd8ce52774f3969aa93ba"
+  "built_at_commit": "ec70a902a5f63da5b9aceaa9a8467c5ef305cd44"
 }

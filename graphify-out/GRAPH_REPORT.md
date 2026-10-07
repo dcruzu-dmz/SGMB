@@ -1,17 +1,17 @@
 # Graph Report - SGMB  (2026-10-06)
 
 ## Corpus Check
-- 114 files · ~68,398 words
+- 114 files · ~68,493 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 32 file(s) not represented in the graph (top: .css 21, (none) 6, .log 3)
+- Unclassified: 33 file(s) not represented in the graph (top: .css 21, (none) 7, .log 3)
 
 ## Summary
-- 1011 nodes · 2299 edges · 62 communities (35 shown, 27 thin omitted)
+- 1011 nodes · 2302 edges · 63 communities (36 shown, 27 thin omitted)
 - Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 203 edges (avg confidence: 0.92)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `fe1b7637`
+- Built from commit: `ec70a902`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -23,7 +23,7 @@
 - reports-dashboard.component.ts
 - routers/maintenance_visit.py
 - frontend
-- @angular/core
+- app.ts
 - assets-list.component.ts
 - assigned-tasks-list.component.ts
 - routers/corrective_request.py
@@ -74,10 +74,11 @@
 - Pagination template
 - require_roles
 - CLAUDE.md
+- @angular/core
 
 ## God Nodes (most connected - your core abstractions)
 1. `User` - 72 edges
-2. `@angular/core` - 48 edges
+2. `@angular/core` - 49 edges
 3. `AssetsListComponent` - 44 edges
 4. `CorrectiveRequestListComponent` - 36 edges
 5. `Asset` - 35 edges
@@ -115,7 +116,7 @@
 - **Per-module unit test duration charts** — backend_pruebas_screenshots_graf_dur_auth_auth_duration_chart, backend_pruebas_screenshots_graf_dur_solicitudes_solicitudes_duration_chart, backend_pruebas_screenshots_graf_dur_visitas_visitas_duration_chart [INFERRED 0.95]
 - **Per-module unit test success charts (5 reps, 100% OK)** — backend_pruebas_screenshots_graf_ok_auth_auth_success_chart, backend_pruebas_screenshots_graf_ok_solicitudes_solicitudes_success_chart, backend_pruebas_screenshots_graf_ok_visitas_visitas_success_chart [INFERRED 0.95]
 
-## Communities (62 total, 27 thin omitted)
+## Communities (63 total, 27 thin omitted)
 
 ### Community 0 - "test_units_v2.py"
 Cohesion: 0.07
@@ -134,7 +135,7 @@ Cohesion: 0.04
 Nodes (42): dependencies, @angular/common, @angular/compiler, @angular/core, @angular/forms, @angular/platform-browser, @angular/router, rxjs (+34 more)
 
 ### Community 4 - "reports-dashboard.component.ts"
-Cohesion: 0.10
+Cohesion: 0.11
 Nodes (16): LabelPipe, BRANCH_CHAINS, BranchCreate, BranchesService, BranchUpdate, MaintenanceVisit, MaintenanceVisitChecklistEntry, MaintenanceVisitCreate (+8 more)
 
 ### Community 5 - "routers/maintenance_visit.py"
@@ -145,13 +146,13 @@ Nodes (36): add_checklist_entries(), add_visit_item(), check_preventive(), _chec
 Cohesion: 0.05
 Nodes (38): build, serve, test, builder, configurations, defaultConfiguration, options, cli (+30 more)
 
-### Community 7 - "@angular/core"
-Cohesion: 0.07
-Nodes (5): App, ThemeService, ConfirmDialogComponent, ToastContainerComponent, @angular/core
+### Community 7 - "app.ts"
+Cohesion: 0.11
+Nodes (7): App, ConfirmOptions, ConfirmService, ConfirmState, ThemeService, ConfirmDialogComponent, ToastContainerComponent
 
 ### Community 8 - "assets-list.component.ts"
-Cohesion: 0.13
-Nodes (10): ConfirmOptions, ConfirmService, ConfirmState, User, UserCreate, UsersService, UserUpdate, CATEGORY_KEYWORDS (+2 more)
+Cohesion: 0.19
+Nodes (8): User, UserCreate, UsersService, UserUpdate, CATEGORY_KEYWORDS, EQUIPMENT_CATEGORY_ORDER, EQUIPMENT_DEFAULT_TYPE, @angular/common
 
 ### Community 9 - "assigned-tasks-list.component.ts"
 Cohesion: 0.11
@@ -214,8 +215,8 @@ Cohesion: 0.20
 Nodes (12): Flujo ANTES - Reporte consolidado manual (Reportes), Flujo DESPUES - Dashboard de Reportes en SGMB, Flujo ANTES - Reporte de falla manual (Solicitudes Correctivas), Hoja firmada digital de cierre, Flujo DESPUES - Solicitud correctiva en SGMB, Flujo ANTES - Mantenimiento preventivo manual (Visitas), Programacion automatica de mantenimiento preventivo por frecuencia, Flujo DESPUES - Visita preventiva automatica en SGMB (+4 more)
 
 ### Community 34 - "app.routes.ts"
-Cohesion: 0.19
-Nodes (10): routes, authGuard(), roleGuard(), authInterceptor(), ClientRow, LoginComponent, Login Template, @angular/common (+2 more)
+Cohesion: 0.24
+Nodes (7): authGuard(), roleGuard(), ClientRow, LoginComponent, Login Template, @angular/forms, @angular/router
 
 ### Community 35 - "routers/branch.py"
 Cohesion: 0.20
@@ -257,6 +258,10 @@ Nodes (3): Logo BOFASA 40 anos (Distribuyendo Bienestar desde 1986), Icono BOFAS
 Cohesion: 0.17
 Nodes (4): equipmentCategory(), groupByEquipmentCategory(), isCpuType(), isDvrType()
 
+### Community 62 - "@angular/core"
+Cohesion: 0.11
+Nodes (3): routes, authInterceptor(), @angular/core
+
 ## Knowledge Gaps
 - **142 isolated node(s):** `Config`, `Config`, `Config`, `Config`, `Config` (+137 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 418 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
@@ -265,17 +270,17 @@ Nodes (4): equipmentCategory(), groupByEquipmentCategory(), isCpuType(), isDvrTy
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `@angular/core` connect `@angular/core` to `app.routes.ts`, `package.json`, `reports-dashboard.component.ts`, `corrective-requests-list.component.ts`, `assets-list.component.ts`, `assigned-tasks-list.component.ts`, `visit-form.component.ts`?**
-  _High betweenness centrality (0.038) - this node is a cross-community bridge._
+- **Why does `User` connect `User` to `test_units_v2.py`, `routers/branch.py`, `routers/maintenance_visit.py`, `routers/corrective_request.py`, `dependencies.py`, `users.py`, `routers/assigned_task.py`, `require_roles`, `test_authz.py`?**
+  _High betweenness centrality (0.036) - this node is a cross-community bridge._
 - **Are the 54 inferred relationships involving `User` (e.g. with `_can_create_in_branch()` and `_can_edit_asset()`) actually correct?**
   _`User` has 54 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `Config`, `Config`, `Config` to the rest of the system?**
   _142 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `test_units_v2.py` be split into smaller, more focused modules?**
   _Cohesion score 0.07320024198427103 - nodes in this community are weakly interconnected._
-- **Why does `User` connect `User` to `test_units_v2.py`, `routers/branch.py`, `routers/maintenance_visit.py`, `routers/corrective_request.py`, `dependencies.py`, `users.py`, `routers/assigned_task.py`, `require_roles`, `test_authz.py`?**
+- **Why does `@angular/core` connect `@angular/core` to `app.routes.ts`, `package.json`, `reports-dashboard.component.ts`, `corrective-requests-list.component.ts`, `app.ts`, `assets-list.component.ts`, `assigned-tasks-list.component.ts`, `visit-form.component.ts`?**
   _High betweenness centrality (0.036) - this node is a cross-community bridge._
 - **Should `CorrectiveRequestListComponent` be split into smaller, more focused modules?**
   _Cohesion score 0.061495457721872815 - nodes in this community are weakly interconnected._
 - **Why does `Branch` connect `Branch` to `CorrectiveRequestListComponent`, `app.routes.ts`, `reports-dashboard.component.ts`, `CorrectiveRequestPrintComponent`, `corrective-requests-list.component.ts`, `VisitDetailComponent`, `assets-list.component.ts`, `assigned-tasks-list.component.ts`, `BulkBranchAssetsComponent`, `AssetsListComponent`, `AssignedTasksListComponent`, `VisitListComponent`, `VisitPrintComponent`, `VisitFormComponent`, `VisitScheduleComponent`, `ReportsDashboardComponent`, `visit-form.component.ts`?**
-  _High betweenness centrality (0.029) - this node is a cross-community bridge._
+  _High betweenness centrality (0.028) - this node is a cross-community bridge._

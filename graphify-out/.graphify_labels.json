@@ -6,7 +6,7 @@
   "4": "reports-dashboard.component.ts",
   "5": "routers/maintenance_visit.py",
   "6": "frontend",
-  "7": "@angular/core",
+  "7": "app.ts",
   "8": "assets-list.component.ts",
   "9": "assigned-tasks-list.component.ts",
   "10": "routers/corrective_request.py",
@@ -60,5 +60,6 @@
   "58": "users-list.component.spec.ts",
   "59": "Pagination template",
   "60": "require_roles",
-  "61": "CLAUDE.md"
+  "61": "CLAUDE.md",
+  "62": "@angular/core"
 }
