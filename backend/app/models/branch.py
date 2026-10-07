@@ -7,7 +7,7 @@ class Branch(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(150), nullable=False)
-    address = Column(String(100), nullable=True)
+    address = Column(String(200), nullable=True)
     phone = Column(String(20), nullable=True)
     chain = Column(String(100), nullable=True)
     is_active = Column(Boolean, default=True)
