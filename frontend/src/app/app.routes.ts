@@ -39,7 +39,7 @@ export const routes: Routes = [
       { path: 'maintenance-visits', component: VisitListComponent },
       { path: 'maintenance-visits/new', component: VisitFormComponent, canActivate: [roleGuard(['admin'])] },
       { path: 'maintenance-visits/schedule', component: VisitScheduleComponent, canActivate: [roleGuard(['admin'])] },
-      { path: 'maintenance-visits/:id/edit', component: VisitFormComponent },
+      { path: 'maintenance-visits/:id/edit', component: VisitFormComponent, canActivate: [roleGuard(['admin', 'tecnico'])] },
       { path: 'maintenance-visits/:id', component: VisitDetailComponent },
     ]
   },
