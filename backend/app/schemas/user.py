@@ -16,6 +16,10 @@ class UserCreate(UserBase):
     role: UserRole
     password: str = Field(min_length=8)
 
+class PasswordReset(BaseModel):
+    new_password: str = Field(min_length=8)
+
+
 class UserUpdate(BaseModel):
     name: str
     email: EmailStr

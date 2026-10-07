@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.user import User
-from app.schemas.user import UserCreate, UserResponse, UserUpdate
+from app.schemas.user import PasswordReset, UserCreate, UserResponse, UserUpdate
 from app.utils.security import hash_password
 from app.utils.dependencies import get_current_user, require_roles
 
@@ -107,3 +107,19 @@ def toggle_user_status(
     db.commit()
     db.refresh(user)
     return user
+
+
+# Cambiar la contraseña de un usuario (el admin tambien la usa para su propia cuenta)
+@router.patch("/{user_id}/password", status_code=status.HTTP_204_NO_CONTENT)
+def reset_user_password(
+    user_id: int,
+    data: PasswordReset,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_roles("admin"))
+):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    user.password_hash = hash_password(data.new_password)
+    db.commit()

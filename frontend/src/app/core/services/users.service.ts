@@ -53,4 +53,8 @@ export class UsersService {
   changeStatus(id: number, isActive: boolean): Observable<User> {
     return this.http.patch<User>(`${this.apiUrl}/${id}/status?is_active=${isActive}`, {});
   }
+
+  resetPassword(id: number, newPassword: string): Observable<void> {
+    return this.http.patch<void>(`${this.apiUrl}/${id}/password`, { new_password: newPassword });
+  }
 }

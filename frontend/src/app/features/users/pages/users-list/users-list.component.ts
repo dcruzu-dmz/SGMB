@@ -28,6 +28,12 @@ export class UsersListComponent implements OnInit {
   selectedUserId: number | null = null;
   showFormModal = false;
 
+  // Ventana de cambio de contraseña (independiente del formulario de edicion)
+  passwordUser: User | null = null;
+  passwordForm = { password: '', confirm: '' };
+  passwordError = '';
+  savingPassword = false;
+
   form = {
     name: '',
     email: '',
@@ -170,6 +176,44 @@ export class UsersListComponent implements OnInit {
       },
       error: () => {
         this.toast.error('No se pudo cambiar el estado del usuario');
+      }
+    });
+  }
+
+  openPasswordModal(user: User): void {
+    this.passwordUser = user;
+    this.passwordForm = { password: '', confirm: '' };
+    this.passwordError = '';
+  }
+
+  closePasswordModal(): void {
+    this.passwordUser = null;
+    this.passwordForm = { password: '', confirm: '' };
+  }
+
+  submitPassword(): void {
+    if (!this.passwordUser) return;
+    if (this.passwordForm.password.length < 8) {
+      this.passwordError = 'La contraseña debe tener al menos 8 caracteres';
+      return;
+    }
+    if (this.passwordForm.password !== this.passwordForm.confirm) {
+      this.passwordError = 'Las contraseñas no coinciden';
+      return;
+    }
+
+    const name = this.passwordUser.name;
+    this.savingPassword = true;
+    this.usersService.resetPassword(this.passwordUser.id, this.passwordForm.password).subscribe({
+      next: () => {
+        this.savingPassword = false;
+        this.closePasswordModal();
+        this.toast.success(`Contraseña de ${name} actualizada`);
+      },
+      error: (err) => {
+        this.savingPassword = false;
+        const detail = err?.error?.detail;
+        this.passwordError = typeof detail === 'string' ? detail : 'No se pudo cambiar la contraseña';
       }
     });
   }
