@@ -13,7 +13,7 @@ class Asset(Base):
     model = Column(String(100), nullable=True)
     serial_number = Column(String(100), nullable=True)
     location = Column(String(100), nullable=True)
-    status = Column(String(50), default="activo")
+    status = Column(String(50), default="disponible")
     description = Column(Text, nullable=True)
     ram = Column(String(50), nullable=True)
     storage = Column(String(50), nullable=True)

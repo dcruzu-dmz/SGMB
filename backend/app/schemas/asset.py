@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from datetime import datetime
-from typing import Optional
+from typing import Literal, Optional
+
+AssetStatus = Literal["disponible", "en_mantenimiento", "baja_solicitada", "dado_de_baja"]
 
 class AssetBase(BaseModel):
     name: str
@@ -22,7 +24,7 @@ class AssetBase(BaseModel):
 
 
 class AssetCreate(AssetBase):
-    pass
+    status: AssetStatus = "disponible"
 
 class AssetUpdate(BaseModel):
     name: Optional[str] = None
@@ -31,7 +33,7 @@ class AssetUpdate(BaseModel):
     model: Optional[str] = None
     serial_number: Optional[str] = None
     location: Optional[str] = None
-    status: Optional[str] = None
+    status: Optional[AssetStatus] = None
     description: Optional[str] = None
     branch_id: Optional[int] = None
     ram: Optional[str] = None

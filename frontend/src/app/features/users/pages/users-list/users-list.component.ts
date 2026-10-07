@@ -114,6 +114,11 @@ export class UsersListComponent implements OnInit {
       return;
     }
 
+    if (this.form.password.length < 8) {
+      this.errorMessage = 'La contraseña debe tener al menos 8 caracteres';
+      return;
+    }
+
     const createData: UserCreate = {
       name: this.form.name,
       email: this.form.email,

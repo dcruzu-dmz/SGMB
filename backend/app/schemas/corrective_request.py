@@ -1,6 +1,9 @@
 from pydantic import BaseModel
 from datetime import datetime
-from typing import Optional
+from typing import Literal, Optional
+
+RequestStatus = Literal["abierta", "en_proceso", "cerrada"]
+RequestPriority = Literal["alta", "media", "baja"]
 
 
 class CorrectiveRequestBase(BaseModel):
@@ -13,15 +16,16 @@ class CorrectiveRequestBase(BaseModel):
     status: str = "abierta"
 
 class CorrectiveRequestCreate(CorrectiveRequestBase):
-    pass
+    priority: RequestPriority
+    status: RequestStatus = "abierta"
 
 class CorrectiveRequestUpdate(BaseModel):
     asset_id: Optional[int] = None
     requester_id: Optional[int] = None
     assigned_id: Optional[int] = None
     description: Optional[str] = None
-    priority: Optional[str] = None
-    status: Optional[str] = None
+    priority: Optional[RequestPriority] = None
+    status: Optional[RequestStatus] = None
     solution: Optional[str] = None
 
 class CorrectiveRequestResponse(CorrectiveRequestBase):

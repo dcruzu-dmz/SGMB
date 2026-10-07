@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from datetime import date, time, datetime
-from typing import Optional
+from typing import Literal, Optional
+
+VisitStatus = Literal["borrador", "programada", "completado"]
 
 
 class MaintenanceVisitPhotoResponse(BaseModel):
@@ -99,6 +101,7 @@ class MaintenanceVisitBase(BaseModel):
 
 
 class MaintenanceVisitCreate(MaintenanceVisitBase):
+    status: VisitStatus = "borrador"
     items: list[MaintenanceVisitItemCreate] = []
     checklist_entries: list[MaintenanceVisitChecklistEntryCreate] = []
 
@@ -127,7 +130,7 @@ class MaintenanceVisitUpdate(BaseModel):
     delivered_model: Optional[str] = None
     general_observations: Optional[str] = None
     supervisor_observations: Optional[str] = None
-    status: Optional[str] = None
+    status: Optional[VisitStatus] = None
 
 
 class MaintenanceVisitResponse(MaintenanceVisitBase):
