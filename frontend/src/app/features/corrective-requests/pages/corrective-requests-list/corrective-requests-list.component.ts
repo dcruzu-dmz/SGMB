@@ -43,6 +43,8 @@ export class CorrectiveRequestListComponent implements OnInit {
   selectedRequestId: number | null = null;
   canCreate = false;
   isTecnico = false;
+  isAdmin = false;
+  isSolicitante = false;
   filterBranchId: number | null = null;
   uploadingReport = false;
   reportErrorMessage = '';
@@ -108,6 +110,8 @@ export class CorrectiveRequestListComponent implements OnInit {
         this.form.requester_id = user.id;
         this.canCreate = user.role === 'admin' || user.role === 'solicitante';
         this.isTecnico = user.role === 'tecnico';
+        this.isAdmin = user.role === 'admin';
+        this.isSolicitante = user.role === 'solicitante';
       },
       error: () => this.errorMessage = 'No se pudo identificar al usuario actual'
     });
@@ -174,6 +178,11 @@ export class CorrectiveRequestListComponent implements OnInit {
     this.reportErrorMessage = '';
   }
 
+  // Al editar, el solicitante solo puede cambiar descripción y prioridad (el backend rechaza lo demás)
+  get lockedFields(): boolean {
+    return this.isEditing && this.isSolicitante;
+  }
+
   openCreateModal(): void {
     this.resetForm();
     this.showFormModal = true;
@@ -221,7 +230,7 @@ export class CorrectiveRequestListComponent implements OnInit {
           this.closeFormModal();
           this.toast.success(this.form.status === 'cerrada' ? 'Solicitud cerrada correctamente' : 'Solicitud actualizada correctamente');
         },
-        error: () => this.errorMessage = 'No se pudo actualizar la solicitud'
+        error: (err) => this.errorMessage = err.error?.detail || 'No se pudo actualizar la solicitud'
       });
       return;
     }
@@ -301,8 +310,8 @@ export class CorrectiveRequestListComponent implements OnInit {
         input.value = '';
         this.toast.success('Hoja firmada subida correctamente');
       },
-      error: () => {
-        this.reportErrorMessage = 'No se pudo subir la hoja firmada';
+      error: (err) => {
+        this.reportErrorMessage = err.error?.detail || 'No se pudo subir la hoja firmada';
         this.uploadingReport = false;
         input.value = '';
       },

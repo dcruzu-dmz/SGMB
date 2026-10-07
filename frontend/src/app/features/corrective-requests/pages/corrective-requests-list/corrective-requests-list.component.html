@@ -47,9 +47,9 @@
             </td>
             <ng-template #adminActions>
               <td class="actions">
-                <button class="action-btn edit" (click)="openEditModal(request)"><span class="icon">✎</span> Editar</button>
+                <button class="action-btn edit" *ngIf="isAdmin || request.status === 'abierta'" (click)="openEditModal(request)"><span class="icon">✎</span> Editar</button>
                 <button class="action-btn accent" (click)="openCloseModal(request)"
-                  *ngIf="request.status !== 'cerrada'">
+                  *ngIf="isAdmin && request.status !== 'cerrada'">
                   <span class="icon">✓</span> Cerrar
                 </button>
                 <a class="action-btn link" [routerLink]="['/requests', request.id, 'print']" target="_blank"><span class="icon">⎙</span> Imprimir</a>
@@ -78,7 +78,7 @@
         <div class="form-grid">
         <div class="form-group">
           <label>Sucursal</label>
-          <select [(ngModel)]="filterBranchId" name="filter_branch_id" (ngModelChange)="onFilterBranchChange()">
+          <select [(ngModel)]="filterBranchId" name="filter_branch_id" (ngModelChange)="onFilterBranchChange()" [disabled]="lockedFields">
             <option [ngValue]="null">Todas las sucursales</option>
             <option *ngFor="let branch of branches" [ngValue]="branch.id">
               {{ branch.name }}
@@ -88,7 +88,7 @@
 
         <div class="form-group">
           <label>Equipo</label>
-          <select [(ngModel)]="form.asset_id" name="asset_id" required>
+          <select [(ngModel)]="form.asset_id" name="asset_id" required [disabled]="lockedFields">
             <option [ngValue]="0" disabled>Selecciona un equipo</option>
             <option *ngFor="let asset of assetsForForm" [ngValue]="asset.id">
               {{ asset.name }}
@@ -99,7 +99,7 @@
 
         <div class="form-group">
           <label>Técnico asignado</label>
-          <select [(ngModel)]="form.assigned_id" name="assigned_id">
+          <select [(ngModel)]="form.assigned_id" name="assigned_id" [disabled]="lockedFields">
             <option [ngValue]="null">Sin asignar</option>
             <option *ngFor="let tech of technicians" [ngValue]="tech.id">
               {{ tech.name }}
@@ -118,7 +118,7 @@
 
         <div class="form-group">
           <label>Estado</label>
-          <select [(ngModel)]="form.status" name="status" required>
+          <select [(ngModel)]="form.status" name="status" required [disabled]="lockedFields">
             <option value="abierta">Abierta</option>
             <option value="en_proceso">En proceso</option>
             <option value="cerrada">Cerrada</option>
@@ -131,12 +131,12 @@
           <textarea [(ngModel)]="form.description" name="description" required rows="4"></textarea>
         </div>
 
-        <div class="form-group" *ngIf="isEditing">
+        <div class="form-group" *ngIf="isEditing && !isSolicitante">
           <label>Solución{{ form.status === 'cerrada' ? ' (requerida para cerrar)' : '' }}</label>
           <textarea [(ngModel)]="form.solution" name="solution" rows="3" placeholder="¿Qué se hizo para resolverla?" [required]="form.status === 'cerrada'"></textarea>
         </div>
 
-        <div class="form-group signed-report-group" *ngIf="isEditing">
+        <div class="form-group signed-report-group" *ngIf="isEditing && !isSolicitante">
           <label>Hoja firmada</label>
           <p class="hint">Imprime el informe, hazlo firmar por el encargado, escanéalo y súbelo aquí. Es obligatorio para poder cerrar la solicitud.</p>
           <a class="print-link" [routerLink]="['/requests', selectedRequestId, 'print']" target="_blank">Imprimir informe</a>
@@ -147,7 +147,7 @@
           </div>
 
           <div *ngIf="!selectedRequest?.signed_report_path">
-            <input type="file" accept="image/*,.pdf" (change)="onSignedReportSelected($event)" [disabled]="uploadingReport">
+            <input type="file" accept=".pdf,.jpg,.jpeg,.png" (change)="onSignedReportSelected($event)" [disabled]="uploadingReport">
             <p class="hint" *ngIf="uploadingReport">Subiendo...</p>
           </div>
 

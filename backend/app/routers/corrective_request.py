@@ -1,5 +1,4 @@
 import os
-import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
@@ -10,6 +9,7 @@ from app.models.corrective_request import CorrectiveRequest
 from app.schemas.corrective_request import CorrectiveRequestCreate, CorrectiveRequestResponse, CorrectiveRequestUpdate
 from app.utils.dependencies import get_current_user, require_roles
 from app.models.user import User
+from app.utils.uploads import save_upload, remove_upload, REPORT_EXTENSIONS
 
 router = APIRouter(prefix="/correctiverequest", tags=["CorrectiveRequest"])
 
@@ -17,9 +17,42 @@ REPORTS_UPLOAD_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirnam
 os.makedirs(REPORTS_UPLOAD_DIR, exist_ok=True)
 
 
-def _check_request_access(request: CorrectiveRequest, current_user: User) -> None:
-    if current_user.role == "tecnico" and request.assigned_id != current_user.id:
+# Campos que cada rol (no admin) puede cambiar con PUT en las solicitudes a las que tiene acceso
+EDITABLE_FIELDS_BY_ROLE = {
+    "tecnico": {"status", "solution"},
+    "solicitante": {"description", "priority"},
+}
+
+
+def _can_read_request(request: CorrectiveRequest, current_user: User) -> bool:
+    if current_user.role == "admin":
+        return True
+    if current_user.role == "tecnico":
+        return request.assigned_id == current_user.id
+    if current_user.role == "solicitante":
+        return request.requester_id == current_user.id
+    return False
+
+
+def _check_request_read(request: CorrectiveRequest, current_user: User) -> None:
+    if not _can_read_request(request, current_user):
         raise HTTPException(status_code=403, detail="No tienes acceso a esta solicitud")
+
+
+def _check_request_work(request: CorrectiveRequest, current_user: User) -> None:
+    """Cambiar estado y manejar la hoja firmada: admin o el tecnico asignado."""
+    if current_user.role == "admin":
+        return
+    if current_user.role == "tecnico" and request.assigned_id == current_user.id:
+        return
+    raise HTTPException(status_code=403, detail="No tienes acceso a esta solicitud")
+
+
+def _get_request_or_404(corrective_request_id: int, db: Session) -> CorrectiveRequest:
+    corrective_request = db.query(CorrectiveRequest).filter(CorrectiveRequest.id == corrective_request_id).first()
+    if not corrective_request:
+        raise HTTPException(status_code=404, detail="Solicitud no encontrada")
+    return corrective_request
 
 
 #Crear Solicitud
@@ -31,7 +64,8 @@ def create_correctiverequest(
 ):
     corrective_request  = CorrectiveRequest(
         asset_id=data.asset_id,
-        requester_id=data.requester_id,
+        # solo un admin registra solicitudes a nombre de otra persona
+        requester_id=data.requester_id if current_user.role == "admin" else current_user.id,
         assigned_id=data.assigned_id,
         description=data.description,
         priority=data.priority,
@@ -52,6 +86,10 @@ def get_corrective_request(
     query = db.query(CorrectiveRequest)
     if current_user.role == "tecnico":
         query = query.filter(CorrectiveRequest.assigned_id == current_user.id)
+    elif current_user.role == "solicitante":
+        query = query.filter(CorrectiveRequest.requester_id == current_user.id)
+    elif current_user.role != "admin":
+        return []
     return query.all()
 
 #Obtener Solicitud por ID
@@ -61,10 +99,8 @@ def get_corrective_request_by_id(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    corrective_request = db.query(CorrectiveRequest).filter(CorrectiveRequest.id == corrective_request_id).first()
-    if not corrective_request:
-        raise HTTPException(status_code=404, detail="Solicitud no encontrada")
-    _check_request_access(corrective_request, current_user)
+    corrective_request = _get_request_or_404(corrective_request_id, db)
+    _check_request_read(corrective_request, current_user)
     return corrective_request
 
 #Actualizar solicitud
@@ -75,12 +111,19 @@ def update_corrective_request(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    corrective_request = db.query(CorrectiveRequest).filter(CorrectiveRequest.id == corrective_request_id).first()
-    if not corrective_request:
-        raise HTTPException(status_code=404, detail="Solicitud no encontrada")
-    _check_request_access(corrective_request, current_user)
+    corrective_request = _get_request_or_404(corrective_request_id, db)
+    _check_request_read(corrective_request, current_user)
 
-    for key, value in data.dict(exclude_unset=True).items():
+    update_data = data.dict(exclude_unset=True)
+    if current_user.role != "admin":
+        # el formulario reenvia todos los campos; solo cuentan los que cambian
+        changed = {k for k, v in update_data.items() if getattr(corrective_request, k) != v}
+        if not changed <= EDITABLE_FIELDS_BY_ROLE.get(current_user.role, set()):
+            raise HTTPException(status_code=403, detail="No puedes modificar esos campos de la solicitud")
+        if current_user.role == "solicitante" and changed and corrective_request.status != "abierta":
+            raise HTTPException(status_code=403, detail="Solo puedes editar solicitudes abiertas")
+
+    for key, value in update_data.items():
         setattr(corrective_request,key, value)
 
     if data.status == "cerrada" and corrective_request.closed_at is None:
@@ -100,22 +143,11 @@ def upload_signed_report(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    corrective_request = db.query(CorrectiveRequest).filter(CorrectiveRequest.id == corrective_request_id).first()
-    if not corrective_request:
-        raise HTTPException(status_code=404, detail="Solicitud no encontrada")
-    _check_request_access(corrective_request, current_user)
+    corrective_request = _get_request_or_404(corrective_request_id, db)
+    _check_request_work(corrective_request, current_user)
 
-    if corrective_request.signed_report_path:
-        old_path = os.path.join(REPORTS_UPLOAD_DIR, os.path.basename(corrective_request.signed_report_path))
-        if os.path.exists(old_path):
-            os.remove(old_path)
-
-    extension = os.path.splitext(file.filename or "")[1] or ".pdf"
-    filename = f"{uuid.uuid4().hex}{extension}"
-    destination = os.path.join(REPORTS_UPLOAD_DIR, filename)
-
-    with open(destination, "wb") as out:
-        out.write(file.file.read())
+    filename = save_upload(file, REPORTS_UPLOAD_DIR, REPORT_EXTENSIONS)
+    remove_upload(REPORTS_UPLOAD_DIR, corrective_request.signed_report_path)
 
     corrective_request.signed_report_path = f"/uploads/request-reports/{filename}"
     db.commit()
@@ -130,15 +162,11 @@ def delete_signed_report(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    corrective_request = db.query(CorrectiveRequest).filter(CorrectiveRequest.id == corrective_request_id).first()
-    if not corrective_request:
-        raise HTTPException(status_code=404, detail="Solicitud no encontrada")
-    _check_request_access(corrective_request, current_user)
+    corrective_request = _get_request_or_404(corrective_request_id, db)
+    _check_request_work(corrective_request, current_user)
 
     if corrective_request.signed_report_path:
-        file_path = os.path.join(REPORTS_UPLOAD_DIR, os.path.basename(corrective_request.signed_report_path))
-        if os.path.exists(file_path):
-            os.remove(file_path)
+        remove_upload(REPORTS_UPLOAD_DIR, corrective_request.signed_report_path)
         corrective_request.signed_report_path = None
         db.commit()
         db.refresh(corrective_request)
@@ -154,10 +182,8 @@ def change_corrective_request_status(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    corrective_request = db.query(CorrectiveRequest).filter(CorrectiveRequest.id == corrective_request_id).first()
-    if not corrective_request:
-        raise HTTPException(status_code=404, detail="Solicitud no encontrada")
-    _check_request_access(corrective_request, current_user)
+    corrective_request = _get_request_or_404(corrective_request_id, db)
+    _check_request_work(corrective_request, current_user)
 
     corrective_request.status = status
     if status == "cerrada" and corrective_request.closed_at is None:

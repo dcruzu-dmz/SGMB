@@ -1,5 +1,4 @@
 import os
-import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session, joinedload
@@ -26,6 +25,7 @@ from app.schemas.maintenance_visit import (
 from app.utils.dependencies import get_current_user, require_roles
 from app.models.user import User
 from app.services.preventive_scheduler import run_preventive_check
+from app.utils.uploads import save_upload, remove_upload, PHOTO_EXTENSIONS, REPORT_EXTENSIONS
 
 router = APIRouter(prefix="/maintenance-visits", tags=["MaintenanceVisits"])
 
@@ -54,9 +54,24 @@ def _get_visit_or_404(visit_id: int, db: Session) -> MaintenanceVisit:
     return visit
 
 
-def _check_visit_access(visit: MaintenanceVisit, current_user: User) -> None:
-    if current_user.role == "tecnico" and visit.technician_id != current_user.id:
-        raise HTTPException(status_code=403, detail="No tienes acceso a esta visita")
+# Campos de la cabecera que un tecnico no puede cambiar en sus visitas
+TECHNICIAN_FORBIDDEN_VISIT_FIELDS = {"branch_id", "technician_id", "supervisor_observations"}
+
+
+def _is_assigned_technician(visit: MaintenanceVisit, current_user: User) -> bool:
+    return current_user.role == "tecnico" and visit.technician_id == current_user.id
+
+
+def _check_visit_read(visit: MaintenanceVisit, current_user: User) -> None:
+    if current_user.role in ("admin", "solicitante") or _is_assigned_technician(visit, current_user):
+        return
+    raise HTTPException(status_code=403, detail="No tienes acceso a esta visita")
+
+
+def _check_visit_write(visit: MaintenanceVisit, current_user: User) -> None:
+    if current_user.role == "admin" or _is_assigned_technician(visit, current_user):
+        return
+    raise HTTPException(status_code=403, detail="No tienes acceso a esta visita")
 
 
 # Forzar el chequeo de mantenimiento preventivo (crea visitas 'programada' vencidas)
@@ -117,7 +132,7 @@ def get_visit(
     current_user: User = Depends(get_current_user),
 ):
     visit = _get_visit_or_404(visit_id, db)
-    _check_visit_access(visit, current_user)
+    _check_visit_read(visit, current_user)
     return visit
 
 
@@ -132,9 +147,18 @@ def update_visit(
     visit = db.query(MaintenanceVisit).filter(MaintenanceVisit.id == visit_id).first()
     if not visit:
         raise HTTPException(status_code=404, detail="Visita no encontrada")
-    _check_visit_access(visit, current_user)
+    _check_visit_write(visit, current_user)
 
-    for key, value in data.dict(exclude_unset=True).items():
+    update_data = data.dict(exclude_unset=True)
+    # el formulario reenvia todos los campos; solo cuentan los que cambian
+    changed = {k for k, v in update_data.items() if getattr(visit, k) != v}
+    if current_user.role != "admin" and TECHNICIAN_FORBIDDEN_VISIT_FIELDS & changed:
+        raise HTTPException(
+            status_code=403,
+            detail="No puedes cambiar la sucursal, el técnico ni las observaciones del supervisor",
+        )
+
+    for key, value in update_data.items():
         setattr(visit, key, value)
 
     db.commit()
@@ -152,19 +176,10 @@ def upload_signed_report(
     visit = db.query(MaintenanceVisit).filter(MaintenanceVisit.id == visit_id).first()
     if not visit:
         raise HTTPException(status_code=404, detail="Visita no encontrada")
-    _check_visit_access(visit, current_user)
+    _check_visit_write(visit, current_user)
 
-    if visit.signed_report_path:
-        old_path = os.path.join(REPORTS_UPLOAD_DIR, os.path.basename(visit.signed_report_path))
-        if os.path.exists(old_path):
-            os.remove(old_path)
-
-    extension = os.path.splitext(file.filename or "")[1] or ".pdf"
-    filename = f"{uuid.uuid4().hex}{extension}"
-    destination = os.path.join(REPORTS_UPLOAD_DIR, filename)
-
-    with open(destination, "wb") as out:
-        out.write(file.file.read())
+    filename = save_upload(file, REPORTS_UPLOAD_DIR, REPORT_EXTENSIONS)
+    remove_upload(REPORTS_UPLOAD_DIR, visit.signed_report_path)
 
     visit.signed_report_path = f"/uploads/visit-reports/{filename}"
     db.commit()
@@ -181,12 +196,10 @@ def delete_signed_report(
     visit = db.query(MaintenanceVisit).filter(MaintenanceVisit.id == visit_id).first()
     if not visit:
         raise HTTPException(status_code=404, detail="Visita no encontrada")
-    _check_visit_access(visit, current_user)
+    _check_visit_write(visit, current_user)
 
     if visit.signed_report_path:
-        file_path = os.path.join(REPORTS_UPLOAD_DIR, os.path.basename(visit.signed_report_path))
-        if os.path.exists(file_path):
-            os.remove(file_path)
+        remove_upload(REPORTS_UPLOAD_DIR, visit.signed_report_path)
         visit.signed_report_path = None
         db.commit()
 
@@ -231,7 +244,7 @@ def add_visit_item(
     visit = db.query(MaintenanceVisit).filter(MaintenanceVisit.id == visit_id).first()
     if not visit:
         raise HTTPException(status_code=404, detail="Visita no encontrada")
-    _check_visit_access(visit, current_user)
+    _check_visit_write(visit, current_user)
 
     item_dict = data.dict(exclude={"checklist_entries"})
     item = MaintenanceVisitItem(visit_id=visit_id, **item_dict)
@@ -257,7 +270,7 @@ def add_checklist_entries(
     visit = db.query(MaintenanceVisit).filter(MaintenanceVisit.id == visit_id).first()
     if not visit:
         raise HTTPException(status_code=404, detail="Visita no encontrada")
-    _check_visit_access(visit, current_user)
+    _check_visit_write(visit, current_user)
 
     entries = [MaintenanceVisitChecklistEntry(visit_id=visit_id, **entry.dict()) for entry in data]
     db.add_all(entries)
@@ -278,7 +291,7 @@ def update_visit_item(
     item = db.query(MaintenanceVisitItem).filter(MaintenanceVisitItem.id == item_id).first()
     if not item:
         raise HTTPException(status_code=404, detail="Equipo no encontrado")
-    _check_visit_access(item.visit, current_user)
+    _check_visit_write(item.visit, current_user)
 
     for key, value in data.dict(exclude_unset=True).items():
         setattr(item, key, value)
@@ -298,7 +311,7 @@ def delete_visit_item(
     item = db.query(MaintenanceVisitItem).filter(MaintenanceVisitItem.id == item_id).first()
     if not item:
         raise HTTPException(status_code=404, detail="Equipo no encontrado")
-    _check_visit_access(item.visit, current_user)
+    _check_visit_write(item.visit, current_user)
 
     for photo in item.photos:
         file_path = os.path.join(UPLOAD_DIR, os.path.basename(photo.file_path))
@@ -321,17 +334,20 @@ def upload_item_photos(
     item = db.query(MaintenanceVisitItem).filter(MaintenanceVisitItem.id == item_id).first()
     if not item:
         raise HTTPException(status_code=404, detail="Equipo no encontrado")
-    _check_visit_access(item.visit, current_user)
+    _check_visit_write(item.visit, current_user)
 
     saved_photos = []
-    for file in files:
-        extension = os.path.splitext(file.filename or "")[1] or ".jpg"
-        filename = f"{uuid.uuid4().hex}{extension}"
-        destination = os.path.join(UPLOAD_DIR, filename)
+    saved_files = []
+    try:
+        for file in files:
+            saved_files.append(save_upload(file, UPLOAD_DIR, PHOTO_EXTENSIONS))
+    except BaseException:
+        # si una foto falla no quedan huerfanas las que ya se guardaron
+        for filename in saved_files:
+            remove_upload(UPLOAD_DIR, filename)
+        raise
 
-        with open(destination, "wb") as out:
-            out.write(file.file.read())
-
+    for filename in saved_files:
         photo = MaintenanceVisitPhoto(item_id=item_id, file_path=f"/uploads/visit-photos/{filename}")
         db.add(photo)
         saved_photos.append(photo)
@@ -352,7 +368,7 @@ def delete_photo(
     photo = db.query(MaintenanceVisitPhoto).filter(MaintenanceVisitPhoto.id == photo_id).first()
     if not photo:
         raise HTTPException(status_code=404, detail="Foto no encontrada")
-    _check_visit_access(photo.item.visit, current_user)
+    _check_visit_write(photo.item.visit, current_user)
 
     file_path = os.path.join(UPLOAD_DIR, os.path.basename(photo.file_path))
     if os.path.exists(file_path):
@@ -374,7 +390,7 @@ def update_checklist_entry(
     entry = db.query(MaintenanceVisitChecklistEntry).filter(MaintenanceVisitChecklistEntry.id == entry_id).first()
     if not entry:
         raise HTTPException(status_code=404, detail="Elemento de checklist no encontrado")
-    _check_visit_access(entry.visit, current_user)
+    _check_visit_write(entry.visit, current_user)
 
     for key, value in data.dict(exclude_unset=True).items():
         setattr(entry, key, value)

@@ -31,8 +31,8 @@ from app.models.maintenance_visit import (
 )
 from app.models.corrective_request import CorrectiveRequest
 from app.schemas.corrective_request import CorrectiveRequestCreate
-from app.routers.maintenance_visit import _check_visit_access
-from app.routers.corrective_request import _check_request_access
+from app.routers.maintenance_visit import _check_visit_write
+from app.routers.corrective_request import _check_request_read
 from app.services.preventive_scheduler import run_preventive_check
 
 
@@ -90,23 +90,23 @@ def test_RBAC_U02_require_roles_denies_non_matching_role():
 # Modulo: Visitas de Mantenimiento
 # ---------------------------------------------------------------------
 
-def test_VIS_U01_check_visit_access_permite_al_tecnico_asignado():
-    """_check_visit_access no debe lanzar excepcion cuando el tecnico
+def test_VIS_U01_check_visit_write_permite_al_tecnico_asignado():
+    """_check_visit_write no debe lanzar excepcion cuando el tecnico
     autenticado es el mismo asignado a la visita."""
     tecnico = _fake_user("tecnico")
     tecnico.id = 5
     visit = MaintenanceVisit(branch_id=1, technician_id=5, visit_date=date.today())
-    _check_visit_access(visit, tecnico)  # no debe lanzar
+    _check_visit_write(visit, tecnico)  # no debe lanzar
 
 
-def test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado():
-    """_check_visit_access debe lanzar HTTPException 403 cuando el
+def test_VIS_U02_check_visit_write_deniega_a_tecnico_no_asignado():
+    """_check_visit_write debe lanzar HTTPException 403 cuando el
     tecnico autenticado no es el asignado a la visita."""
     tecnico = _fake_user("tecnico")
     tecnico.id = 5
     visit = MaintenanceVisit(branch_id=1, technician_id=99, visit_date=date.today())
     with pytest.raises(HTTPException) as exc_info:
-        _check_visit_access(visit, tecnico)
+        _check_visit_write(visit, tecnico)
     assert exc_info.value.status_code == 403
 
 
@@ -146,12 +146,12 @@ def test_SOL_U01_correctiverequestcreate_requires_description():
         CorrectiveRequestCreate(asset_id=1, requester_id=1, priority="alta")
 
 
-def test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado():
-    """_check_request_access debe lanzar HTTPException 403 cuando el
+def test_SOL_U02_check_request_read_deniega_a_tecnico_no_asignado():
+    """_check_request_read debe lanzar HTTPException 403 cuando el
     tecnico autenticado no es el asignado a la solicitud."""
     tecnico = _fake_user("tecnico")
     tecnico.id = 7
     request = CorrectiveRequest(asset_id=1, requester_id=1, assigned_id=99, description="x", priority="alta")
     with pytest.raises(HTTPException) as exc_info:
-        _check_request_access(request, tecnico)
+        _check_request_read(request, tecnico)
     assert exc_info.value.status_code == 403

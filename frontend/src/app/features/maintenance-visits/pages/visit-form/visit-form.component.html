@@ -210,7 +210,7 @@
 
               <div class="form-group">
                 <label>Fotos del equipo (cómo quedó)</label>
-                <input type="file" accept="image/*" multiple (change)="onPhotosSelected(item, $event)">
+                <input type="file" accept=".jpg,.jpeg,.png,.webp" multiple (change)="onPhotosSelected(item, $event)">
                 <div class="photo-preview-row" *ngIf="item._previews.length > 0">
                   <div class="photo-preview" *ngFor="let preview of item._previews; let p = index">
                     <img [src]="preview" alt="Foto del equipo">
@@ -291,7 +291,7 @@
 
       <div class="form-group">
         <label>Fotos del equipo (cómo quedó)</label>
-        <input type="file" accept="image/*" multiple (change)="onPhotosSelected(item, $event)">
+        <input type="file" accept=".jpg,.jpeg,.png,.webp" multiple (change)="onPhotosSelected(item, $event)">
         <div class="photo-preview-row" *ngIf="item._previews.length > 0">
           <div class="photo-preview" *ngFor="let preview of item._previews; let p = index">
             <img [src]="preview" alt="Foto del equipo">
@@ -347,7 +347,7 @@
       </div>
 
       <div class="form-group" *ngIf="!signedReportPath">
-        <input type="file" accept="image/*,.pdf" (change)="onSignedReportSelected($event)" [disabled]="uploadingReport">
+        <input type="file" accept=".pdf,.jpg,.jpeg,.png" (change)="onSignedReportSelected($event)" [disabled]="uploadingReport">
         <p class="hint" *ngIf="uploadingReport">Subiendo...</p>
       </div>
     </ng-container>

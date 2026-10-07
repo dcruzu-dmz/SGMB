@@ -101,8 +101,8 @@ export class VisitDetailComponent implements OnInit {
         this.uploadingReport = false;
         input.value = '';
       },
-      error: () => {
-        this.reportErrorMessage = 'No se pudo subir la hoja firmada';
+      error: (err) => {
+        this.reportErrorMessage = err.error?.detail || 'No se pudo subir la hoja firmada';
         this.uploadingReport = false;
         input.value = '';
       },
