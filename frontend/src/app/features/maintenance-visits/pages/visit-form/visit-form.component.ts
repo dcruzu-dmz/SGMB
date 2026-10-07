@@ -356,7 +356,11 @@ export class VisitFormComponent implements OnInit {
     uploads.forEach(u => {
       this.visitService.uploadItemPhotos(u.savedItem.id, u.files).subscribe({
         next: () => { remaining--; if (remaining === 0) onDone(); },
-        error: () => { remaining--; if (remaining === 0) onDone(); },
+        error: (err) => {
+          // La visita ya quedó guardada; solo se avisa qué fotos no se pudieron subir
+          this.toast.error(`No se pudieron subir las fotos: ${err.error?.detail || 'error al subir'}`);
+          remaining--; if (remaining === 0) onDone();
+        },
       });
     });
   }
