@@ -44,7 +44,7 @@ def create_user(
 ):
     existing = db.query(User).filter(User.email == data.email).first()
     if existing:
-        raise HTTPException(status_code=400, detail="El correo ya está registrado")
+        raise HTTPException(status_code=409, detail="El correo ya está registrado")
 
     user = User(
         name=data.name,
@@ -96,7 +96,7 @@ def update_user(
 
     existing = db.query(User).filter(User.email == data.email, User.id != user_id).first()
     if existing:
-        raise HTTPException(status_code=400, detail="El correo ya está en uso")
+        raise HTTPException(status_code=409, detail="El correo ya está en uso")
 
     _ensure_admin_access_kept(user, data.role, data.is_active, current_user, db)
 

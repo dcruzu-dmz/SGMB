@@ -3,11 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../config/api-config';
 
+// Debe coincidir con UserRole de backend/app/schemas/user.py
+export type UserRole = 'admin' | 'tecnico' | 'solicitante';
+
 export interface User {
   id: number;
   name: string;
   email: string | null;  // null cuando quien consulta no es admin
-  role: string;
+  role: UserRole;
   is_active: boolean;
   created_at: string;
 }
@@ -16,14 +19,14 @@ export interface UserCreate {
   name: string;
   email: string;
   password: string;
-  role: string;
+  role: UserRole;
   is_active: boolean;
 }
 
 export interface UserUpdate {
   name: string;
   email: string;
-  role: string;
+  role: UserRole;
   is_active: boolean;
 }
 

@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { API_BASE_URL } from '../config/api-config';
+import { UserRole } from './users.service';
 
 export interface LoginRequest {
   email: string;
@@ -17,7 +18,7 @@ export interface CurrentUser {
   id: number;
   name: string;
   email: string;
-  role: string;
+  role: UserRole;
   is_active: boolean;
   created_at: string;
 }
