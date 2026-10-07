@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { UsersService, User, UserCreate, UserUpdate } from '../../../../core/services/users.service';
+import { UsersService, User, UserCreate, UserRole, UserUpdate } from '../../../../core/services/users.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { ConfirmService } from '../../../../core/services/confirm.service';
 import { PaginationComponent } from '../../../../shared/pagination/pagination.component';
@@ -34,7 +34,7 @@ export class UsersListComponent implements OnInit {
   passwordError = '';
   savingPassword = false;
 
-  form = {
+  form: { name: string; email: string; password: string; role: UserRole; is_active: boolean } = {
     name: '',
     email: '',
     password: '',
