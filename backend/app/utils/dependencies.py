@@ -36,6 +36,13 @@ def get_current_user(
             detail="Usuario no encontrado"
         )
 
+    # Desactivar a un usuario corta su acceso de inmediato, aunque su token siga vigente
+    if not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Usuario inactivo"
+        )
+
     return user
 
 
