@@ -6,7 +6,7 @@ import { API_BASE_URL } from '../config/api-config';
 export interface User {
   id: number;
   name: string;
-  email: string;
+  email: string | null;  // null cuando quien consulta no es admin
   role: string;
   is_active: boolean;
   created_at: string;

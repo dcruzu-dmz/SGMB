@@ -6,11 +6,13 @@ from fastapi import HTTPException, UploadFile
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024  # 10 MB
 CHUNK_SIZE = 64 * 1024
 
-# extension normalizada -> (MIME aceptados, chequeo de firma sobre los primeros bytes)
+# extension normalizada -> (MIME aceptados, chequeo de firma sobre los primeros bytes).
+# Incluye los alias que mandan algunos navegadores/sistemas; la firma es la que
+# garantiza el contenido real.
 _FORMATS = {
-    ".pdf": ({"application/pdf"}, lambda h: h.startswith(b"%PDF")),
-    ".jpg": ({"image/jpeg"}, lambda h: h.startswith(b"\xff\xd8\xff")),
-    ".png": ({"image/png"}, lambda h: h.startswith(b"\x89PNG\r\n\x1a\n")),
+    ".pdf": ({"application/pdf", "application/x-pdf"}, lambda h: h.startswith(b"%PDF")),
+    ".jpg": ({"image/jpeg", "image/jpg", "image/pjpeg"}, lambda h: h.startswith(b"\xff\xd8\xff")),
+    ".png": ({"image/png", "image/x-png"}, lambda h: h.startswith(b"\x89PNG\r\n\x1a\n")),
     ".webp": ({"image/webp"}, lambda h: h[:4] == b"RIFF" and h[8:12] == b"WEBP"),
 }
 _ALIASES = {".jpeg": ".jpg"}
