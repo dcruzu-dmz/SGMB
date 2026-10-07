@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.asset import Asset
-from app.schemas.asset import AssetCreate, AssetResponse, AssetUpdate
+from app.schemas.asset import AssetCreate, AssetResponse, AssetUpdate, AssetStatus
 from app.utils.dependencies import get_current_user, require_roles
 from app.models.user import User
 from app.services.assigned_tasks import has_active_task, TASK_TYPE_INVENTORY
@@ -126,7 +126,7 @@ def update_asset(
 @router.patch("/{asset_id}", response_model=AssetResponse)
 def update_asset_status(
     asset_id: int,
-    status: str,
+    status: AssetStatus,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):

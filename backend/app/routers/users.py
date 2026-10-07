@@ -10,6 +10,14 @@ from app.utils.dependencies import get_current_user, require_roles
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
+def _visible_user(user: User, current_user: User) -> UserResponse:
+    """Los correos solo los ve un admin; el resto de pantallas solo necesita nombre y rol."""
+    data = UserResponse.model_validate(user)
+    if current_user.role != "admin":
+        data = data.model_copy(update={"email": None})
+    return data
+
+
 # Crear usuario
 @router.post("/", response_model=UserResponse)
 def create_user(
@@ -41,7 +49,7 @@ def get_users(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    return db.query(User).all()
+    return [_visible_user(user, current_user) for user in db.query(User).all()]
 
 
 # Obtener usuario por ID
@@ -54,7 +62,7 @@ def get_user(
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
-    return user
+    return _visible_user(user, current_user)
 
 
 # Editar usuario

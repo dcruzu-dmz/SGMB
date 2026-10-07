@@ -6,7 +6,7 @@ from sqlalchemy.sql import func
 
 from app.database import get_db
 from app.models.corrective_request import CorrectiveRequest
-from app.schemas.corrective_request import CorrectiveRequestCreate, CorrectiveRequestResponse, CorrectiveRequestUpdate
+from app.schemas.corrective_request import CorrectiveRequestCreate, CorrectiveRequestResponse, CorrectiveRequestUpdate, RequestStatus
 from app.utils.dependencies import get_current_user, require_roles
 from app.models.user import User
 from app.utils.uploads import save_upload, remove_upload, REPORT_EXTENSIONS
@@ -178,7 +178,7 @@ def delete_signed_report(
 @router.patch("/{corrective_request_id}", response_model=CorrectiveRequestResponse)
 def change_corrective_request_status(
     corrective_request_id: int,
-    status: str,
+    status: RequestStatus,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
