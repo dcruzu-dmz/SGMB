@@ -124,6 +124,7 @@ export class VisitFormComponent implements OnInit {
   isCompleting = false;
 
   loading = false;
+  isAdmin = false;
   errorMessage = '';
   signedReportPath: string | null = null;
   uploadingReport = false;
@@ -201,6 +202,7 @@ export class VisitFormComponent implements OnInit {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.visitId = idParam ? Number(idParam) : null;
     this.isCompleting = !!this.visitId;
+    this.authService.getMe().subscribe({ next: user => this.isAdmin = user.role === 'admin' });
 
     this.branchesService.getBranches().subscribe({ next: res => this.branches = res });
     this.assetsService.getAssets().subscribe({ next: res => this.allAssets = res });
@@ -314,6 +316,16 @@ export class VisitFormComponent implements OnInit {
 
   onManualTypeChange(item: DraftItem): void {
     item.checklist_entries = buildChecklistForType(item.equipment_type);
+  }
+
+  // groupedBranchAssets crea objetos nuevos en cada ciclo; sin trackBy, Angular
+  // recrea las fichas (y sus ngModel) en cada ciclo y entra en un bucle infinito.
+  trackByCategory(_: number, group: { category: string }): string {
+    return group.category;
+  }
+
+  trackByAssetId(_: number, asset: Asset): number {
+    return asset.id;
   }
 
   trackByIndex(index: number): number {
@@ -487,9 +499,9 @@ export class VisitFormComponent implements OnInit {
 
           this.visitService.addChecklistEntries(id, checklist_entries).subscribe();
         },
-        error: () => {
+        error: (err) => {
           this.loading = false;
-          this.errorMessage = 'No se pudo actualizar la visita';
+          this.errorMessage = err.error?.detail || 'No se pudo actualizar la visita';
         },
       });
       return;
@@ -508,9 +520,9 @@ export class VisitFormComponent implements OnInit {
           navigateAfterSave(created.id);
         });
       },
-      error: () => {
+      error: (err) => {
         this.loading = false;
-        this.errorMessage = 'No se pudo guardar la visita';
+        this.errorMessage = err.error?.detail || 'No se pudo guardar la visita';
       },
     });
   }

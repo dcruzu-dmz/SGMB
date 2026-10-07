@@ -24,8 +24,12 @@ _failed_logins: dict[tuple[str, str], list[float]] = defaultdict(list)
 
 def _recent_failures(key: tuple[str, str]) -> list[float]:
     cutoff = time.monotonic() - FAILED_LOGIN_WINDOW_SECONDS
-    _failed_logins[key] = [t for t in _failed_logins[key] if t > cutoff]
-    return _failed_logins[key]
+    recent = [t for t in _failed_logins.get(key, []) if t > cutoff]
+    if recent:
+        _failed_logins[key] = recent
+    else:
+        _failed_logins.pop(key, None)  # no acumular claves de intentos ya vencidos
+    return recent
 
 
 @router.post("/login", response_model=Token)

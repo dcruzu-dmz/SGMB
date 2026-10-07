@@ -12,14 +12,14 @@
     <div class="field-grid">
       <div class="form-group">
         <label>Sucursal</label>
-        <select [(ngModel)]="header.branch_id" name="branch_id" required>
+        <select [(ngModel)]="header.branch_id" name="branch_id" required [disabled]="!isAdmin">
           <option [ngValue]="0" disabled>Selecciona una sucursal</option>
           <option *ngFor="let b of branches" [ngValue]="b.id">{{ b.name }}</option>
         </select>
       </div>
       <div class="form-group">
         <label>Técnico</label>
-        <select [(ngModel)]="header.technician_id" name="technician_id">
+        <select [(ngModel)]="header.technician_id" name="technician_id" [disabled]="!isAdmin">
           <option [ngValue]="null">Sin asignar</option>
           <option *ngFor="let t of technicians" [ngValue]="t.id">{{ t.name }}</option>
         </select>
@@ -149,11 +149,11 @@
     </p>
 
     <div *ngIf="branchAssets.length > 0">
-      <div class="equipment-category-block" *ngFor="let group of groupedBranchAssets">
+      <div class="equipment-category-block" *ngFor="let group of groupedBranchAssets; trackBy: trackByCategory">
         <h3 class="category-heading"><app-equipment-icon [type]="group.category" [size]="26"></app-equipment-icon>{{ group.category }} <span class="category-count">({{ group.items.length }})</span></h3>
 
         <div class="category-asset-grid">
-          <div class="asset-cell" [class.expanded]="selectedAssetIds[asset.id]" *ngFor="let asset of group.items">
+          <div class="asset-cell" [class.expanded]="selectedAssetIds[asset.id]" *ngFor="let asset of group.items; trackBy: trackByAssetId">
             <div class="asset-pick-row">
               <label class="asset-pick-row-main">
                 <input type="checkbox" [checked]="!!selectedAssetIds[asset.id]" (change)="toggleAsset(asset)">

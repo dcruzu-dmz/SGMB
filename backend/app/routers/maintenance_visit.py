@@ -55,7 +55,7 @@ def _get_visit_or_404(visit_id: int, db: Session) -> MaintenanceVisit:
 
 
 # Campos de la cabecera que un tecnico no puede cambiar en sus visitas
-TECHNICIAN_FORBIDDEN_VISIT_FIELDS = {"branch_id", "technician_id", "supervisor_observations"}
+TECHNICIAN_FORBIDDEN_VISIT_FIELDS = {"branch_id", "technician_id"}
 
 
 def _is_assigned_technician(visit: MaintenanceVisit, current_user: User) -> bool:
@@ -155,7 +155,7 @@ def update_visit(
     if current_user.role != "admin" and TECHNICIAN_FORBIDDEN_VISIT_FIELDS & changed:
         raise HTTPException(
             status_code=403,
-            detail="No puedes cambiar la sucursal, el técnico ni las observaciones del supervisor",
+            detail="Solo un administrador puede cambiar la sucursal o el técnico de la visita",
         )
 
     for key, value in update_data.items():

@@ -69,7 +69,8 @@ def create_correctiverequest(
         assigned_id=data.assigned_id,
         description=data.description,
         priority=data.priority,
-        status=data.status, 
+        # quien no es admin siempre abre la solicitud; cerrarla sigue el flujo normal
+        status=data.status if current_user.role == "admin" else "abierta",
     )
 
     db.add(corrective_request)
