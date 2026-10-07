@@ -1,0 +1,515 @@
+===== RUN 1 =====
+============================= test session starts ==============================
+platform darwin -- Python 3.13.13, pytest-9.1.1, pluggy-1.6.0 -- /Users/bofasa/SGMB/backend/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/bofasa/SGMB/backend
+plugins: repeat-0.9.4, anyio-4.14.2
+collecting ... collected 7 items
+
+tests/test_units.py::test_U01_hash_and_verify_password_roundtrip PASSED  [ 14%]
+tests/test_units.py::test_U02_require_roles_denies_non_matching_role PASSED [ 28%]
+tests/test_units.py::test_U03_preventive_check_crea_visita_programada_si_vencida PASSED [ 42%]
+tests/test_integration.py::test_INT01_login_valido_devuelve_token PASSED [ 57%]
+tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd PASSED [ 71%]
+tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena PASSED [ 85%]
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist PASSED [100%]
+
+=============================== warnings summary ===============================
+venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /Users/bofasa/SGMB/backend/venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+app/schemas/user.py:22
+  /Users/bofasa/SGMB/backend/app/schemas/user.py:22: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class UserResponse(UserBase):
+
+app/schemas/asset.py:39
+  /Users/bofasa/SGMB/backend/app/schemas/asset.py:39: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class AssetResponse(AssetBase):
+
+app/schemas/branch.py:22
+  /Users/bofasa/SGMB/backend/app/schemas/branch.py:22: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class BranchResponse(BranchBase):
+
+app/schemas/corrective_request.py:27
+  /Users/bofasa/SGMB/backend/app/schemas/corrective_request.py:27: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class CorrectiveRequestResponse(CorrectiveRequestBase):
+
+app/schemas/maintenance_visit.py:6
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:6: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitPhotoResponse(BaseModel):
+
+app/schemas/maintenance_visit.py:32
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:32: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitChecklistEntryResponse(MaintenanceVisitChecklistEntryBase):
+
+app/schemas/maintenance_visit.py:65
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:65: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitItemResponse(MaintenanceVisitItemBase):
+
+app/schemas/maintenance_visit.py:133
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:133: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitResponse(MaintenanceVisitBase):
+
+app/main.py:47
+  /Users/bofasa/SGMB/backend/app/main.py:47: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+venv/lib/python3.13/site-packages/fastapi/applications.py:4675
+  /Users/bofasa/SGMB/backend/venv/lib/python3.13/site-packages/fastapi/applications.py:4675: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)  # ty: ignore[deprecated]
+
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+  /Users/bofasa/SGMB/backend/app/routers/maintenance_visit.py:79: PydanticDeprecatedSince20: The `dict` method is deprecated; use `model_dump` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    payload = data.dict(exclude={"items", "checklist_entries"})
+
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+  /Users/bofasa/SGMB/backend/app/routers/maintenance_visit.py:85: PydanticDeprecatedSince20: The `dict` method is deprecated; use `model_dump` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    item_dict = item_data.dict(exclude={"checklist_entries"})
+
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+  /Users/bofasa/SGMB/backend/app/routers/maintenance_visit.py:91: PydanticDeprecatedSince20: The `dict` method is deprecated; use `model_dump` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    db.add(MaintenanceVisitChecklistEntry(visit_id=visit.id, item_id=item.id, **entry_data.dict(exclude={"item_id"})))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================== slowest durations ===============================
+0.72s setup    tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd
+0.65s setup    tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena
+0.65s setup    tests/test_integration.py::test_INT01_login_valido_devuelve_token
+0.64s setup    tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+0.45s call     tests/test_units.py::test_U01_hash_and_verify_password_roundtrip
+0.44s call     tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena
+0.26s call     tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd
+0.26s call     tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+0.25s call     tests/test_integration.py::test_INT01_login_valido_devuelve_token
+0.03s setup    tests/test_units.py::test_U03_preventive_check_crea_visita_programada_si_vencida
+0.01s teardown tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+0.01s call     tests/test_units.py::test_U03_preventive_check_crea_visita_programada_si_vencida
+0.01s teardown tests/test_integration.py::test_INT01_login_valido_devuelve_token
+0.01s teardown tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd
+0.01s teardown tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena
+
+(6 durations < 0.005s hidden.  Use -vv to show these durations.)
+======================== 7 passed, 14 warnings in 5.36s ========================
+===== RUN 2 =====
+============================= test session starts ==============================
+platform darwin -- Python 3.13.13, pytest-9.1.1, pluggy-1.6.0 -- /Users/bofasa/SGMB/backend/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/bofasa/SGMB/backend
+plugins: repeat-0.9.4, anyio-4.14.2
+collecting ... collected 7 items
+
+tests/test_units.py::test_U01_hash_and_verify_password_roundtrip PASSED  [ 14%]
+tests/test_units.py::test_U02_require_roles_denies_non_matching_role PASSED [ 28%]
+tests/test_units.py::test_U03_preventive_check_crea_visita_programada_si_vencida PASSED [ 42%]
+tests/test_integration.py::test_INT01_login_valido_devuelve_token PASSED [ 57%]
+tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd PASSED [ 71%]
+tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena PASSED [ 85%]
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist PASSED [100%]
+
+=============================== warnings summary ===============================
+venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /Users/bofasa/SGMB/backend/venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+app/schemas/user.py:22
+  /Users/bofasa/SGMB/backend/app/schemas/user.py:22: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class UserResponse(UserBase):
+
+app/schemas/asset.py:39
+  /Users/bofasa/SGMB/backend/app/schemas/asset.py:39: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class AssetResponse(AssetBase):
+
+app/schemas/branch.py:22
+  /Users/bofasa/SGMB/backend/app/schemas/branch.py:22: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class BranchResponse(BranchBase):
+
+app/schemas/corrective_request.py:27
+  /Users/bofasa/SGMB/backend/app/schemas/corrective_request.py:27: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class CorrectiveRequestResponse(CorrectiveRequestBase):
+
+app/schemas/maintenance_visit.py:6
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:6: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitPhotoResponse(BaseModel):
+
+app/schemas/maintenance_visit.py:32
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:32: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitChecklistEntryResponse(MaintenanceVisitChecklistEntryBase):
+
+app/schemas/maintenance_visit.py:65
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:65: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitItemResponse(MaintenanceVisitItemBase):
+
+app/schemas/maintenance_visit.py:133
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:133: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitResponse(MaintenanceVisitBase):
+
+app/main.py:47
+  /Users/bofasa/SGMB/backend/app/main.py:47: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+venv/lib/python3.13/site-packages/fastapi/applications.py:4675
+  /Users/bofasa/SGMB/backend/venv/lib/python3.13/site-packages/fastapi/applications.py:4675: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)  # ty: ignore[deprecated]
+
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+  /Users/bofasa/SGMB/backend/app/routers/maintenance_visit.py:79: PydanticDeprecatedSince20: The `dict` method is deprecated; use `model_dump` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    payload = data.dict(exclude={"items", "checklist_entries"})
+
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+  /Users/bofasa/SGMB/backend/app/routers/maintenance_visit.py:85: PydanticDeprecatedSince20: The `dict` method is deprecated; use `model_dump` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    item_dict = item_data.dict(exclude={"checklist_entries"})
+
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+  /Users/bofasa/SGMB/backend/app/routers/maintenance_visit.py:91: PydanticDeprecatedSince20: The `dict` method is deprecated; use `model_dump` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    db.add(MaintenanceVisitChecklistEntry(visit_id=visit.id, item_id=item.id, **entry_data.dict(exclude={"item_id"})))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================== slowest durations ===============================
+0.68s setup    tests/test_integration.py::test_INT01_login_valido_devuelve_token
+0.67s setup    tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena
+0.65s setup    tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd
+0.65s setup    tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+0.45s call     tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena
+0.45s call     tests/test_units.py::test_U01_hash_and_verify_password_roundtrip
+0.27s call     tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd
+0.26s call     tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+0.24s call     tests/test_integration.py::test_INT01_login_valido_devuelve_token
+0.01s setup    tests/test_units.py::test_U03_preventive_check_crea_visita_programada_si_vencida
+0.01s teardown tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+0.01s teardown tests/test_integration.py::test_INT01_login_valido_devuelve_token
+0.01s call     tests/test_units.py::test_U03_preventive_check_crea_visita_programada_si_vencida
+0.01s teardown tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd
+0.01s teardown tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena
+
+(6 durations < 0.005s hidden.  Use -vv to show these durations.)
+======================== 7 passed, 14 warnings in 5.13s ========================
+===== RUN 3 =====
+============================= test session starts ==============================
+platform darwin -- Python 3.13.13, pytest-9.1.1, pluggy-1.6.0 -- /Users/bofasa/SGMB/backend/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/bofasa/SGMB/backend
+plugins: repeat-0.9.4, anyio-4.14.2
+collecting ... collected 7 items
+
+tests/test_units.py::test_U01_hash_and_verify_password_roundtrip PASSED  [ 14%]
+tests/test_units.py::test_U02_require_roles_denies_non_matching_role PASSED [ 28%]
+tests/test_units.py::test_U03_preventive_check_crea_visita_programada_si_vencida PASSED [ 42%]
+tests/test_integration.py::test_INT01_login_valido_devuelve_token PASSED [ 57%]
+tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd PASSED [ 71%]
+tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena PASSED [ 85%]
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist PASSED [100%]
+
+=============================== warnings summary ===============================
+venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /Users/bofasa/SGMB/backend/venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+app/schemas/user.py:22
+  /Users/bofasa/SGMB/backend/app/schemas/user.py:22: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class UserResponse(UserBase):
+
+app/schemas/asset.py:39
+  /Users/bofasa/SGMB/backend/app/schemas/asset.py:39: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class AssetResponse(AssetBase):
+
+app/schemas/branch.py:22
+  /Users/bofasa/SGMB/backend/app/schemas/branch.py:22: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class BranchResponse(BranchBase):
+
+app/schemas/corrective_request.py:27
+  /Users/bofasa/SGMB/backend/app/schemas/corrective_request.py:27: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class CorrectiveRequestResponse(CorrectiveRequestBase):
+
+app/schemas/maintenance_visit.py:6
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:6: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitPhotoResponse(BaseModel):
+
+app/schemas/maintenance_visit.py:32
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:32: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitChecklistEntryResponse(MaintenanceVisitChecklistEntryBase):
+
+app/schemas/maintenance_visit.py:65
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:65: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitItemResponse(MaintenanceVisitItemBase):
+
+app/schemas/maintenance_visit.py:133
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:133: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitResponse(MaintenanceVisitBase):
+
+app/main.py:47
+  /Users/bofasa/SGMB/backend/app/main.py:47: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+venv/lib/python3.13/site-packages/fastapi/applications.py:4675
+  /Users/bofasa/SGMB/backend/venv/lib/python3.13/site-packages/fastapi/applications.py:4675: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)  # ty: ignore[deprecated]
+
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+  /Users/bofasa/SGMB/backend/app/routers/maintenance_visit.py:79: PydanticDeprecatedSince20: The `dict` method is deprecated; use `model_dump` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    payload = data.dict(exclude={"items", "checklist_entries"})
+
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+  /Users/bofasa/SGMB/backend/app/routers/maintenance_visit.py:85: PydanticDeprecatedSince20: The `dict` method is deprecated; use `model_dump` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    item_dict = item_data.dict(exclude={"checklist_entries"})
+
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+  /Users/bofasa/SGMB/backend/app/routers/maintenance_visit.py:91: PydanticDeprecatedSince20: The `dict` method is deprecated; use `model_dump` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    db.add(MaintenanceVisitChecklistEntry(visit_id=visit.id, item_id=item.id, **entry_data.dict(exclude={"item_id"})))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================== slowest durations ===============================
+0.67s setup    tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena
+0.67s setup    tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+0.67s setup    tests/test_integration.py::test_INT01_login_valido_devuelve_token
+0.66s setup    tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd
+0.46s call     tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena
+0.45s call     tests/test_units.py::test_U01_hash_and_verify_password_roundtrip
+0.26s call     tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd
+0.26s call     tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+0.23s call     tests/test_integration.py::test_INT01_login_valido_devuelve_token
+0.01s teardown tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+0.01s teardown tests/test_integration.py::test_INT01_login_valido_devuelve_token
+0.01s setup    tests/test_units.py::test_U03_preventive_check_crea_visita_programada_si_vencida
+0.01s call     tests/test_units.py::test_U03_preventive_check_crea_visita_programada_si_vencida
+0.01s teardown tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd
+0.01s teardown tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena
+
+(6 durations < 0.005s hidden.  Use -vv to show these durations.)
+======================== 7 passed, 14 warnings in 5.16s ========================
+===== RUN 4 =====
+============================= test session starts ==============================
+platform darwin -- Python 3.13.13, pytest-9.1.1, pluggy-1.6.0 -- /Users/bofasa/SGMB/backend/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/bofasa/SGMB/backend
+plugins: repeat-0.9.4, anyio-4.14.2
+collecting ... collected 7 items
+
+tests/test_units.py::test_U01_hash_and_verify_password_roundtrip PASSED  [ 14%]
+tests/test_units.py::test_U02_require_roles_denies_non_matching_role PASSED [ 28%]
+tests/test_units.py::test_U03_preventive_check_crea_visita_programada_si_vencida PASSED [ 42%]
+tests/test_integration.py::test_INT01_login_valido_devuelve_token PASSED [ 57%]
+tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd PASSED [ 71%]
+tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena PASSED [ 85%]
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist PASSED [100%]
+
+=============================== warnings summary ===============================
+venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /Users/bofasa/SGMB/backend/venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+app/schemas/user.py:22
+  /Users/bofasa/SGMB/backend/app/schemas/user.py:22: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class UserResponse(UserBase):
+
+app/schemas/asset.py:39
+  /Users/bofasa/SGMB/backend/app/schemas/asset.py:39: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class AssetResponse(AssetBase):
+
+app/schemas/branch.py:22
+  /Users/bofasa/SGMB/backend/app/schemas/branch.py:22: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class BranchResponse(BranchBase):
+
+app/schemas/corrective_request.py:27
+  /Users/bofasa/SGMB/backend/app/schemas/corrective_request.py:27: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class CorrectiveRequestResponse(CorrectiveRequestBase):
+
+app/schemas/maintenance_visit.py:6
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:6: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitPhotoResponse(BaseModel):
+
+app/schemas/maintenance_visit.py:32
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:32: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitChecklistEntryResponse(MaintenanceVisitChecklistEntryBase):
+
+app/schemas/maintenance_visit.py:65
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:65: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitItemResponse(MaintenanceVisitItemBase):
+
+app/schemas/maintenance_visit.py:133
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:133: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitResponse(MaintenanceVisitBase):
+
+app/main.py:47
+  /Users/bofasa/SGMB/backend/app/main.py:47: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+venv/lib/python3.13/site-packages/fastapi/applications.py:4675
+  /Users/bofasa/SGMB/backend/venv/lib/python3.13/site-packages/fastapi/applications.py:4675: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)  # ty: ignore[deprecated]
+
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+  /Users/bofasa/SGMB/backend/app/routers/maintenance_visit.py:79: PydanticDeprecatedSince20: The `dict` method is deprecated; use `model_dump` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    payload = data.dict(exclude={"items", "checklist_entries"})
+
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+  /Users/bofasa/SGMB/backend/app/routers/maintenance_visit.py:85: PydanticDeprecatedSince20: The `dict` method is deprecated; use `model_dump` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    item_dict = item_data.dict(exclude={"checklist_entries"})
+
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+  /Users/bofasa/SGMB/backend/app/routers/maintenance_visit.py:91: PydanticDeprecatedSince20: The `dict` method is deprecated; use `model_dump` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    db.add(MaintenanceVisitChecklistEntry(visit_id=visit.id, item_id=item.id, **entry_data.dict(exclude={"item_id"})))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================== slowest durations ===============================
+0.66s setup    tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena
+0.66s setup    tests/test_integration.py::test_INT01_login_valido_devuelve_token
+0.66s setup    tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+0.64s setup    tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd
+0.47s call     tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena
+0.46s call     tests/test_units.py::test_U01_hash_and_verify_password_roundtrip
+0.27s call     tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+0.26s call     tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd
+0.24s call     tests/test_integration.py::test_INT01_login_valido_devuelve_token
+0.01s teardown tests/test_integration.py::test_INT01_login_valido_devuelve_token
+0.01s teardown tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+0.01s setup    tests/test_units.py::test_U03_preventive_check_crea_visita_programada_si_vencida
+0.01s call     tests/test_units.py::test_U03_preventive_check_crea_visita_programada_si_vencida
+0.01s teardown tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd
+0.01s teardown tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena
+
+(6 durations < 0.005s hidden.  Use -vv to show these durations.)
+======================== 7 passed, 14 warnings in 5.22s ========================
+===== RUN 5 =====
+============================= test session starts ==============================
+platform darwin -- Python 3.13.13, pytest-9.1.1, pluggy-1.6.0 -- /Users/bofasa/SGMB/backend/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/bofasa/SGMB/backend
+plugins: repeat-0.9.4, anyio-4.14.2
+collecting ... collected 7 items
+
+tests/test_units.py::test_U01_hash_and_verify_password_roundtrip PASSED  [ 14%]
+tests/test_units.py::test_U02_require_roles_denies_non_matching_role PASSED [ 28%]
+tests/test_units.py::test_U03_preventive_check_crea_visita_programada_si_vencida PASSED [ 42%]
+tests/test_integration.py::test_INT01_login_valido_devuelve_token PASSED [ 57%]
+tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd PASSED [ 71%]
+tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena PASSED [ 85%]
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist PASSED [100%]
+
+=============================== warnings summary ===============================
+venv/lib/python3.13/site-packages/fastapi/testclient.py:1
+  /Users/bofasa/SGMB/backend/venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+app/schemas/user.py:22
+  /Users/bofasa/SGMB/backend/app/schemas/user.py:22: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class UserResponse(UserBase):
+
+app/schemas/asset.py:39
+  /Users/bofasa/SGMB/backend/app/schemas/asset.py:39: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class AssetResponse(AssetBase):
+
+app/schemas/branch.py:22
+  /Users/bofasa/SGMB/backend/app/schemas/branch.py:22: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class BranchResponse(BranchBase):
+
+app/schemas/corrective_request.py:27
+  /Users/bofasa/SGMB/backend/app/schemas/corrective_request.py:27: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class CorrectiveRequestResponse(CorrectiveRequestBase):
+
+app/schemas/maintenance_visit.py:6
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:6: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitPhotoResponse(BaseModel):
+
+app/schemas/maintenance_visit.py:32
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:32: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitChecklistEntryResponse(MaintenanceVisitChecklistEntryBase):
+
+app/schemas/maintenance_visit.py:65
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:65: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitItemResponse(MaintenanceVisitItemBase):
+
+app/schemas/maintenance_visit.py:133
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:133: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitResponse(MaintenanceVisitBase):
+
+app/main.py:47
+  /Users/bofasa/SGMB/backend/app/main.py:47: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+venv/lib/python3.13/site-packages/fastapi/applications.py:4675
+  /Users/bofasa/SGMB/backend/venv/lib/python3.13/site-packages/fastapi/applications.py:4675: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)  # ty: ignore[deprecated]
+
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+  /Users/bofasa/SGMB/backend/app/routers/maintenance_visit.py:79: PydanticDeprecatedSince20: The `dict` method is deprecated; use `model_dump` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    payload = data.dict(exclude={"items", "checklist_entries"})
+
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+  /Users/bofasa/SGMB/backend/app/routers/maintenance_visit.py:85: PydanticDeprecatedSince20: The `dict` method is deprecated; use `model_dump` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    item_dict = item_data.dict(exclude={"checklist_entries"})
+
+tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+  /Users/bofasa/SGMB/backend/app/routers/maintenance_visit.py:91: PydanticDeprecatedSince20: The `dict` method is deprecated; use `model_dump` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    db.add(MaintenanceVisitChecklistEntry(visit_id=visit.id, item_id=item.id, **entry_data.dict(exclude={"item_id"})))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================== slowest durations ===============================
+0.67s setup    tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+0.66s setup    tests/test_integration.py::test_INT01_login_valido_devuelve_token
+0.65s setup    tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena
+0.65s setup    tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd
+0.47s call     tests/test_units.py::test_U01_hash_and_verify_password_roundtrip
+0.45s call     tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena
+0.26s call     tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+0.26s call     tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd
+0.24s call     tests/test_integration.py::test_INT01_login_valido_devuelve_token
+0.01s teardown tests/test_integration.py::test_INT04_crear_visita_con_equipos_y_checklist
+0.01s setup    tests/test_units.py::test_U03_preventive_check_crea_visita_programada_si_vencida
+0.01s teardown tests/test_integration.py::test_INT01_login_valido_devuelve_token
+0.01s call     tests/test_units.py::test_U03_preventive_check_crea_visita_programada_si_vencida
+0.01s teardown tests/test_integration.py::test_INT02_crear_solicitud_persiste_en_bd
+0.01s teardown tests/test_integration.py::test_INT03_tecnico_no_asignado_no_puede_ver_solicitud_ajena
+
+(6 durations < 0.005s hidden.  Use -vv to show these durations.)
+======================== 7 passed, 14 warnings in 5.14s ========================

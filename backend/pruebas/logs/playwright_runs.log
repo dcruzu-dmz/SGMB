@@ -1,0 +1,115 @@
+===== RUN 1 (suffix=run1) =====
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+ADMIN_EMAIL=e2e-admin-run1@sgmb.com
+TEC_EMAIL=e2e-tec-run1@sgmb.com
+BRANCH_ID=350
+ASSET_ID=94
+REQUEST_ID=30
+
+Running 3 tests using 1 worker
+
+  ✓  1 tests-e2e/e2e.spec.ts:13:5 › SIS01 - flujo completo de login redirige al Dashboard (857ms)
+  ✓  2 tests-e2e/e2e.spec.ts:22:5 › SIS02 - crear una solicitud correctiva desde la UI aparece en el listado (1.3s)
+  ✓  3 tests-e2e/e2e.spec.ts:41:5 › ACEP01 - un tecnico completa la tarea real de cerrar su solicitud asignada (1.2s)
+
+  3 passed (4.1s)
+DELETE 2
+DELETE 1
+DELETE 1
+DELETE 2
+===== RUN 2 (suffix=run2) =====
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+ADMIN_EMAIL=e2e-admin-run2@sgmb.com
+TEC_EMAIL=e2e-tec-run2@sgmb.com
+BRANCH_ID=351
+ASSET_ID=95
+REQUEST_ID=32
+
+Running 3 tests using 1 worker
+
+  ✓  1 tests-e2e/e2e.spec.ts:13:5 › SIS01 - flujo completo de login redirige al Dashboard (859ms)
+  ✓  2 tests-e2e/e2e.spec.ts:22:5 › SIS02 - crear una solicitud correctiva desde la UI aparece en el listado (1.3s)
+  ✓  3 tests-e2e/e2e.spec.ts:41:5 › ACEP01 - un tecnico completa la tarea real de cerrar su solicitud asignada (1.2s)
+
+  3 passed (4.2s)
+DELETE 2
+DELETE 1
+DELETE 1
+DELETE 2
+===== RUN 3 (suffix=run3) =====
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+ADMIN_EMAIL=e2e-admin-run3@sgmb.com
+TEC_EMAIL=e2e-tec-run3@sgmb.com
+BRANCH_ID=352
+ASSET_ID=96
+REQUEST_ID=34
+
+Running 3 tests using 1 worker
+
+  ✓  1 tests-e2e/e2e.spec.ts:13:5 › SIS01 - flujo completo de login redirige al Dashboard (858ms)
+  ✓  2 tests-e2e/e2e.spec.ts:22:5 › SIS02 - crear una solicitud correctiva desde la UI aparece en el listado (1.3s)
+  ✓  3 tests-e2e/e2e.spec.ts:41:5 › ACEP01 - un tecnico completa la tarea real de cerrar su solicitud asignada (1.2s)
+
+  3 passed (4.2s)
+DELETE 2
+DELETE 1
+DELETE 1
+DELETE 2
+===== RUN 4 (suffix=run4) =====
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+ADMIN_EMAIL=e2e-admin-run4@sgmb.com
+TEC_EMAIL=e2e-tec-run4@sgmb.com
+BRANCH_ID=353
+ASSET_ID=97
+REQUEST_ID=36
+
+Running 3 tests using 1 worker
+
+  ✓  1 tests-e2e/e2e.spec.ts:13:5 › SIS01 - flujo completo de login redirige al Dashboard (859ms)
+  ✓  2 tests-e2e/e2e.spec.ts:22:5 › SIS02 - crear una solicitud correctiva desde la UI aparece en el listado (1.3s)
+  ✓  3 tests-e2e/e2e.spec.ts:41:5 › ACEP01 - un tecnico completa la tarea real de cerrar su solicitud asignada (1.2s)
+
+  3 passed (4.1s)
+DELETE 2
+DELETE 1
+DELETE 1
+DELETE 2
+===== RUN 5 (suffix=run5) =====
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+ADMIN_EMAIL=e2e-admin-run5@sgmb.com
+TEC_EMAIL=e2e-tec-run5@sgmb.com
+BRANCH_ID=354
+ASSET_ID=98
+REQUEST_ID=38
+
+Running 3 tests using 1 worker
+
+  ✓  1 tests-e2e/e2e.spec.ts:13:5 › SIS01 - flujo completo de login redirige al Dashboard (866ms)
+  ✓  2 tests-e2e/e2e.spec.ts:22:5 › SIS02 - crear una solicitud correctiva desde la UI aparece en el listado (1.2s)
+  ✓  3 tests-e2e/e2e.spec.ts:41:5 › ACEP01 - un tecnico completa la tarea real de cerrar su solicitud asignada (1.2s)
+
+  3 passed (4.1s)
+DELETE 2
+DELETE 1
+DELETE 1
+DELETE 2

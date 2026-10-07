@@ -1,0 +1,365 @@
+===== RUN 1 =====
+============================= test session starts ==============================
+platform darwin -- Python 3.13.13, pytest-9.1.1, pluggy-1.6.0 -- /Users/bofasa/SGMB/backend/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/bofasa/SGMB/backend
+plugins: repeat-0.9.4, anyio-4.14.2
+collecting ... collected 10 items
+
+tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip PASSED [ 10%]
+tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password PASSED [ 20%]
+tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token PASSED [ 30%]
+tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role PASSED [ 40%]
+tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role PASSED [ 50%]
+tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado PASSED [ 60%]
+tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado PASSED [ 70%]
+tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida PASSED [ 80%]
+tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description PASSED [ 90%]
+tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado PASSED [100%]
+
+=============================== warnings summary ===============================
+app/schemas/corrective_request.py:27
+  /Users/bofasa/SGMB/backend/app/schemas/corrective_request.py:27: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class CorrectiveRequestResponse(CorrectiveRequestBase):
+
+app/schemas/maintenance_visit.py:6
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:6: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitPhotoResponse(BaseModel):
+
+app/schemas/maintenance_visit.py:32
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:32: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitChecklistEntryResponse(MaintenanceVisitChecklistEntryBase):
+
+app/schemas/maintenance_visit.py:65
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:65: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitItemResponse(MaintenanceVisitItemBase):
+
+app/schemas/maintenance_visit.py:133
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:133: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitResponse(MaintenanceVisitBase):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================== slowest durations ===============================
+0.46s call     tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip
+0.42s call     tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password
+0.00s call     tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida
+0.00s setup    tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip
+0.00s call     tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado
+0.00s call     tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role
+0.00s call     tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado
+0.00s call     tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role
+0.00s call     tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado
+0.00s setup    tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role
+0.00s call     tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description
+0.00s call     tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token
+0.00s teardown tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip
+0.00s teardown tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password
+0.00s setup    tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password
+0.00s setup    tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token
+0.00s setup    tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role
+0.00s teardown tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token
+0.00s teardown tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description
+0.00s setup    tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description
+0.00s teardown tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado
+0.00s setup    tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida
+0.00s teardown tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role
+0.00s teardown tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida
+0.00s setup    tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado
+0.00s setup    tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado
+0.00s setup    tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado
+0.00s teardown tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role
+0.00s teardown tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado
+0.00s teardown tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado
+======================== 10 passed, 5 warnings in 1.54s ========================
+===== RUN 2 =====
+============================= test session starts ==============================
+platform darwin -- Python 3.13.13, pytest-9.1.1, pluggy-1.6.0 -- /Users/bofasa/SGMB/backend/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/bofasa/SGMB/backend
+plugins: repeat-0.9.4, anyio-4.14.2
+collecting ... collected 10 items
+
+tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip PASSED [ 10%]
+tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password PASSED [ 20%]
+tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token PASSED [ 30%]
+tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role PASSED [ 40%]
+tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role PASSED [ 50%]
+tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado PASSED [ 60%]
+tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado PASSED [ 70%]
+tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida PASSED [ 80%]
+tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description PASSED [ 90%]
+tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado PASSED [100%]
+
+=============================== warnings summary ===============================
+app/schemas/corrective_request.py:27
+  /Users/bofasa/SGMB/backend/app/schemas/corrective_request.py:27: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class CorrectiveRequestResponse(CorrectiveRequestBase):
+
+app/schemas/maintenance_visit.py:6
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:6: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitPhotoResponse(BaseModel):
+
+app/schemas/maintenance_visit.py:32
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:32: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitChecklistEntryResponse(MaintenanceVisitChecklistEntryBase):
+
+app/schemas/maintenance_visit.py:65
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:65: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitItemResponse(MaintenanceVisitItemBase):
+
+app/schemas/maintenance_visit.py:133
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:133: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitResponse(MaintenanceVisitBase):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================== slowest durations ===============================
+0.46s call     tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip
+0.42s call     tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password
+0.00s call     tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida
+0.00s setup    tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip
+0.00s call     tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado
+0.00s call     tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role
+0.00s call     tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado
+0.00s call     tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role
+0.00s call     tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado
+0.00s call     tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description
+0.00s call     tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token
+0.00s teardown tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip
+0.00s teardown tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password
+0.00s setup    tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password
+0.00s setup    tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token
+0.00s setup    tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role
+0.00s setup    tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role
+0.00s teardown tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token
+0.00s setup    tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida
+0.00s setup    tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description
+0.00s setup    tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado
+0.00s teardown tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida
+0.00s setup    tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado
+0.00s teardown tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role
+0.00s setup    tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado
+0.00s teardown tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role
+0.00s teardown tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado
+0.00s teardown tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description
+0.00s teardown tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado
+0.00s teardown tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado
+======================== 10 passed, 5 warnings in 1.58s ========================
+===== RUN 3 =====
+============================= test session starts ==============================
+platform darwin -- Python 3.13.13, pytest-9.1.1, pluggy-1.6.0 -- /Users/bofasa/SGMB/backend/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/bofasa/SGMB/backend
+plugins: repeat-0.9.4, anyio-4.14.2
+collecting ... collected 10 items
+
+tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip PASSED [ 10%]
+tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password PASSED [ 20%]
+tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token PASSED [ 30%]
+tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role PASSED [ 40%]
+tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role PASSED [ 50%]
+tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado PASSED [ 60%]
+tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado PASSED [ 70%]
+tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida PASSED [ 80%]
+tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description PASSED [ 90%]
+tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado PASSED [100%]
+
+=============================== warnings summary ===============================
+app/schemas/corrective_request.py:27
+  /Users/bofasa/SGMB/backend/app/schemas/corrective_request.py:27: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class CorrectiveRequestResponse(CorrectiveRequestBase):
+
+app/schemas/maintenance_visit.py:6
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:6: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitPhotoResponse(BaseModel):
+
+app/schemas/maintenance_visit.py:32
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:32: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitChecklistEntryResponse(MaintenanceVisitChecklistEntryBase):
+
+app/schemas/maintenance_visit.py:65
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:65: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitItemResponse(MaintenanceVisitItemBase):
+
+app/schemas/maintenance_visit.py:133
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:133: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitResponse(MaintenanceVisitBase):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================== slowest durations ===============================
+0.52s call     tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip
+0.42s call     tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password
+0.00s call     tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida
+0.00s setup    tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip
+0.00s call     tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role
+0.00s call     tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado
+0.00s teardown tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado
+0.00s call     tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role
+0.00s call     tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado
+0.00s call     tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado
+0.00s call     tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description
+0.00s call     tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token
+0.00s teardown tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password
+0.00s teardown tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip
+0.00s setup    tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role
+0.00s setup    tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token
+0.00s setup    tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password
+0.00s setup    tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role
+0.00s setup    tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado
+0.00s setup    tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description
+0.00s setup    tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida
+0.00s teardown tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida
+0.00s teardown tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token
+0.00s setup    tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado
+0.00s teardown tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role
+0.00s setup    tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado
+0.00s teardown tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role
+0.00s teardown tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description
+0.00s teardown tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado
+0.00s teardown tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado
+======================== 10 passed, 5 warnings in 1.60s ========================
+===== RUN 4 =====
+============================= test session starts ==============================
+platform darwin -- Python 3.13.13, pytest-9.1.1, pluggy-1.6.0 -- /Users/bofasa/SGMB/backend/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/bofasa/SGMB/backend
+plugins: repeat-0.9.4, anyio-4.14.2
+collecting ... collected 10 items
+
+tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip PASSED [ 10%]
+tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password PASSED [ 20%]
+tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token PASSED [ 30%]
+tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role PASSED [ 40%]
+tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role PASSED [ 50%]
+tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado PASSED [ 60%]
+tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado PASSED [ 70%]
+tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida PASSED [ 80%]
+tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description PASSED [ 90%]
+tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado PASSED [100%]
+
+=============================== warnings summary ===============================
+app/schemas/corrective_request.py:27
+  /Users/bofasa/SGMB/backend/app/schemas/corrective_request.py:27: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class CorrectiveRequestResponse(CorrectiveRequestBase):
+
+app/schemas/maintenance_visit.py:6
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:6: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitPhotoResponse(BaseModel):
+
+app/schemas/maintenance_visit.py:32
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:32: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitChecklistEntryResponse(MaintenanceVisitChecklistEntryBase):
+
+app/schemas/maintenance_visit.py:65
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:65: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitItemResponse(MaintenanceVisitItemBase):
+
+app/schemas/maintenance_visit.py:133
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:133: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitResponse(MaintenanceVisitBase):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================== slowest durations ===============================
+0.45s call     tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip
+0.42s call     tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password
+0.00s call     tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida
+0.00s teardown tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password
+0.00s setup    tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip
+0.00s call     tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role
+0.00s call     tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado
+0.00s call     tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role
+0.00s call     tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado
+0.00s call     tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado
+0.00s setup    tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password
+0.00s call     tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token
+0.00s call     tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description
+0.00s teardown tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida
+0.00s teardown tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip
+0.00s setup    tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token
+0.00s setup    tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description
+0.00s setup    tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role
+0.00s setup    tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida
+0.00s setup    tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role
+0.00s setup    tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado
+0.00s setup    tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado
+0.00s teardown tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token
+0.00s teardown tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role
+0.00s teardown tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role
+0.00s teardown tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado
+0.00s setup    tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado
+0.00s teardown tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado
+0.00s teardown tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description
+0.00s teardown tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado
+======================== 10 passed, 5 warnings in 1.54s ========================
+===== RUN 5 =====
+============================= test session starts ==============================
+platform darwin -- Python 3.13.13, pytest-9.1.1, pluggy-1.6.0 -- /Users/bofasa/SGMB/backend/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/bofasa/SGMB/backend
+plugins: repeat-0.9.4, anyio-4.14.2
+collecting ... collected 10 items
+
+tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip PASSED [ 10%]
+tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password PASSED [ 20%]
+tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token PASSED [ 30%]
+tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role PASSED [ 40%]
+tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role PASSED [ 50%]
+tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado PASSED [ 60%]
+tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado PASSED [ 70%]
+tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida PASSED [ 80%]
+tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description PASSED [ 90%]
+tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado PASSED [100%]
+
+=============================== warnings summary ===============================
+app/schemas/corrective_request.py:27
+  /Users/bofasa/SGMB/backend/app/schemas/corrective_request.py:27: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class CorrectiveRequestResponse(CorrectiveRequestBase):
+
+app/schemas/maintenance_visit.py:6
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:6: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitPhotoResponse(BaseModel):
+
+app/schemas/maintenance_visit.py:32
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:32: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitChecklistEntryResponse(MaintenanceVisitChecklistEntryBase):
+
+app/schemas/maintenance_visit.py:65
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:65: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitItemResponse(MaintenanceVisitItemBase):
+
+app/schemas/maintenance_visit.py:133
+  /Users/bofasa/SGMB/backend/app/schemas/maintenance_visit.py:133: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class MaintenanceVisitResponse(MaintenanceVisitBase):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================== slowest durations ===============================
+0.44s call     tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip
+0.42s call     tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password
+0.00s call     tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida
+0.00s setup    tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip
+0.00s setup    tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado
+0.00s call     tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role
+0.00s call     tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado
+0.00s call     tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado
+0.00s call     tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role
+0.00s call     tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado
+0.00s call     tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description
+0.00s call     tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token
+0.00s teardown tests/test_units_v2.py::test_AUTH_U01_hash_and_verify_password_roundtrip
+0.00s teardown tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password
+0.00s setup    tests/test_units_v2.py::test_AUTH_U02_verify_password_rejects_wrong_password
+0.00s setup    tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description
+0.00s setup    tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token
+0.00s setup    tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida
+0.00s setup    tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado
+0.00s setup    tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role
+0.00s teardown tests/test_units_v2.py::test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida
+0.00s setup    tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role
+0.00s setup    tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado
+0.00s teardown tests/test_units_v2.py::test_VIS_U02_check_visit_access_deniega_a_tecnico_no_asignado
+0.00s teardown tests/test_units_v2.py::test_SOL_U01_correctiverequestcreate_requires_description
+0.00s teardown tests/test_units_v2.py::test_SOL_U02_check_request_access_deniega_a_tecnico_no_asignado
+0.00s teardown tests/test_units_v2.py::test_AUTH_U03_verify_token_returns_none_for_invalid_token
+0.00s teardown tests/test_units_v2.py::test_RBAC_U02_require_roles_denies_non_matching_role
+0.00s teardown tests/test_units_v2.py::test_RBAC_U01_require_roles_allows_matching_role
+0.00s teardown tests/test_units_v2.py::test_VIS_U01_check_visit_access_permite_al_tecnico_asignado
+======================== 10 passed, 5 warnings in 1.54s ========================
