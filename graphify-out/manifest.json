@@ -102,8 +102,8 @@
     "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
   },
   "backend/app/routers/maintenance_visit.py": {
-    "mtime": 1791351584.2378323,
-    "seen": 1791351625.436963,
+    "mtime": 1791351672.6482258,
+    "seen": 1791351864.497045,
     "ast_hash": "1d8f8eb5cf545f53e8aa94cf8d3a6bd7",
     "semantic_hash": ""
   },
@@ -180,10 +180,10 @@
     "semantic_hash": ""
   },
   "backend/app/utils/security.py": {
-    "mtime": 1785007828.3738909,
-    "seen": 1791345549.9320068,
-    "ast_hash": "867caafbd290f67c8e7a0a42b48039da",
-    "semantic_hash": "867caafbd290f67c8e7a0a42b48039da"
+    "mtime": 1791351818.3319645,
+    "seen": 1791351864.497542,
+    "ast_hash": "f1b3cbd15fe278cdffed08b1275fa74e",
+    "semantic_hash": ""
   },
   "backend/create_admin.py": {
     "mtime": 1791348501.161739,
@@ -414,8 +414,8 @@
     "semantic_hash": "d3e2eaeb081cb14f0dfe0b2f5815f994"
   },
   "frontend/src/app/core/services/users.service.ts": {
-    "mtime": 1791351584.238545,
-    "seen": 1791351625.439164,
+    "mtime": 1791351672.6493773,
+    "seen": 1791351864.4991949,
     "ast_hash": "300f838e0fd7d9d973e3d05d6854e127",
     "semantic_hash": ""
   },
@@ -534,8 +534,8 @@
     "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
   },
   "frontend/src/app/features/users/pages/users-list/users-list.component.ts": {
-    "mtime": 1791351584.2388468,
-    "seen": 1791351625.440458,
+    "mtime": 1791351672.649983,
+    "seen": 1791351864.500273,
     "ast_hash": "0738203a96a8c8be5967b0ef02d751d6",
     "semantic_hash": ""
   },
@@ -642,9 +642,9 @@
     "semantic_hash": "4f45cdd0a0f4b170057994368dcbf7a5"
   },
   "backend/requirements.txt": {
-    "mtime": 1791350263.067783,
-    "seen": 1791351285.9169972,
-    "ast_hash": "34dedafc44a97bc534bb16bc1c73558a",
+    "mtime": 1791351818.332231,
+    "seen": 1791351864.500997,
+    "ast_hash": "93fc62d1bae0030fad7628297e719473",
     "semantic_hash": ""
   },
   "documentacion/capitulo5_analisis_resultados/Capitulo_V_Analisis_de_Resultados_SGMB.md": {
@@ -936,8 +936,8 @@
     "semantic_hash": ""
   },
   "backend/app/utils/uploads.py": {
-    "mtime": 1791351584.2374551,
-    "seen": 1791351625.437492,
+    "mtime": 1791351672.6487947,
+    "seen": 1791351864.497544,
     "ast_hash": "139bfd4be79e7e9a48001361c6b1de37",
     "semantic_hash": ""
   },
@@ -954,9 +954,9 @@
     "semantic_hash": ""
   },
   "SPEC.md": {
-    "mtime": 1791348501.1599438,
-    "seen": 1791349454.5622542,
-    "ast_hash": "ac24ea48925291d0a58f564c60bdea23",
+    "mtime": 1791351799.2118773,
+    "seen": 1791351864.5009222,
+    "ast_hash": "7bb62f4f57206edef74bb82783db5316",
     "semantic_hash": ""
   }
 }

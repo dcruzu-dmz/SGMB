@@ -12,27 +12,27 @@ Regla general: **se niega todo salvo que el permiso esté explícito** (antes er
 
 | Acción | admin | tecnico | solicitante |
 |---|---|---|---|
-| Listar y ver | todas | solo las asignadas | todas, solo lectura ❓ |
+| Listar y ver | todas | solo las asignadas | todas, solo lectura |
 | Crear, eliminar, chequeo preventivo | ✅ | ❌ | ❌ |
-| Editar la cabecera | todos los campos | solo las asignadas, sin `branch_id`, `technician_id` ni `supervisor_observations` ❓ | ❌ |
+| Editar la cabecera | todos los campos | solo las asignadas, sin cambiar `branch_id` ni `technician_id` | ❌ |
 | Equipos, checklist, fotos, hoja firmada | ✅ | solo las asignadas | ❌ |
 
 **Solicitudes correctivas** (`/correctiverequest`)
 
 | Acción | admin | tecnico | solicitante |
 |---|---|---|---|
-| Listar y ver | todas | solo las asignadas | solo las propias ❓ |
+| Listar y ver | todas | solo las asignadas | solo las propias |
 | Crear | ✅, puede indicar `requester_id` | ❌ | ✅, `requester_id` se fuerza a `current_user.id` |
-| Editar (`PUT`) | todos los campos | solo las asignadas: `status` y `solution` | solo las propias: `description` y `priority`, mientras estén en `abierta` ❓ |
+| Editar (`PUT`) | todos los campos | solo las asignadas: `status` y `solution` | solo las propias: `description` y `priority`, mientras estén en `abierta` |
 | Cambiar estado (`PATCH`) | ✅ | solo las asignadas | ❌ |
-| Subir o borrar la hoja firmada | ✅ | solo las asignadas | ❌ ❓ |
+| Subir o borrar la hoja firmada | ✅ | solo las asignadas | ❌ |
 
 **Archivos subidos** (fotos y hojas firmadas)
 
 - Extensiones permitidas: fotos `.jpg`, `.jpeg`, `.png`, `.webp`; hojas firmadas `.pdf`, `.jpg`, `.jpeg`, `.png`. Todo lo demás devuelve **400**.
 - Se valida la extensión, el `content_type` declarado **y** la firma de los primeros bytes (`%PDF`, `\xFF\xD8\xFF`, `\x89PNG`, `RIFF....WEBP`). El nombre en disco usa la extensión normalizada, nunca la que manda el cliente.
 - Tamaño máximo: **10 MB por archivo**. Se lee por bloques y se corta al pasar el límite (**413**), sin cargar el archivo completo en memoria. Si hay error, se borra el archivo parcial.
-- El montaje `/uploads` queda **público** ❓. Con la lista blanca ya no se puede servir HTML/SVG, así que se elimina el XSS. Exigir autenticación para descargar es otro cambio (ver Preguntas abiertas).
+- El montaje `/uploads` queda **público**. Con la lista blanca ya no se puede servir HTML/SVG, así que se elimina el XSS. Exigir autenticación para descargar es otro cambio (ver Decisiones).
 
 ## Tech Stack
 
@@ -57,7 +57,7 @@ Grafo:  graphify update .
 | `backend/create_admin.py` | La contraseña se lee de `ADMIN_PASSWORD` (variable de entorno) o se pide con `getpass`; se elimina `Admin123`. |
 | `backend/.env.example` | Se documenta `ADMIN_PASSWORD` (opcional). |
 | `backend/tests/test_authz.py` (nuevo) | Tests de la matriz y de las subidas (ver Testing). |
-| `frontend/.../corrective-requests-list.component.html` / `.ts` | El solicitante deja de ver los botones que ahora dan 403 (editar o subir en solicitudes ajenas o cerradas) ❓ |
+| `frontend/.../corrective-requests-list.component.html` / `.ts` | El solicitante deja de ver los botones que ahora dan 403 (editar o subir en solicitudes ajenas o cerradas) |
 
 No se toca: modelos ni esquema de la base, `asset.py` (ya restringe bien), `users.py`, `branch.py`.
 
@@ -67,7 +67,7 @@ Se siguen los patrones existentes, como los helpers `_check_*` y las listas blan
 
 ```python
 TECHNICIAN_VISIT_FIELDS = set(MaintenanceVisitUpdate.model_fields) - {
-    "branch_id", "technician_id", "supervisor_observations",
+    "branch_id", "technician_id",
 }
 
 def _check_visit_write(visit: MaintenanceVisit, current_user: User) -> None:
@@ -108,11 +108,11 @@ Para comprobar que los tests detectan regresiones: se revierte temporalmente el 
 - `create_admin.py` no contiene ninguna contraseña.
 - Los 13 tests existentes siguen pasando.
 
-## Preguntas abiertas (marcadas con ❓)
+## Decisiones (antes "Preguntas abiertas")
 
-1. **Visitas para el solicitante:** ¿solo lectura de todas (propuesto), o ningún acceso?
-2. **Solicitudes para el solicitante:** ¿solo las propias (propuesto) o todas en lectura? ¿Puede editar `description` y `priority` mientras está `abierta`, o nunca?
-3. **Hoja firmada de solicitudes:** ¿la sube solo el técnico o el admin (propuesto), o también el solicitante?
-4. **`supervisor_observations`:** ¿solo la escribe el admin (propuesto)?
-5. **`/uploads`:** ¿se queda público con la lista blanca (propuesto, sin cambios en el frontend) o se protege ahora? Protegerlo obliga a cambiar los `<img>`/`<a>` del frontend para usar blobs autenticados; son unos 4 componentes más.
-6. **Contraseña del admin actual:** el script deja de tener `Admin123`, pero si ya se creó con esa contraseña hay que cambiarla a mano. Eso no lo puedo hacer yo.
+1. **Visitas para el solicitante:** solo lectura de todas.
+2. **Solicitudes para el solicitante:** solo las propias; puede editar `description` y `priority` mientras están en `abierta`. Al crear, `requester_id` y `status` los fija el backend (`status="abierta"`, agregado en el PR #6).
+3. **Hoja firmada de solicitudes:** la suben solo el técnico asignado y el admin.
+4. **`supervisor_observations`:** **corregido en el PR #6.** Se propuso como campo solo del admin, pero en el formulario es la "Observación del encargado de sucursal", que el técnico anota durante la visita. El técnico sí puede escribirla; solo se le bloquean `branch_id` y `technician_id`.
+5. **`/uploads`:** queda público con la lista blanca. Protegerlo obligaría a cambiar los `<img>`/`<a>` del frontend para usar blobs autenticados (unos 4 componentes).
+6. **Contraseña del admin actual:** el script ya no la contiene; si la cuenta se creó con `Admin123`, hay que cambiarla a mano.
