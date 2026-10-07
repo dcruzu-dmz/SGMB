@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 from typing import Literal, Optional
 
@@ -34,5 +34,4 @@ class CorrectiveRequestResponse(CorrectiveRequestBase):
     created_at: datetime
     closed_at: Optional[datetime] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

@@ -91,22 +91,22 @@ def create_visit(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_roles("admin")),
 ):
-    payload = data.dict(exclude={"items", "checklist_entries"})
+    payload = data.model_dump(exclude={"items", "checklist_entries"})
     visit = MaintenanceVisit(**payload)
     db.add(visit)
     db.flush()
 
     for item_data in data.items:
-        item_dict = item_data.dict(exclude={"checklist_entries"})
+        item_dict = item_data.model_dump(exclude={"checklist_entries"})
         item = MaintenanceVisitItem(visit_id=visit.id, **item_dict)
         db.add(item)
         db.flush()
 
         for entry_data in item_data.checklist_entries:
-            db.add(MaintenanceVisitChecklistEntry(visit_id=visit.id, item_id=item.id, **entry_data.dict(exclude={"item_id"})))
+            db.add(MaintenanceVisitChecklistEntry(visit_id=visit.id, item_id=item.id, **entry_data.model_dump(exclude={"item_id"})))
 
     for entry_data in data.checklist_entries:
-        db.add(MaintenanceVisitChecklistEntry(visit_id=visit.id, **entry_data.dict()))
+        db.add(MaintenanceVisitChecklistEntry(visit_id=visit.id, **entry_data.model_dump()))
 
     db.commit()
     return _get_visit_or_404(visit.id, db)
@@ -149,7 +149,7 @@ def update_visit(
         raise HTTPException(status_code=404, detail="Visita no encontrada")
     _check_visit_write(visit, current_user)
 
-    update_data = data.dict(exclude_unset=True)
+    update_data = data.model_dump(exclude_unset=True)
     # el formulario reenvia todos los campos; solo cuentan los que cambian
     changed = {k for k, v in update_data.items() if getattr(visit, k) != v}
     if current_user.role != "admin" and TECHNICIAN_FORBIDDEN_VISIT_FIELDS & changed:
@@ -246,13 +246,13 @@ def add_visit_item(
         raise HTTPException(status_code=404, detail="Visita no encontrada")
     _check_visit_write(visit, current_user)
 
-    item_dict = data.dict(exclude={"checklist_entries"})
+    item_dict = data.model_dump(exclude={"checklist_entries"})
     item = MaintenanceVisitItem(visit_id=visit_id, **item_dict)
     db.add(item)
     db.flush()
 
     for entry_data in data.checklist_entries:
-        db.add(MaintenanceVisitChecklistEntry(visit_id=visit_id, item_id=item.id, **entry_data.dict(exclude={"item_id"})))
+        db.add(MaintenanceVisitChecklistEntry(visit_id=visit_id, item_id=item.id, **entry_data.model_dump(exclude={"item_id"})))
 
     db.commit()
     db.refresh(item)
@@ -272,7 +272,7 @@ def add_checklist_entries(
         raise HTTPException(status_code=404, detail="Visita no encontrada")
     _check_visit_write(visit, current_user)
 
-    entries = [MaintenanceVisitChecklistEntry(visit_id=visit_id, **entry.dict()) for entry in data]
+    entries = [MaintenanceVisitChecklistEntry(visit_id=visit_id, **entry.model_dump()) for entry in data]
     db.add_all(entries)
     db.commit()
     for entry in entries:
@@ -293,7 +293,7 @@ def update_visit_item(
         raise HTTPException(status_code=404, detail="Equipo no encontrado")
     _check_visit_write(item.visit, current_user)
 
-    for key, value in data.dict(exclude_unset=True).items():
+    for key, value in data.model_dump(exclude_unset=True).items():
         setattr(item, key, value)
 
     db.commit()
@@ -392,7 +392,7 @@ def update_checklist_entry(
         raise HTTPException(status_code=404, detail="Elemento de checklist no encontrado")
     _check_visit_write(entry.visit, current_user)
 
-    for key, value in data.dict(exclude_unset=True).items():
+    for key, value in data.model_dump(exclude_unset=True).items():
         setattr(entry, key, value)
 
     db.commit()

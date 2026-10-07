@@ -63,7 +63,7 @@ def update_branch(
     if not branch:
         raise HTTPException(status_code=404, detail="Sucursal no encontrada")
     
-    for key, value in data.dict(exclude_unset=True).items():
+    for key, value in data.model_dump(exclude_unset=True).items():
         setattr(branch, key, value)
 
     db.commit()
