@@ -104,7 +104,7 @@ def update_asset(
     if not _can_edit_asset(asset, current_user, db):
         raise HTTPException(status_code=403, detail="No tienes autorización para editar este equipo")
 
-    update_data = data.dict(exclude_unset=True)
+    update_data = data.model_dump(exclude_unset=True)
 
     if current_user.role != "admin":
         if "status" in update_data and update_data["status"] not in TECHNICIAN_ALLOWED_STATUSES:

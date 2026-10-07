@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import date, time, datetime
 from typing import Literal, Optional
 
@@ -10,8 +10,7 @@ class MaintenanceVisitPhotoResponse(BaseModel):
     file_path: str
     uploaded_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class MaintenanceVisitChecklistEntryBase(BaseModel):
@@ -34,8 +33,7 @@ class MaintenanceVisitChecklistEntryUpdate(BaseModel):
 class MaintenanceVisitChecklistEntryResponse(MaintenanceVisitChecklistEntryBase):
     id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class MaintenanceVisitItemBase(BaseModel):
@@ -69,8 +67,7 @@ class MaintenanceVisitItemResponse(MaintenanceVisitItemBase):
     photos: list[MaintenanceVisitPhotoResponse] = []
     checklist_entries: list[MaintenanceVisitChecklistEntryResponse] = []
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class MaintenanceVisitBase(BaseModel):
@@ -140,5 +137,4 @@ class MaintenanceVisitResponse(MaintenanceVisitBase):
     items: list[MaintenanceVisitItemResponse] = []
     checklist_entries: list[MaintenanceVisitChecklistEntryResponse] = []
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

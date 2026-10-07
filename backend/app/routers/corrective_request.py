@@ -114,7 +114,7 @@ def update_corrective_request(
     corrective_request = _get_request_or_404(corrective_request_id, db)
     _check_request_read(corrective_request, current_user)
 
-    update_data = data.dict(exclude_unset=True)
+    update_data = data.model_dump(exclude_unset=True)
     if current_user.role != "admin":
         # el formulario reenvia todos los campos; solo cuentan los que cambian
         changed = {k for k, v in update_data.items() if getattr(corrective_request, k) != v}
