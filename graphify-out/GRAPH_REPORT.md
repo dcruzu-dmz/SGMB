@@ -1,9 +1,9 @@
 # Graph Report - SGMB  (2026-10-06)
 
 ## Corpus Check
-- 114 files · ~68,769 words
+- 114 files · ~68,795 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 33 file(s) not represented in the graph (top: .css 21, (none) 7, .log 3)
+- Unclassified: 32 file(s) not represented in the graph (top: .css 21, (none) 6, .log 3)
 
 ## Summary
 - 1013 nodes · 2311 edges · 60 communities (38 shown, 22 thin omitted)
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `5b95ec90`
+- Built from commit: `ae3faa4e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -42,18 +42,19 @@
 - Asset
 - Capítulo V Análisis de Resultados SGMB
 - MaintenanceVisitService
-- seed
+- reports-dashboard.component.ts
 - backend requirements.txt
 - Resultados de Pruebas Unitarias v2
 - Branch
+- run_preventive_check
 - test_subida_hoja_firmada_valida_tipo_y_tamano
 - Flujo DESPUES - Dashboard de Reportes en SGMB
 - generar_capitulo5.py
-- run_preventive_check
+- seed
 - ToastService
 - CorrectiveRequestPrintComponent
 - @angular/common
-- reports-dashboard.component.ts
+- me
 - AppShell layout template
 - Dashboard template
 - tsconfig.app.json
@@ -62,7 +63,6 @@
 - BulkBranchAssetsComponent
 - App root template
 - branches-list.component.ts
-- me
 - Logo BOFASA 40 anos (Distribuyendo Bienestar desde 1986)
 - Solicitudes Unit Test Duration Chart
 - Visitas Unit Test Duration Chart
@@ -195,6 +195,10 @@ Nodes (15): ACEP01 Technician closes request with signed PDF, Deprecation findin
 Cohesion: 0.23
 Nodes (14): BOFASA, Capítulo V Análisis de Resultados SGMB, Flujo 3 Reportes dashboard, Flujo 1 Solicitudes Correctivas, Flujo 2 Visitas Preventivo, Hipótesis: SGMB reduce tiempos, errores e insumos, Métricas TP, TE, Personal, Insumos, Módulo Auth / Control de Acceso (+6 more)
 
+### Community 26 - "reports-dashboard.component.ts"
+Cohesion: 0.17
+Nodes (8): LabelPipe, MaintenanceVisit, EQUIPMENT_CATEGORY_ORDER, CountEntry, ActivityEntry, CalendarDay, MONTH_NAMES, WEEKDAYS
+
 ### Community 27 - "backend requirements.txt"
 Cohesion: 0.15
 Nodes (12): hash_password / verify_password, U01 Password hash/verify, alembic, email-validator, FastAPI, backend requirements.txt, passlib[bcrypt], psycopg2-binary (+4 more)
@@ -207,13 +211,13 @@ Nodes (12): AUTH-U03 verify_token invalid returns None, _check_request_access, _
 Cohesion: 0.07
 Nodes (5): Branch, MaintenanceVisitItem, BranchesListComponent, VisitDetailComponent, VisitPrintComponent
 
+### Community 30 - "run_preventive_check"
+Cohesion: 0.29
+Nodes (3): run_preventive_check(), test_U03_preventive_check_crea_visita_programada_si_vencida(), test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida()
+
 ### Community 32 - "Flujo DESPUES - Dashboard de Reportes en SGMB"
 Cohesion: 0.20
 Nodes (12): Flujo ANTES - Reporte consolidado manual (Reportes), Flujo DESPUES - Dashboard de Reportes en SGMB, Flujo ANTES - Reporte de falla manual (Solicitudes Correctivas), Hoja firmada digital de cierre, Flujo DESPUES - Solicitud correctiva en SGMB, Flujo ANTES - Mantenimiento preventivo manual (Visitas), Programacion automatica de mantenimiento preventivo por frecuencia, Flujo DESPUES - Visita preventiva automatica en SGMB (+4 more)
-
-### Community 34 - "run_preventive_check"
-Cohesion: 0.29
-Nodes (3): run_preventive_check(), test_U03_preventive_check_crea_visita_programada_si_vencida(), test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida()
 
 ### Community 35 - "ToastService"
 Cohesion: 0.29
@@ -222,10 +226,6 @@ Nodes (3): Toast, ToastService, ToastType
 ### Community 37 - "@angular/common"
 Cohesion: 0.23
 Nodes (5): User, UserCreate, UsersService, UserUpdate, @angular/common
-
-### Community 38 - "reports-dashboard.component.ts"
-Cohesion: 0.17
-Nodes (8): LabelPipe, MaintenanceVisit, EQUIPMENT_CATEGORY_ORDER, CountEntry, ActivityEntry, CalendarDay, MONTH_NAMES, WEEKDAYS
 
 ### Community 39 - "AppShell layout template"
 Cohesion: 0.25
@@ -275,7 +275,7 @@ Nodes (10): routes, authGuard(), roleGuard(), authInterceptor(), ClientRow, Logi
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `User` connect `User` to `routers/branch.py`, `routers/corrective_request.py`, `login`, `me`, `routers/asset.py`, `test_authz.py`, `users.py`, `seed`, `test_units_v2.py`?**
+- **Why does `User` connect `User` to `routers/branch.py`, `seed`, `me`, `routers/corrective_request.py`, `login`, `test_authz.py`, `routers/asset.py`, `users.py`, `test_units_v2.py`?**
   _High betweenness centrality (0.040) - this node is a cross-community bridge._
 - **Are the 55 inferred relationships involving `User` (e.g. with `_can_create_in_branch()` and `_can_edit_asset()`) actually correct?**
   _`User` has 55 INFERRED edges - model-reasoned connections that need verification._
@@ -283,9 +283,9 @@ _Questions this graph is uniquely positioned to answer:_
   _137 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `CorrectiveRequestListComponent` be split into smaller, more focused modules?**
   _Cohesion score 0.061495457721872815 - nodes in this community are weakly interconnected._
-- **Why does `@angular/core` connect `@angular/core` to `package.json`, `corrective-requests-list.component.ts`, `ToastService`, `reports-dashboard.component.ts`, `app.ts`, `@angular/common`, `assets-list.component.ts`, `branches-list.component.ts`, `visit-form.component.ts`?**
+- **Why does `@angular/core` connect `@angular/core` to `package.json`, `corrective-requests-list.component.ts`, `ToastService`, `@angular/common`, `app.ts`, `assets-list.component.ts`, `branches-list.component.ts`, `visit-form.component.ts`, `reports-dashboard.component.ts`?**
   _High betweenness centrality (0.036) - this node is a cross-community bridge._
 - **Should `PaginationComponent` be split into smaller, more focused modules?**
   _Cohesion score 0.07564102564102564 - nodes in this community are weakly interconnected._
-- **Why does `Branch` connect `Branch` to `CorrectiveRequestListComponent`, `PaginationComponent`, `corrective-requests-list.component.ts`, `CorrectiveRequestPrintComponent`, `@angular/common`, `reports-dashboard.component.ts`, `assets-list.component.ts`, `BulkBranchAssetsComponent`, `AssetsListComponent`, `branches-list.component.ts`, `AssignedTasksListComponent`, `VisitFormComponent`, `ReportsDashboardComponent`, `visit-form.component.ts`, `@angular/core`?**
+- **Why does `Branch` connect `Branch` to `CorrectiveRequestListComponent`, `PaginationComponent`, `corrective-requests-list.component.ts`, `CorrectiveRequestPrintComponent`, `@angular/common`, `assets-list.component.ts`, `BulkBranchAssetsComponent`, `AssetsListComponent`, `branches-list.component.ts`, `AssignedTasksListComponent`, `VisitFormComponent`, `ReportsDashboardComponent`, `visit-form.component.ts`, `reports-dashboard.component.ts`, `@angular/core`?**
   _High betweenness centrality (0.028) - this node is a cross-community bridge._

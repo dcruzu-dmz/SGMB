@@ -981,6 +981,71 @@
       "source_location": "L119"
     },
     {
+      "id": "frontend_src_app_core_pipes_label_pipe_labelpipe",
+      "label": "LabelPipe",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "reports-dashboard.component.ts",
+      "file_type": "code",
+      "norm_label": "labelpipe",
+      "source_file": "frontend/src/app/core/pipes/label.pipe.ts",
+      "source_location": "L7"
+    },
+    {
+      "id": "frontend_src_app_core_services_maintenance_visit_service_maintenancevisit",
+      "label": "MaintenanceVisit",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "reports-dashboard.component.ts",
+      "file_type": "code",
+      "norm_label": "maintenancevisit",
+      "source_file": "frontend/src/app/core/services/maintenance-visit.service.ts",
+      "source_location": "L55"
+    },
+    {
+      "id": "frontend_src_app_features_reports_pages_reports_dashboard_reports_dashboard_component_countentry",
+      "label": "CountEntry",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "reports-dashboard.component.ts",
+      "file_type": "code",
+      "norm_label": "countentry",
+      "source_file": "frontend/src/app/features/reports/pages/reports-dashboard/reports-dashboard.component.ts",
+      "source_location": "L16"
+    },
+    {
+      "id": "frontend_src_app_layout_pages_dashboard_dashboard_component_activityentry",
+      "label": "ActivityEntry",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "reports-dashboard.component.ts",
+      "file_type": "code",
+      "norm_label": "activityentry",
+      "source_file": "frontend/src/app/layout/pages/dashboard/dashboard.component.ts",
+      "source_location": "L21"
+    },
+    {
+      "id": "frontend_src_app_layout_pages_dashboard_dashboard_component_calendarday",
+      "label": "CalendarDay",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "reports-dashboard.component.ts",
+      "file_type": "code",
+      "norm_label": "calendarday",
+      "source_file": "frontend/src/app/layout/pages/dashboard/dashboard.component.ts",
+      "source_location": "L13"
+    },
+    {
       "id": "frontend_src_app_core_services_branches_service_branch",
       "label": "Branch",
       "_callable": true,
@@ -1148,71 +1213,6 @@
       "norm_label": "userupdate",
       "source_file": "frontend/src/app/core/services/users.service.ts",
       "source_location": "L23"
-    },
-    {
-      "id": "frontend_src_app_core_pipes_label_pipe_labelpipe",
-      "label": "LabelPipe",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 38,
-      "community_name": "reports-dashboard.component.ts",
-      "file_type": "code",
-      "norm_label": "labelpipe",
-      "source_file": "frontend/src/app/core/pipes/label.pipe.ts",
-      "source_location": "L7"
-    },
-    {
-      "id": "frontend_src_app_core_services_maintenance_visit_service_maintenancevisit",
-      "label": "MaintenanceVisit",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 38,
-      "community_name": "reports-dashboard.component.ts",
-      "file_type": "code",
-      "norm_label": "maintenancevisit",
-      "source_file": "frontend/src/app/core/services/maintenance-visit.service.ts",
-      "source_location": "L55"
-    },
-    {
-      "id": "frontend_src_app_features_reports_pages_reports_dashboard_reports_dashboard_component_countentry",
-      "label": "CountEntry",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 38,
-      "community_name": "reports-dashboard.component.ts",
-      "file_type": "code",
-      "norm_label": "countentry",
-      "source_file": "frontend/src/app/features/reports/pages/reports-dashboard/reports-dashboard.component.ts",
-      "source_location": "L16"
-    },
-    {
-      "id": "frontend_src_app_layout_pages_dashboard_dashboard_component_activityentry",
-      "label": "ActivityEntry",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 38,
-      "community_name": "reports-dashboard.component.ts",
-      "file_type": "code",
-      "norm_label": "activityentry",
-      "source_file": "frontend/src/app/layout/pages/dashboard/dashboard.component.ts",
-      "source_location": "L21"
-    },
-    {
-      "id": "frontend_src_app_layout_pages_dashboard_dashboard_component_calendarday",
-      "label": "CalendarDay",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 38,
-      "community_name": "reports-dashboard.component.ts",
-      "file_type": "code",
-      "norm_label": "calendarday",
-      "source_file": "frontend/src/app/layout/pages/dashboard/dashboard.component.ts",
-      "source_location": "L13"
     },
     {
       "id": "frontend_src_app_core_services_assets_service_assetsservice",
@@ -3463,7 +3463,7 @@
       "file_type": "code",
       "norm_label": ".onsignedreportselected()",
       "source_file": "frontend/src/app/features/maintenance-visits/pages/visit-form/visit-form.component.ts",
-      "source_location": "L364"
+      "source_location": "L368"
     },
     {
       "id": "frontend_src_app_features_maintenance_visits_pages_visit_form_visit_form_component_visitformcomponent_photourl",
@@ -3475,7 +3475,7 @@
       "file_type": "code",
       "norm_label": ".photourl()",
       "source_file": "frontend/src/app/features/maintenance-visits/pages/visit-form/visit-form.component.ts",
-      "source_location": "L393"
+      "source_location": "L397"
     },
     {
       "id": "frontend_src_app_features_maintenance_visits_pages_visit_form_visit_form_component_visitformcomponent_removeitem",
@@ -3511,7 +3511,7 @@
       "file_type": "code",
       "norm_label": ".removesignedreport()",
       "source_file": "frontend/src/app/features/maintenance-visits/pages/visit-form/visit-form.component.ts",
-      "source_location": "L385"
+      "source_location": "L389"
     },
     {
       "id": "frontend_src_app_features_maintenance_visits_pages_visit_form_visit_form_component_visitformcomponent_submitvisit",
@@ -3523,7 +3523,7 @@
       "file_type": "code",
       "norm_label": ".submitvisit()",
       "source_file": "frontend/src/app/features/maintenance-visits/pages/visit-form/visit-form.component.ts",
-      "source_location": "L397"
+      "source_location": "L401"
     },
     {
       "id": "frontend_src_app_features_maintenance_visits_pages_visit_form_visit_form_component_visitformcomponent_toggleasset",
@@ -4330,28 +4330,16 @@
       "source_location": "L161"
     },
     {
-      "id": "backend_tests_test_integration_db",
-      "label": "db()",
+      "id": "frontend_src_app_core_pipes_label_pipe_labelpipe_transform",
+      "label": ".transform()",
       "_callable": true,
       "_origin": "ast",
       "community": 26,
-      "community_name": "seed",
+      "community_name": "reports-dashboard.component.ts",
       "file_type": "code",
-      "norm_label": "db()",
-      "source_file": "backend/tests/test_integration.py",
-      "source_location": "L33"
-    },
-    {
-      "id": "backend_tests_test_integration_seed",
-      "label": "seed()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 26,
-      "community_name": "seed",
-      "file_type": "code",
-      "norm_label": "seed()",
-      "source_file": "backend/tests/test_integration.py",
-      "source_location": "L40"
+      "norm_label": ".transform()",
+      "source_file": "frontend/src/app/core/pipes/label.pipe.ts",
+      "source_location": "L8"
     },
     {
       "id": "frontend_src_app_features_branches_pages_branches_list_branches_list_component_brancheslistcomponent_closeassetsmodal",
@@ -4738,6 +4726,42 @@
       "source_location": "L77"
     },
     {
+      "id": "backend_app_services_preventive_scheduler_run_preventive_check",
+      "label": "run_preventive_check()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 30,
+      "community_name": "run_preventive_check",
+      "file_type": "code",
+      "norm_label": "run_preventive_check()",
+      "source_file": "backend/app/services/preventive_scheduler.py",
+      "source_location": "L16"
+    },
+    {
+      "id": "backend_tests_test_units_test_u03_preventive_check_crea_visita_programada_si_vencida",
+      "label": "test_U03_preventive_check_crea_visita_programada_si_vencida()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 30,
+      "community_name": "run_preventive_check",
+      "file_type": "code",
+      "norm_label": "test_u03_preventive_check_crea_visita_programada_si_vencida()",
+      "source_file": "backend/tests/test_units.py",
+      "source_location": "L58"
+    },
+    {
+      "id": "backend_tests_test_units_v2_test_vis_u03_preventive_check_no_genera_visita_si_no_esta_vencida",
+      "label": "test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 30,
+      "community_name": "run_preventive_check",
+      "file_type": "code",
+      "norm_label": "test_vis_u03_preventive_check_no_genera_visita_si_no_esta_vencida()",
+      "source_file": "backend/tests/test_units_v2.py",
+      "source_location": "L113"
+    },
+    {
       "id": "backend_tests_test_authz_test_subida_hoja_firmada_valida_tipo_y_tamano",
       "label": "test_subida_hoja_firmada_valida_tipo_y_tamano()",
       "_callable": true,
@@ -4774,40 +4798,28 @@
       "source_location": "L50"
     },
     {
-      "id": "backend_app_services_preventive_scheduler_run_preventive_check",
-      "label": "run_preventive_check()",
+      "id": "backend_tests_test_integration_db",
+      "label": "db()",
       "_callable": true,
       "_origin": "ast",
       "community": 34,
-      "community_name": "run_preventive_check",
+      "community_name": "seed",
       "file_type": "code",
-      "norm_label": "run_preventive_check()",
-      "source_file": "backend/app/services/preventive_scheduler.py",
-      "source_location": "L16"
+      "norm_label": "db()",
+      "source_file": "backend/tests/test_integration.py",
+      "source_location": "L33"
     },
     {
-      "id": "backend_tests_test_units_test_u03_preventive_check_crea_visita_programada_si_vencida",
-      "label": "test_U03_preventive_check_crea_visita_programada_si_vencida()",
+      "id": "backend_tests_test_integration_seed",
+      "label": "seed()",
       "_callable": true,
       "_origin": "ast",
       "community": 34,
-      "community_name": "run_preventive_check",
+      "community_name": "seed",
       "file_type": "code",
-      "norm_label": "test_u03_preventive_check_crea_visita_programada_si_vencida()",
-      "source_file": "backend/tests/test_units.py",
-      "source_location": "L58"
-    },
-    {
-      "id": "backend_tests_test_units_v2_test_vis_u03_preventive_check_no_genera_visita_si_no_esta_vencida",
-      "label": "test_VIS_U03_preventive_check_no_genera_visita_si_no_esta_vencida()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "run_preventive_check",
-      "file_type": "code",
-      "norm_label": "test_vis_u03_preventive_check_no_genera_visita_si_no_esta_vencida()",
-      "source_file": "backend/tests/test_units_v2.py",
-      "source_location": "L113"
+      "norm_label": "seed()",
+      "source_file": "backend/tests/test_integration.py",
+      "source_location": "L40"
     },
     {
       "id": "frontend_src_app_core_services_toast_service_toastservice_dismiss",
@@ -5026,16 +5038,16 @@
       "source_location": "L49"
     },
     {
-      "id": "frontend_src_app_core_pipes_label_pipe_labelpipe_transform",
-      "label": ".transform()",
+      "id": "backend_app_routers_auth_me",
+      "label": "me()",
       "_callable": true,
       "_origin": "ast",
       "community": 38,
-      "community_name": "reports-dashboard.component.ts",
+      "community_name": "me",
       "file_type": "code",
-      "norm_label": ".transform()",
-      "source_file": "frontend/src/app/core/pipes/label.pipe.ts",
-      "source_location": "L8"
+      "norm_label": "me()",
+      "source_file": "backend/app/routers/auth.py",
+      "source_location": "L71"
     },
     {
       "id": "frontend_src_app_core_services_assets_service_assetsservice_changestatus",
@@ -5372,18 +5384,6 @@
       "norm_label": ".setterm()",
       "source_file": "frontend/src/app/core/services/search.service.ts",
       "source_location": "L11"
-    },
-    {
-      "id": "backend_app_routers_auth_me",
-      "label": "me()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 47,
-      "community_name": "me",
-      "file_type": "code",
-      "norm_label": "me()",
-      "source_file": "backend/app/routers/auth.py",
-      "source_location": "L71"
     },
     {
       "id": "backend_app_routers_maintenance_visit_add_checklist_entries",
@@ -7609,13 +7609,90 @@
       "source_location": ""
     },
     {
-      "id": "backend_tests_test_integration_py_fixture",
-      "label": "fixture",
+      "id": "frontend_src_app_core_pipes_label_pipe",
+      "label": "label.pipe.ts",
       "_origin": "ast",
       "community": 26,
-      "community_name": "seed",
+      "community_name": "reports-dashboard.component.ts",
       "file_type": "code",
-      "norm_label": "fixture",
+      "norm_label": "label.pipe.ts",
+      "source_file": "frontend/src/app/core/pipes/label.pipe.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "frontend_src_app_core_utils_equipment_category_equipment_category_order",
+      "label": "EQUIPMENT_CATEGORY_ORDER",
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "reports-dashboard.component.ts",
+      "file_type": "code",
+      "norm_label": "equipment_category_order",
+      "source_file": "frontend/src/app/core/utils/equipment-category.ts",
+      "source_location": "L4"
+    },
+    {
+      "id": "frontend_src_app_features_reports_pages_reports_dashboard_reports_dashboard_component",
+      "label": "reports-dashboard.component.ts",
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "reports-dashboard.component.ts",
+      "file_type": "code",
+      "norm_label": "reports-dashboard.component.ts",
+      "source_file": "frontend/src/app/features/reports/pages/reports-dashboard/reports-dashboard.component.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "frontend_src_app_layout_pages_dashboard_dashboard_component",
+      "label": "dashboard.component.ts",
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "reports-dashboard.component.ts",
+      "file_type": "code",
+      "norm_label": "dashboard.component.ts",
+      "source_file": "frontend/src/app/layout/pages/dashboard/dashboard.component.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "frontend_src_app_layout_pages_dashboard_dashboard_component_month_names",
+      "label": "MONTH_NAMES",
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "reports-dashboard.component.ts",
+      "file_type": "code",
+      "norm_label": "month_names",
+      "source_file": "frontend/src/app/layout/pages/dashboard/dashboard.component.ts",
+      "source_location": "L29"
+    },
+    {
+      "id": "frontend_src_app_layout_pages_dashboard_dashboard_component_weekdays",
+      "label": "WEEKDAYS",
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "reports-dashboard.component.ts",
+      "file_type": "code",
+      "norm_label": "weekdays",
+      "source_file": "frontend/src/app/layout/pages/dashboard/dashboard.component.ts",
+      "source_location": "L28"
+    },
+    {
+      "id": "frontend_src_app_layout_pages_dashboard_dashboard_spec",
+      "label": "dashboard.spec.ts",
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "reports-dashboard.component.ts",
+      "file_type": "code",
+      "norm_label": "dashboard.spec.ts",
+      "source_file": "frontend/src/app/layout/pages/dashboard/dashboard.spec.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "pipe",
+      "label": "Pipe",
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "reports-dashboard.component.ts",
+      "file_type": "code",
+      "norm_label": "pipe",
       "source_file": "",
       "source_location": ""
     },
@@ -8159,6 +8236,50 @@
       "source_location": "L22"
     },
     {
+      "id": "backend_app_services_preventive_scheduler_py_session",
+      "label": "Session",
+      "_origin": "ast",
+      "community": 30,
+      "community_name": "run_preventive_check",
+      "file_type": "code",
+      "norm_label": "session",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "backend_app_services_preventive_scheduler_rationale_17",
+      "label": "Crea una visita 'programada' (sin t\u00e9cnico asignado) para cada sucursal activa\u2026",
+      "_origin": "ast",
+      "community": 30,
+      "community_name": "run_preventive_check",
+      "file_type": "rationale",
+      "norm_label": "crea una visita 'programada' (sin tecnico asignado) para cada sucursal activa...",
+      "source_file": "backend/app/services/preventive_scheduler.py",
+      "source_location": "L17"
+    },
+    {
+      "id": "backend_tests_test_units_rationale_59",
+      "label": "Debe generarse una visita en estado 'programada' cuando la ultima visita\u2026",
+      "_origin": "ast",
+      "community": 30,
+      "community_name": "run_preventive_check",
+      "file_type": "rationale",
+      "norm_label": "debe generarse una visita en estado 'programada' cuando la ultima visita...",
+      "source_file": "backend/tests/test_units.py",
+      "source_location": "L59"
+    },
+    {
+      "id": "backend_tests_test_units_v2_rationale_114",
+      "label": "run_preventive_check no debe crear ninguna visita cuando la ultima visita\u2026",
+      "_origin": "ast",
+      "community": 30,
+      "community_name": "run_preventive_check",
+      "file_type": "rationale",
+      "norm_label": "run_preventive_check no debe crear ninguna visita cuando la ultima visita...",
+      "source_file": "backend/tests/test_units_v2.py",
+      "source_location": "L114"
+    },
+    {
       "id": "parametrize",
       "label": "parametrize",
       "_origin": "ast",
@@ -8236,48 +8357,15 @@
       "source_location": "L1"
     },
     {
-      "id": "backend_app_services_preventive_scheduler_py_session",
-      "label": "Session",
+      "id": "backend_tests_test_integration_py_fixture",
+      "label": "fixture",
       "_origin": "ast",
       "community": 34,
-      "community_name": "run_preventive_check",
+      "community_name": "seed",
       "file_type": "code",
-      "norm_label": "session",
+      "norm_label": "fixture",
       "source_file": "",
       "source_location": ""
-    },
-    {
-      "id": "backend_app_services_preventive_scheduler_rationale_17",
-      "label": "Crea una visita 'programada' (sin t\u00e9cnico asignado) para cada sucursal activa\u2026",
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "run_preventive_check",
-      "file_type": "rationale",
-      "norm_label": "crea una visita 'programada' (sin tecnico asignado) para cada sucursal activa...",
-      "source_file": "backend/app/services/preventive_scheduler.py",
-      "source_location": "L17"
-    },
-    {
-      "id": "backend_tests_test_units_rationale_59",
-      "label": "Debe generarse una visita en estado 'programada' cuando la ultima visita\u2026",
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "run_preventive_check",
-      "file_type": "rationale",
-      "norm_label": "debe generarse una visita en estado 'programada' cuando la ultima visita...",
-      "source_file": "backend/tests/test_units.py",
-      "source_location": "L59"
-    },
-    {
-      "id": "backend_tests_test_units_v2_rationale_114",
-      "label": "run_preventive_check no debe crear ninguna visita cuando la ultima visita\u2026",
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "run_preventive_check",
-      "file_type": "rationale",
-      "norm_label": "run_preventive_check no debe crear ninguna visita cuando la ultima visita...",
-      "source_file": "backend/tests/test_units_v2.py",
-      "source_location": "L114"
     },
     {
       "id": "frontend_src_app_core_services_toast_service",
@@ -8401,90 +8489,13 @@
       "source_location": "L14"
     },
     {
-      "id": "frontend_src_app_core_pipes_label_pipe",
-      "label": "label.pipe.ts",
+      "id": "backend_app_routers_auth_py_get",
+      "label": "get",
       "_origin": "ast",
       "community": 38,
-      "community_name": "reports-dashboard.component.ts",
+      "community_name": "me",
       "file_type": "code",
-      "norm_label": "label.pipe.ts",
-      "source_file": "frontend/src/app/core/pipes/label.pipe.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "frontend_src_app_core_utils_equipment_category_equipment_category_order",
-      "label": "EQUIPMENT_CATEGORY_ORDER",
-      "_origin": "ast",
-      "community": 38,
-      "community_name": "reports-dashboard.component.ts",
-      "file_type": "code",
-      "norm_label": "equipment_category_order",
-      "source_file": "frontend/src/app/core/utils/equipment-category.ts",
-      "source_location": "L4"
-    },
-    {
-      "id": "frontend_src_app_features_reports_pages_reports_dashboard_reports_dashboard_component",
-      "label": "reports-dashboard.component.ts",
-      "_origin": "ast",
-      "community": 38,
-      "community_name": "reports-dashboard.component.ts",
-      "file_type": "code",
-      "norm_label": "reports-dashboard.component.ts",
-      "source_file": "frontend/src/app/features/reports/pages/reports-dashboard/reports-dashboard.component.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "frontend_src_app_layout_pages_dashboard_dashboard_component",
-      "label": "dashboard.component.ts",
-      "_origin": "ast",
-      "community": 38,
-      "community_name": "reports-dashboard.component.ts",
-      "file_type": "code",
-      "norm_label": "dashboard.component.ts",
-      "source_file": "frontend/src/app/layout/pages/dashboard/dashboard.component.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "frontend_src_app_layout_pages_dashboard_dashboard_component_month_names",
-      "label": "MONTH_NAMES",
-      "_origin": "ast",
-      "community": 38,
-      "community_name": "reports-dashboard.component.ts",
-      "file_type": "code",
-      "norm_label": "month_names",
-      "source_file": "frontend/src/app/layout/pages/dashboard/dashboard.component.ts",
-      "source_location": "L29"
-    },
-    {
-      "id": "frontend_src_app_layout_pages_dashboard_dashboard_component_weekdays",
-      "label": "WEEKDAYS",
-      "_origin": "ast",
-      "community": 38,
-      "community_name": "reports-dashboard.component.ts",
-      "file_type": "code",
-      "norm_label": "weekdays",
-      "source_file": "frontend/src/app/layout/pages/dashboard/dashboard.component.ts",
-      "source_location": "L28"
-    },
-    {
-      "id": "frontend_src_app_layout_pages_dashboard_dashboard_spec",
-      "label": "dashboard.spec.ts",
-      "_origin": "ast",
-      "community": 38,
-      "community_name": "reports-dashboard.component.ts",
-      "file_type": "code",
-      "norm_label": "dashboard.spec.ts",
-      "source_file": "frontend/src/app/layout/pages/dashboard/dashboard.spec.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "pipe",
-      "label": "Pipe",
-      "_origin": "ast",
-      "community": 38,
-      "community_name": "reports-dashboard.component.ts",
-      "file_type": "code",
-      "norm_label": "pipe",
+      "norm_label": "get",
       "source_file": "",
       "source_location": ""
     },
@@ -8784,17 +8795,6 @@
       "norm_label": "visit-list.component.ts",
       "source_file": "frontend/src/app/features/maintenance-visits/pages/visit-list/visit-list.component.ts",
       "source_location": "L1"
-    },
-    {
-      "id": "backend_app_routers_auth_py_get",
-      "label": "get",
-      "_origin": "ast",
-      "community": 47,
-      "community_name": "me",
-      "file_type": "code",
-      "norm_label": "get",
-      "source_file": "",
-      "source_location": ""
     },
     {
       "id": "backend_app_models_maintenance_visit_py_base",
@@ -12141,6 +12141,18 @@
       "type": "external"
     },
     {
+      "id": "contextlib",
+      "label": "contextlib",
+      "_origin": "semantic",
+      "community": 15,
+      "community_name": "test_authz.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "contextlib",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "datetime",
       "label": "datetime",
       "_origin": "semantic",
@@ -12333,6 +12345,18 @@
       "type": "external"
     },
     {
+      "id": "frontend_src_app_layout_pages_dashboard_dashboard_component_dashboard",
+      "label": "frontend_src_app_layout_pages_dashboard_dashboard_component_dashboard",
+      "_origin": "semantic",
+      "community": 26,
+      "community_name": "reports-dashboard.component.ts",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "frontend_src_app_layout_pages_dashboard_dashboard_component_dashboard",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "matplotlib",
       "label": "matplotlib",
       "_origin": "semantic",
@@ -12365,18 +12389,6 @@
       "external": true,
       "file_type": "concept",
       "norm_label": "numpy",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "frontend_src_app_layout_pages_dashboard_dashboard_component_dashboard",
-      "label": "frontend_src_app_layout_pages_dashboard_dashboard_component_dashboard",
-      "_origin": "semantic",
-      "community": 38,
-      "community_name": "reports-dashboard.component.ts",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "frontend_src_app_layout_pages_dashboard_dashboard_component_dashboard",
       "source_file": "",
       "type": "external"
     },
@@ -12497,17 +12509,6 @@
       "external": true,
       "file_type": "concept",
       "norm_label": "ref_users",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "contextlib",
-      "label": "contextlib",
-      "community": 15,
-      "community_name": "test_authz.py",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "contextlib",
       "source_file": "",
       "type": "external"
     }
@@ -14490,7 +14491,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/app/features/maintenance-visits/pages/visit-form/visit-form.component.ts",
-      "source_location": "L427",
+      "source_location": "L431",
       "weight": 1.0
     },
     {
@@ -14502,7 +14503,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/app/features/maintenance-visits/pages/visit-form/visit-form.component.ts",
-      "source_location": "L453",
+      "source_location": "L457",
       "weight": 1.0
     },
     {
@@ -34337,7 +34338,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "frontend/src/app/features/maintenance-visits/pages/visit-form/visit-form.component.ts",
-      "source_location": "L364",
+      "source_location": "L368",
       "weight": 1.0
     },
     {
@@ -34348,7 +34349,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "frontend/src/app/features/maintenance-visits/pages/visit-form/visit-form.component.ts",
-      "source_location": "L385",
+      "source_location": "L389",
       "weight": 1.0
     },
     {
@@ -34359,7 +34360,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "frontend/src/app/features/maintenance-visits/pages/visit-form/visit-form.component.ts",
-      "source_location": "L393",
+      "source_location": "L397",
       "weight": 1.0
     },
     {
@@ -34370,7 +34371,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "frontend/src/app/features/maintenance-visits/pages/visit-form/visit-form.component.ts",
-      "source_location": "L397",
+      "source_location": "L401",
       "weight": 1.0
     },
     {
@@ -39476,5 +39477,5 @@
       "source_file": "backend/pruebas/screenshots/graf_ok_auth.png"
     }
   ],
-  "built_at_commit": "5b95ec904683b0322dbcf36d1d2af78aabca4bc9"
+  "built_at_commit": "ae3faa4ea5db6c57c7f64d668b77ee15ac056d84"
 }
