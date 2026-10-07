@@ -58,6 +58,18 @@ def _get_visit_or_404(visit_id: int, db: Session) -> MaintenanceVisit:
 TECHNICIAN_FORBIDDEN_VISIT_FIELDS = {"branch_id", "technician_id"}
 
 
+def _check_entries_belong_to_visit(entries, visit_id: int, db: Session) -> None:
+    """Un checklist solo puede apuntar a equipos (item_id) de su propia visita."""
+    item_ids = {e.item_id for e in entries if e.item_id is not None}
+    if not item_ids:
+        return
+    own = db.query(MaintenanceVisitItem.id).filter(
+        MaintenanceVisitItem.visit_id == visit_id, MaintenanceVisitItem.id.in_(item_ids)
+    ).count()
+    if own != len(item_ids):
+        raise HTTPException(status_code=400, detail="El checklist hace referencia a un equipo de otra visita")
+
+
 def _is_assigned_technician(visit: MaintenanceVisit, current_user: User) -> bool:
     return current_user.role == "tecnico" and visit.technician_id == current_user.id
 
@@ -105,6 +117,7 @@ def create_visit(
         for entry_data in item_data.checklist_entries:
             db.add(MaintenanceVisitChecklistEntry(visit_id=visit.id, item_id=item.id, **entry_data.model_dump(exclude={"item_id"})))
 
+    _check_entries_belong_to_visit(data.checklist_entries, visit.id, db)
     for entry_data in data.checklist_entries:
         db.add(MaintenanceVisitChecklistEntry(visit_id=visit.id, **entry_data.model_dump()))
 
@@ -272,6 +285,7 @@ def add_checklist_entries(
         raise HTTPException(status_code=404, detail="Visita no encontrada")
     _check_visit_write(visit, current_user)
 
+    _check_entries_belong_to_visit(data, visit_id, db)
     entries = [MaintenanceVisitChecklistEntry(visit_id=visit_id, **entry.model_dump()) for entry in data]
     db.add_all(entries)
     db.commit()

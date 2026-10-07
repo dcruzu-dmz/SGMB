@@ -144,7 +144,7 @@ export class UsersListComponent implements OnInit {
     this.selectedUserId = user.id;
 
     this.form.name = user.name;
-    this.form.email = user.email;
+    this.form.email = user.email ?? '';
     this.form.password = '';
     this.form.role = user.role;
     this.form.is_active = user.is_active;
