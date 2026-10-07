@@ -92,6 +92,18 @@
       </div>
 
       <div class="card wide">
+        <h2>Equipos por tipo</h2>
+        <div class="bar-row" *ngFor="let entry of assetsByType">
+          <span class="bar-label"><app-equipment-icon [type]="entry.label" [size]="22"></app-equipment-icon> {{ entry.label }}</span>
+          <div class="bar-track">
+            <div class="bar-fill asset" [style.width.%]="entry.percent"></div>
+          </div>
+          <span class="bar-count">{{ entry.count }}</span>
+        </div>
+        <p class="empty" *ngIf="assets.length === 0">Sin equipos registrados</p>
+      </div>
+
+      <div class="card wide">
         <h2>Mantenimientos realizados</h2>
 
         <div class="filters-row">
@@ -132,7 +144,7 @@
               <td>{{ v.visit_date }}</td>
               <td>{{ v.items.length }}</td>
               <td class="reasons-cell">{{ getReasons(v.visit_reasons) }}</td>
-              <td><a class="action-btn link" [routerLink]="['/maintenance-visits', v.id]"><span class="icon">👁</span> Ver detalle</a></td>
+              <td><a class="action-btn link" [routerLink]="['/maintenance-visits', v.id]"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg></span> Ver detalle</a></td>
             </tr>
           </tbody>
         </table>
@@ -162,7 +174,113 @@
         </div>
         <p class="empty" *ngIf="upcomingVisits.length === 0">No hay visitas próximas</p>
       </div>
+
+      <div class="card wide">
+        <h2>Reporte personalizado de equipos</h2>
+        <p class="hint">Filtra por sucursal, cadena, tipo, RAM, procesador o sistema operativo. Se busca en todas las sucursales a la vez.</p>
+
+        <div class="filters-row">
+          <div class="form-group">
+            <label>Sucursal</label>
+            <select [(ngModel)]="assetFilterBranchId" name="assetFilterBranchId">
+              <option [ngValue]="null">Todas</option>
+              <option *ngFor="let b of branches" [ngValue]="b.id">{{ b.name }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Cadena</label>
+            <select [(ngModel)]="assetFilterChain" name="assetFilterChain">
+              <option value="">Todas</option>
+              <option *ngFor="let c of chains" [value]="c">{{ c }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tipo</label>
+            <select [(ngModel)]="assetFilterType" name="assetFilterType">
+              <option value="">Todos</option>
+              <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>RAM</label>
+            <input type="text" [(ngModel)]="assetFilterRam" name="assetFilterRam" placeholder="Ej. 8 GB">
+          </div>
+          <div class="form-group">
+            <label>Procesador</label>
+            <input type="text" [(ngModel)]="assetFilterProcessor" name="assetFilterProcessor" placeholder="Ej. i5">
+          </div>
+          <div class="form-group">
+            <label>Sistema operativo</label>
+            <input type="text" [(ngModel)]="assetFilterOs" name="assetFilterOs" placeholder="Ej. Windows 10">
+          </div>
+          <div class="form-group">
+            <label>Estado</label>
+            <select [(ngModel)]="assetFilterStatus" name="assetFilterStatus">
+              <option value="">Todos</option>
+              <option value="disponible">Disponible</option>
+              <option value="en_mantenimiento">En mantenimiento</option>
+              <option value="baja_solicitada">Baja solicitada</option>
+              <option value="dado_de_baja">Dado de baja</option>
+            </select>
+          </div>
+          <button type="button" class="clear-filters-btn" (click)="clearAssetFilters()">Limpiar filtros</button>
+          <button type="button" class="cta-btn" (click)="openExportPreview()"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg></span> Vista previa y exportar</button>
+        </div>
+
+        <p class="result-count">{{ filteredAssets.length }} de {{ assets.length }} equipos coinciden con el filtro actual</p>
+      </div>
     </div>
 
   </ng-container>
+</div>
+
+<!-- Modal de vista previa de exportación -->
+<div class="modal-backdrop" *ngIf="showExportPreview" (click)="closeExportPreview()">
+  <div class="modal-card export-modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Vista previa de exportación</h2>
+      <button type="button" class="modal-close" (click)="closeExportPreview()" aria-label="Cerrar">&times;</button>
+    </div>
+
+    <p class="result-count">{{ filteredAssets.length }} de {{ assets.length }} equipos coinciden con el filtro actual</p>
+
+    <div class="table-scroll" *ngIf="filteredAssets.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Tipo</th>
+          <th>Marca / Modelo</th>
+          <th>Procesador</th>
+          <th>RAM</th>
+          <th>Disco</th>
+          <th>S.O.</th>
+          <th>Sucursal</th>
+          <th>Cadena</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let a of filteredAssets">
+          <td>{{ a.name }}</td>
+          <td>{{ a.type }}</td>
+          <td>{{ a.brand }} {{ a.model }}</td>
+          <td>{{ a.processor || '—' }}</td>
+          <td>{{ a.ram || '—' }}</td>
+          <td>{{ a.storage || '—' }}</td>
+          <td>{{ a.operating_system || '—' }}</td>
+          <td>{{ getBranchName(a.branch_id ?? 0) }}</td>
+          <td>{{ branchChain(a.branch_id) || '—' }}</td>
+          <td><span [class]="'badge badge-' + a.status">{{ a.status | label }}</span></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="empty" *ngIf="filteredAssets.length === 0">No hay equipos que coincidan con el filtro</p>
+
+    <div class="form-actions">
+      <button type="button" class="cta-btn" (click)="exportAssetsCsv()">⬇ Exportar CSV</button>
+      <button type="button" class="secondary" (click)="closeExportPreview()">Cerrar</button>
+    </div>
+  </div>
 </div>

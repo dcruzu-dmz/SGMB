@@ -19,6 +19,9 @@ class Asset(Base):
     storage = Column(String(50), nullable=True)
     processor = Column(String(100), nullable=True)
     operating_system = Column(String(100), nullable=True)
+    channels = Column(Integer, nullable=True)
+    screen_size = Column(String(50), nullable=True)
+    video_port = Column(String(20), nullable=True)
     branch_id = Column(Integer, ForeignKey("branches.id"), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 

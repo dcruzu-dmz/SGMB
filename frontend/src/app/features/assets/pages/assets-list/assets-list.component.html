@@ -6,12 +6,34 @@
         </div>
         <div class="header-actions">
           <a class="cta-btn secondary-btn" routerLink="/assets/bulk" *ngIf="canManage">+ Registrar equipos de sucursal</a>
-          <button type="button" class="cta-btn" *ngIf="canManage" (click)="openCreateModal()">+ Nuevo equipo</button>
+          <button type="button" class="cta-btn" *ngIf="canCreateAsset" (click)="openCreateModal()">+ Nuevo equipo</button>
         </div>
 </div>
 
 <div class="card table-card">
     <h2>Listado de equipos</h2>
+
+    <div class="filter-row">
+      <label>Sucursal</label>
+      <select [(ngModel)]="filterBranchId" name="filterBranchId" (ngModelChange)="onFilterBranchChange()">
+        <option [ngValue]="null">Todas las sucursales</option>
+        <option *ngFor="let b of branches" [ngValue]="b.id">{{ b.name }}</option>
+      </select>
+    </div>
+
+    <p class="hint" *ngIf="currentUser?.role === 'tecnico' && authorizedBranchIds.size > 0">
+      Tienes autorización para editar equipos de: {{ getBranchName([...authorizedBranchIds][0]) }}<span *ngIf="authorizedBranchIds.size > 1">, y {{ authorizedBranchIds.size - 1 }} sucursal(es) más</span>
+    </p>
+
+    <div class="category-tabs" *ngIf="!loading">
+      <button type="button" class="category-tab" [class.active]="activeCategory === 'Todos'" (click)="selectCategory('Todos')">
+        <app-equipment-icon type="Todos" [size]="20"></app-equipment-icon>Todos <span class="tab-count">{{ branchFilteredAssets.length }}</span>
+      </button>
+      <button type="button" class="category-tab" *ngFor="let c of categoryTabs" [class.active]="activeCategory === c.category" [class.empty-tab]="c.count === 0" (click)="selectCategory(c.category)">
+        <app-equipment-icon [type]="c.category" [size]="20"></app-equipment-icon>{{ c.category }} <span class="tab-count">{{ c.count }}</span>
+      </button>
+    </div>
+
     <p *ngIf="loading">Cargando equipos...</p>
     <div class="table-scroll" *ngIf="!loading">
     <table>
@@ -20,33 +42,64 @@
             <th>Nombre</th>
             <th>Tipo</th>
             <th>Marca</th>
+            <th>Modelo</th>
+            <th>Serie</th>
+            <th *ngIf="activeCategory === 'CPU'">Procesador</th>
+            <th *ngIf="activeCategory === 'CPU'">RAM</th>
+            <th *ngIf="activeCategory === 'CPU'">S.O.</th>
+            <th *ngIf="activeCategory === 'DVR'">Canales</th>
+            <th *ngIf="activeCategory === 'Monitores'">Tamaño</th>
+            <th *ngIf="activeCategory === 'Monitores'">Puerto</th>
             <th>Ubicación</th>
             <th>Sucursal</th>
             <th>Estado</th>
-            <th *ngIf="canManage">Acciones</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let asset of pagedAssets">
-            <td>{{ asset.name }}</td>
+            <td><div class="asset-name"><app-equipment-icon [type]="asset.type" [size]="30"></app-equipment-icon><span>{{ asset.name }}</span></div></td>
             <td>{{ asset.type }}</td>
-            <td>{{ asset.brand }}</td>
+            <td>{{ asset.brand || '—' }}</td>
+            <td>{{ asset.model || '—' }}</td>
+            <td>{{ asset.serial_number || '—' }}</td>
+            <td *ngIf="activeCategory === 'CPU'">{{ asset.processor || '—' }}</td>
+            <td *ngIf="activeCategory === 'CPU'">{{ asset.ram || '—' }}</td>
+            <td *ngIf="activeCategory === 'CPU'">{{ asset.operating_system || '—' }}</td>
+            <td *ngIf="activeCategory === 'DVR'">{{ asset.channels || '—' }}</td>
+            <td *ngIf="activeCategory === 'Monitores'">{{ asset.screen_size || '—' }}</td>
+            <td *ngIf="activeCategory === 'Monitores'">{{ asset.video_port || '—' }}</td>
             <td>{{ asset.location }}</td>
             <td>{{ getBranchName(asset.branch_id) }}</td>
             <td><span [class]="'badge badge-' + asset.status">{{ asset.status | label }}</span></td>
-            <td class="actions" *ngIf="canManage">
-                <button class="action-btn edit" (click)="openEditModal(asset)"><span class="icon">✎</span> Editar</button>
-                <button class="action-btn" [class.warning]="asset.status !== 'dado_de_baja'" [class.success]="asset.status === 'dado_de_baja'" (click)="toggleStatus(asset)">
-                  <span class="icon">{{ asset.status === 'dado_de_baja' ? '✓' : '⏻' }}</span>
-                  {{ asset.status === 'dado_de_baja' ? 'Reactivar' : 'Dar de baja' }}
+            <td class="actions">
+                <button class="action-btn link" (click)="openDetailModal(asset)"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg></span> Ver</button>
+                <button class="action-btn edit" *ngIf="canEditAsset(asset)" (click)="openEditModal(asset)"><span class="icon">✎</span> Editar</button>
+
+                <ng-container *ngIf="canManage">
+                  <ng-container *ngIf="asset.status === 'baja_solicitada'; else normalToggle">
+                    <button class="action-btn warning" (click)="confirmBaja(asset)"><span class="icon">⏻</span> Confirmar baja</button>
+                    <button class="action-btn success" (click)="rejectBaja(asset)"><span class="icon">✓</span> Rechazar</button>
+                  </ng-container>
+                  <ng-template #normalToggle>
+                    <button class="action-btn" [class.warning]="asset.status !== 'dado_de_baja'" [class.success]="asset.status === 'dado_de_baja'" (click)="toggleStatus(asset)">
+                      <span class="icon">{{ asset.status === 'dado_de_baja' ? '✓' : '⏻' }}</span>
+                      {{ asset.status === 'dado_de_baja' ? 'Reactivar' : 'Dar de baja' }}
+                    </button>
+                  </ng-template>
+                </ng-container>
+
+                <button class="action-btn warning" *ngIf="!canManage && canEditAsset(asset) && asset.status !== 'baja_solicitada' && asset.status !== 'dado_de_baja'" (click)="requestBaja(asset)">
+                  <span class="icon">⚠</span> Solicitar baja
                 </button>
+                <span class="no-actions" *ngIf="!canManage && asset.status === 'baja_solicitada'">Esperando revisión del admin</span>
             </td>
         </tr>
     </tbody>
     </table>
     </div>
     <p class="empty" *ngIf="!loading && visibleAssets.length === 0">
-      {{ searchTerm ? 'Sin resultados para "' + searchTerm + '"' : 'No hay equipos registrados' }}
+      {{ searchTerm ? 'Sin resultados para "' + searchTerm + '"' : (activeCategory !== 'Todos' ? 'No hay equipos de tipo "' + activeCategory + '"' : 'No hay equipos registrados') }}
     </p>
     <app-pagination [page]="page" [pageSize]="pageSize" [total]="visibleAssets.length" (pageChange)="onPageChange($event)"></app-pagination>
 </div>
@@ -58,8 +111,9 @@
             <button type="button" class="modal-close" (click)="closeFormModal()" aria-label="Cerrar">&times;</button>
         </div>
 
-    <form (ngSubmit)="submitForm()">
+    <form #assetForm="ngForm" (ngSubmit)="submitForm(assetForm)">
 
+        <h3 class="form-section-title">Información general</h3>
         <div class="form-grid">
             <div class="form-group">
                 <label>Nombre</label>
@@ -68,7 +122,7 @@
 
             <div class="form-group">
                 <label>Tipo</label>
-                <input type="text" [(ngModel)]="form.type" name="type" required />
+                <input type="text" [(ngModel)]="form.type" name="type" required placeholder="Ej. CPU Cliente, Monitor, DVR, Cámaras...">
             </div>
             <div class="form-group">
                 <label>Marca</label>
@@ -87,26 +141,10 @@
                 <input type="text" [(ngModel)]="form.location" name="location" required />
             </div>
             <div class="form-group">
-                <label>Procesador</label>
-                <input type="text" [(ngModel)]="form.processor" name="processor" placeholder="Ej. Intel Core i5-10400" />
-            </div>
-            <div class="form-group">
-                <label>Memoria RAM</label>
-                <input type="text" [(ngModel)]="form.ram" name="ram" placeholder="Ej. 8 GB" />
-            </div>
-            <div class="form-group">
-                <label>Disco</label>
-                <input type="text" [(ngModel)]="form.storage" name="storage" placeholder="Ej. 256 GB SSD" />
-            </div>
-            <div class="form-group">
-                <label>Sistema operativo</label>
-                <input type="text" [(ngModel)]="form.operating_system" name="operating_system" placeholder="Ej. Windows 10 Pro" />
-            </div>
-            <div class="form-group">
                 <label>Sucursal</label>
-                <select [(ngModel)]="form.branch_id" name="branch_id">
-                    <option [ngValue]="null">Sin asignar</option>
-                    <option *ngFor="let b of branches" [ngValue]="b.id">{{ b.name }}</option>
+                <select [(ngModel)]="form.branch_id" name="branch_id" [disabled]="!canManage && isEditing">
+                    <option [ngValue]="null" *ngIf="canManage">Sin asignar</option>
+                    <option *ngFor="let b of formBranches" [ngValue]="b.id">{{ b.name }}</option>
                 </select>
             </div>
             <div class="form-group">
@@ -114,16 +152,69 @@
                 <select [(ngModel)]="form.status" name="status">
                     <option value="disponible">Disponible</option>
                     <option value="en_mantenimiento">En mantenimiento</option>
-                    <option value="dado_de_baja">Dado de baja</option>
+                    <option value="dado_de_baja" *ngIf="canManage">Dado de baja</option>
                 </select>
             </div>
         </div>
+
+        <ng-container *ngIf="formIsCpu">
+          <h3 class="form-section-title">Especificaciones técnicas (CPU) — obligatorias</h3>
+          <div class="form-grid">
+            <div class="form-group">
+                <label>Procesador *</label>
+                <input type="text" [(ngModel)]="form.processor" name="processor" required placeholder="Ej. Intel Core i5-10400" />
+            </div>
+            <div class="form-group">
+                <label>Memoria RAM *</label>
+                <input type="text" [(ngModel)]="form.ram" name="ram" required placeholder="Ej. 8 GB" />
+            </div>
+            <div class="form-group">
+                <label>Disco *</label>
+                <input type="text" [(ngModel)]="form.storage" name="storage" required placeholder="Ej. 256 GB SSD" />
+            </div>
+            <div class="form-group">
+                <label>Sistema operativo *</label>
+                <input type="text" [(ngModel)]="form.operating_system" name="operating_system" required placeholder="Ej. Windows 10 Pro" />
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="formIsDvr">
+          <h3 class="form-section-title">Especificaciones técnicas (DVR) — obligatorias</h3>
+          <div class="form-grid">
+            <div class="form-group">
+                <label>Número de canales *</label>
+                <input type="number" min="1" [(ngModel)]="form.channels" name="channels" required placeholder="Ej. 8" />
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="formIsMonitor">
+          <h3 class="form-section-title">Especificaciones técnicas (Monitor) — obligatorias</h3>
+          <div class="form-grid">
+            <div class="form-group">
+                <label>Tamaño de pantalla *</label>
+                <input type="text" [(ngModel)]="form.screen_size" name="screen_size" required placeholder="Ej. 22 pulgadas" />
+            </div>
+            <div class="form-group">
+                <label>Puerto de video *</label>
+                <select [(ngModel)]="form.video_port" name="video_port" required>
+                    <option value="" disabled>Selecciona un puerto</option>
+                    <option value="VGA">VGA</option>
+                    <option value="HDMI">HDMI</option>
+                    <option value="DisplayPort">DisplayPort</option>
+                </select>
+            </div>
+          </div>
+        </ng-container>
+
             <div class="form-group">
                 <label>Descripción</label>
                 <textarea [(ngModel)]="form.description" name="description"></textarea>
             </div>
+            <p class="hint" *ngIf="assetForm.invalid && assetForm.touched">Completa los campos obligatorios (*) antes de continuar.</p>
             <div class="form-actions">
-          <button type="submit">
+          <button type="submit" [disabled]="assetForm.invalid">
             {{ isEditing ? 'Actualizar' : 'Crear equipo' }}
           </button>
           <button type="button" class="secondary" (click)="closeFormModal()">
@@ -133,5 +224,72 @@
       </form>
 
       <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    </div>
+</div>
+
+<!-- Modal de detalle completo del equipo -->
+<div class="modal-backdrop" *ngIf="viewingAsset as asset" (click)="closeDetailModal()">
+    <div class="modal-card detail-modal-card" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="detail-title"><app-equipment-icon [type]="asset.type" [size]="40"></app-equipment-icon>{{ asset.name }}</h2>
+            <button type="button" class="modal-close" (click)="closeDetailModal()" aria-label="Cerrar">&times;</button>
+        </div>
+
+        <h3 class="form-section-title">Información general</h3>
+        <div class="detail-grid">
+            <div><span>Tipo</span><strong>{{ asset.type }}</strong></div>
+            <div><span>Marca</span><strong>{{ asset.brand || '—' }}</strong></div>
+            <div><span>Modelo</span><strong>{{ asset.model || '—' }}</strong></div>
+            <div><span>Serie</span><strong>{{ asset.serial_number || '—' }}</strong></div>
+            <div><span>Ubicación</span><strong>{{ asset.location || '—' }}</strong></div>
+            <div><span>Sucursal</span><strong>{{ getBranchName(asset.branch_id) }}</strong></div>
+            <div><span>Estado</span><strong><span [class]="'badge badge-' + asset.status">{{ asset.status | label }}</span></strong></div>
+        </div>
+
+        <ng-container *ngIf="isCpu(asset.type)">
+          <h3 class="form-section-title">Especificaciones técnicas</h3>
+          <div class="detail-grid">
+            <div><span>Procesador</span><strong>{{ asset.processor || '—' }}</strong></div>
+            <div><span>Memoria RAM</span><strong>{{ asset.ram || '—' }}</strong></div>
+            <div><span>Disco</span><strong>{{ asset.storage || '—' }}</strong></div>
+            <div><span>Sistema operativo</span><strong>{{ asset.operating_system || '—' }}</strong></div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="isDvr(asset.type)">
+          <h3 class="form-section-title">Especificaciones técnicas</h3>
+          <div class="detail-grid">
+            <div><span>Número de canales</span><strong>{{ asset.channels || '—' }}</strong></div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="isMonitor(asset.type)">
+          <h3 class="form-section-title">Especificaciones técnicas</h3>
+          <div class="detail-grid">
+            <div><span>Tamaño de pantalla</span><strong>{{ asset.screen_size || '—' }}</strong></div>
+            <div><span>Puerto de video</span><strong>{{ asset.video_port || '—' }}</strong></div>
+          </div>
+        </ng-container>
+
+        <div *ngIf="asset.description">
+          <h3 class="form-section-title">Descripción</h3>
+          <p class="detail-description">{{ asset.description }}</p>
+        </div>
+
+        <h3 class="form-section-title">Historial de fallas reportadas ({{ assetRequests(asset.id).length }})</h3>
+        <div class="request-history" *ngIf="assetRequests(asset.id).length > 0; else noRequests">
+          <div class="request-history-row" *ngFor="let r of assetRequests(asset.id)">
+            <div class="request-history-main">
+              <span class="badge" [class]="'badge-' + r.priority">{{ r.priority | label }}</span>
+              <span class="badge" [class]="'badge-' + r.status">{{ r.status | label }}</span>
+              <span class="request-history-date">{{ r.created_at | date: 'dd/MM/yyyy' }}</span>
+            </div>
+            <p class="request-history-desc">{{ r.description }}</p>
+            <p class="request-history-tech" *ngIf="r.assigned_id">Técnico: {{ getTechnicianName(r.assigned_id) }}</p>
+          </div>
+        </div>
+        <ng-template #noRequests>
+          <p class="empty-note">Este equipo no tiene solicitudes correctivas registradas.</p>
+        </ng-template>
     </div>
 </div>

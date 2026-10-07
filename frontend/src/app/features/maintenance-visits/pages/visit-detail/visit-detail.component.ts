@@ -1,14 +1,16 @@
+import { EquipmentIconComponent } from '../../../../shared/equipment-icon/equipment-icon.component';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MaintenanceVisitService, MaintenanceVisit, MaintenanceVisitItem } from '../../../../core/services/maintenance-visit.service';
 import { BranchesService, Branch } from '../../../../core/services/branches.service';
 import { UsersService, User } from '../../../../core/services/users.service';
+import { groupByEquipmentCategory } from '../../../../core/utils/equipment-category';
 
 @Component({
   selector: 'app-visit-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, EquipmentIconComponent],
   templateUrl: './visit-detail.component.html',
   styleUrl: './visit-detail.component.css',
 })
@@ -58,6 +60,10 @@ export class VisitDetailComponent implements OnInit {
   get technicianName(): string {
     if (!this.visit?.technician_id) return 'Sin asignar';
     return this.technicians.find(t => t.id === this.visit?.technician_id)?.name || '—';
+  }
+
+  get groupedItems(): { category: string; items: MaintenanceVisitItem[] }[] {
+    return groupByEquipmentCategory(this.visit?.items || [], i => i.equipment_type);
   }
 
   get reasons(): string[] {

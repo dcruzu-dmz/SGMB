@@ -43,7 +43,7 @@
               </span>
             </td>
             <td class="actions">
-              <a class="action-btn link" [routerLink]="['/maintenance-visits', visit.id]"><span class="icon">👁</span> Ver</a>
+              <a class="action-btn link" [routerLink]="['/maintenance-visits', visit.id]"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg></span> Ver</a>
               <a class="action-btn accent" *ngIf="visit.status === 'programada'" [routerLink]="['/maintenance-visits', visit.id, 'edit']"><span class="icon">✓</span> Completar</a>
             </td>
           </tr>

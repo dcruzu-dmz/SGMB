@@ -3,11 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../config/api-config';
 
+export const BRANCH_CHAINS = ['Bodega Farmacéutica', 'Meykos', 'Cruz Verde', 'Farmacias del Ahorro'];
+
 export interface Branch {
   id: number,
   name: string,
   address: string,
   phone: string,
+  chain: string | null,
   is_active: boolean,
   maintenance_frequency_days: number | null,
   created_at: string,
@@ -17,6 +20,7 @@ export interface BranchCreate {
   name: string,
   address?: string,
   phone?: string,
+  chain?: string | null,
   is_active?: boolean,
   maintenance_frequency_days?: number | null,
 }
@@ -25,6 +29,7 @@ export interface BranchUpdate {
   name?: string,
   address?: string,
   phone?: string,
+  chain?: string | null,
   is_active?: boolean,
   maintenance_frequency_days?: number | null,
 }

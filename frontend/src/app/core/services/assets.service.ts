@@ -19,6 +19,9 @@ export interface Asset {
   storage: string | null;
   processor: string | null;
   operating_system: string | null;
+  channels: number | null;
+  screen_size: string | null;
+  video_port: string | null;
 }
 
 export interface AssetCreate {
@@ -35,6 +38,9 @@ export interface AssetCreate {
   storage?: string | null;
   processor?: string | null;
   operating_system?: string | null;
+  channels?: number | null;
+  screen_size?: string | null;
+  video_port?: string | null;
 }
 
 export interface AssetUpdate {
@@ -51,6 +57,9 @@ export interface AssetUpdate {
   storage?: string | null;
   processor?: string | null;
   operating_system?: string | null;
+  channels?: number | null;
+  screen_size?: string | null;
+  video_port?: string | null;
 }
 
 @Injectable({

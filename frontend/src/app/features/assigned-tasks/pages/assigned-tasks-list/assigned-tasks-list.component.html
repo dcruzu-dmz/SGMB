@@ -1,0 +1,106 @@
+<div class="tasks-container">
+  <div class="tasks-header">
+    <div>
+      <h1>Tareas asignadas</h1>
+      <p *ngIf="isAdmin">Autoriza a un técnico para trabajar una tarea puntual en una sucursal</p>
+      <p *ngIf="!isAdmin">Tareas que un administrador te ha autorizado a trabajar</p>
+    </div>
+    <button type="button" class="cta-btn" *ngIf="isAdmin" (click)="openCreateModal()">+ Nueva tarea</button>
+  </div>
+
+  <div class="card table-card">
+    <h2>Listado de tareas</h2>
+    <p *ngIf="loading">Cargando tareas...</p>
+
+    <div class="table-scroll" *ngIf="!loading">
+      <table>
+        <thead>
+          <tr>
+            <th>Técnico</th>
+            <th>Sucursal</th>
+            <th>Tarea</th>
+            <th>Estado</th>
+            <th>Notas</th>
+            <th>Asignada por</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let task of pagedTasks">
+            <td>{{ task.technician_name }}</td>
+            <td>{{ task.branch_name }}</td>
+            <td>{{ taskTypeLabel(task.task_type) }}</td>
+            <td>
+              <span class="badge" [class.badge-activo]="task.status === 'activa'" [class.badge-cerrada]="task.status !== 'activa'">
+                {{ task.status === 'activa' ? 'Activa' : 'Cerrada' }}
+              </span>
+            </td>
+            <td>{{ task.notes || '—' }}</td>
+            <td>{{ task.created_by_name }}</td>
+            <td>{{ task.created_at | date: 'dd/MM/yyyy' }}</td>
+            <td class="actions">
+              <button type="button" class="action-btn accent" *ngIf="task.status === 'activa'" (click)="goToAssets(task)">
+                <span class="icon">▤</span> Ir a equipos
+              </button>
+              <button type="button" class="action-btn warning" *ngIf="isAdmin && task.status === 'activa'" (click)="closeTask(task)">
+                <span class="icon">⏻</span> Cerrar tarea
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="empty" *ngIf="!loading && tasks.length === 0">
+      {{ isAdmin ? 'No has asignado tareas todavía' : 'No tienes tareas asignadas' }}
+    </p>
+    <app-pagination [page]="page" [pageSize]="pageSize" [total]="tasks.length" (pageChange)="onPageChange($event)"></app-pagination>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="showFormModal" (click)="closeFormModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Nueva tarea asignada</h2>
+        <button type="button" class="modal-close" (click)="closeFormModal()" aria-label="Cerrar">&times;</button>
+      </div>
+
+      <form (ngSubmit)="submitForm()">
+        <div class="form-group">
+          <label>Técnico</label>
+          <select [(ngModel)]="form.technician_id" name="technician_id" required>
+            <option [ngValue]="0" disabled>Selecciona un técnico</option>
+            <option *ngFor="let t of technicians" [ngValue]="t.id">{{ t.name }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Sucursal</label>
+          <select [(ngModel)]="form.branch_id" name="branch_id" required>
+            <option [ngValue]="0" disabled>Selecciona una sucursal</option>
+            <option *ngFor="let b of branches" [ngValue]="b.id">{{ b.name }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Tarea</label>
+          <select [(ngModel)]="form.task_type" name="task_type" required>
+            <option *ngFor="let t of taskTypes" [value]="t">{{ taskTypeLabel(t) }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Notas (opcional)</label>
+          <textarea [(ngModel)]="form.notes" name="notes" placeholder="Ej. actualizar RAM y disco de los equipos nuevos"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit">Asignar tarea</button>
+          <button type="button" class="secondary" (click)="closeFormModal()">Cancelar</button>
+        </div>
+      </form>
+
+      <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    </div>
+  </div>
+</div>

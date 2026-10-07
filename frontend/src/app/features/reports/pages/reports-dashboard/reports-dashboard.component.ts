@@ -8,7 +8,10 @@ import { BranchesService, Branch } from "../../../../core/services/branches.serv
 import { UsersService, User } from "../../../../core/services/users.service";
 import { CorrectiveRequestService, CorrectiveRequest } from "../../../../core/services/corrective-requests.service";
 import { MaintenanceVisitService, MaintenanceVisit } from "../../../../core/services/maintenance-visit.service";
+import { EquipmentIconComponent } from "../../../../shared/equipment-icon/equipment-icon.component";
 import { LabelPipe } from "../../../../core/pipes/label.pipe";
+import { BRANCH_CHAINS } from "../../../../core/services/branches.service";
+import { EQUIPMENT_CATEGORY_ORDER, equipmentCategory } from "../../../../core/utils/equipment-category";
 
 interface CountEntry {
   label: string;
@@ -19,7 +22,7 @@ interface CountEntry {
 @Component({
   selector: 'app-reports-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, LabelPipe],
+  imports: [CommonModule, FormsModule, RouterLink, LabelPipe, EquipmentIconComponent],
   templateUrl: './reports-dashboard.component.html',
   styleUrl: './reports-dashboard.component.css',
 })
@@ -51,6 +54,18 @@ export class ReportsDashboardComponent implements OnInit {
   filterDateFrom = '';
   filterDateTo = '';
 
+  chains = BRANCH_CHAINS;
+  categories = EQUIPMENT_CATEGORY_ORDER;
+  assetsByType: CountEntry[] = [];
+  assetFilterBranchId: number | null = null;
+  assetFilterChain = '';
+  assetFilterType = '';
+  assetFilterRam = '';
+  assetFilterProcessor = '';
+  assetFilterOs = '';
+  assetFilterStatus = '';
+  showExportPreview = false;
+
   ngOnInit(): void {
     this.loading = true;
     forkJoin({
@@ -71,6 +86,7 @@ export class ReportsDashboardComponent implements OnInit {
         this.requestsByPriority = this.countBy(this.correctiveRequests, r => r.priority);
         this.visitsByStatus = this.countBy(this.visits, v => v.status);
         this.assetsByStatus = this.countBy(this.assets, a => a.status);
+        this.assetsByType = this.countByType();
 
         const today = new Date().toISOString().slice(0, 10);
         this.upcomingVisits = this.visits
@@ -89,6 +105,18 @@ export class ReportsDashboardComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  private countByType(): CountEntry[] {
+    const counts = new Map<string, number>();
+    for (const a of this.assets) {
+      const cat = equipmentCategory(a.type);
+      counts.set(cat, (counts.get(cat) || 0) + 1);
+    }
+    const max = Math.max(1, ...counts.values());
+    return EQUIPMENT_CATEGORY_ORDER
+      .map(label => ({ label, count: counts.get(label) || 0, percent: Math.round(((counts.get(label) || 0) / max) * 100) }))
+      .filter(e => e.count > 0 || e.label !== 'Otros');
   }
 
   private countBy<T>(items: T[], keyFn: (item: T) => string): CountEntry[] {
@@ -155,5 +183,68 @@ export class ReportsDashboardComponent implements OnInit {
 
   get activeUsersCount(): number {
     return this.users.filter(u => u.is_active).length;
+  }
+
+  branchChain(branchId: number | null): string {
+    return this.branches.find(b => b.id === branchId)?.chain || '';
+  }
+
+  get filteredAssets(): Asset[] {
+    const ram = this.assetFilterRam.trim().toLowerCase();
+    const processor = this.assetFilterProcessor.trim().toLowerCase();
+    const os = this.assetFilterOs.trim().toLowerCase();
+
+    return this.assets.filter(a => {
+      if (this.assetFilterBranchId && a.branch_id !== this.assetFilterBranchId) return false;
+      if (this.assetFilterChain && this.branchChain(a.branch_id) !== this.assetFilterChain) return false;
+      if (this.assetFilterStatus && a.status !== this.assetFilterStatus) return false;
+      if (this.assetFilterType && equipmentCategory(a.type) !== this.assetFilterType) return false;
+      if (ram && !a.ram?.toLowerCase().includes(ram)) return false;
+      if (processor && !a.processor?.toLowerCase().includes(processor)) return false;
+      if (os && !a.operating_system?.toLowerCase().includes(os)) return false;
+      return true;
+    });
+  }
+
+  openExportPreview(): void {
+    this.showExportPreview = true;
+  }
+
+  closeExportPreview(): void {
+    this.showExportPreview = false;
+  }
+
+  clearAssetFilters(): void {
+    this.assetFilterBranchId = null;
+    this.assetFilterChain = '';
+    this.assetFilterType = '';
+    this.assetFilterRam = '';
+    this.assetFilterProcessor = '';
+    this.assetFilterOs = '';
+    this.assetFilterStatus = '';
+  }
+
+  exportAssetsCsv(): void {
+    const headers = ['Nombre', 'Tipo', 'Marca', 'Modelo', 'Serie', 'Procesador', 'RAM', 'Disco', 'Sistema operativo', 'Ubicación', 'Sucursal', 'Cadena', 'Estado'];
+    const escape = (value: string | null | undefined): string => {
+      const v = (value ?? '').toString().replace(/"/g, '""');
+      return `"${v}"`;
+    };
+
+    const rows = this.filteredAssets.map(a => [
+      a.name, a.type, a.brand, a.model, a.serial_number,
+      a.processor, a.ram, a.storage, a.operating_system,
+      a.location, this.getBranchName(a.branch_id ?? 0) , this.branchChain(a.branch_id),
+      a.status,
+    ].map(escape).join(','));
+
+    const csv = '﻿' + [headers.map(escape).join(','), ...rows].join('\r\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `equipos_${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
   }
 }

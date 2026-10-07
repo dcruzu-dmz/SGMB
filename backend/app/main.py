@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.database import Base, engine
-from app.routers import auth, users, asset, branch, corrective_request, maintenance_visit
+from app.routers import auth, users, asset, branch, corrective_request, maintenance_visit, assigned_task
 from app.services.preventive_scheduler import preventive_check_loop
 from app.models.user import User
 from app.models.asset import Asset
@@ -18,6 +18,7 @@ from app.models.maintenance_visit import (
     MaintenanceVisitChecklistEntry,
     MaintenanceVisitPhoto,
 )
+from app.models.assigned_task import AssignedTask
 
 
 Base.metadata.create_all(bind=engine)
@@ -43,6 +44,7 @@ app.include_router(asset.router)
 app.include_router(branch.router)
 app.include_router(corrective_request.router)
 app.include_router(maintenance_visit.router)
+app.include_router(assigned_task.router)
 
 uploads_dir = os.path.join(os.path.dirname(__file__), "..", "uploads")
 os.makedirs(uploads_dir, exist_ok=True)

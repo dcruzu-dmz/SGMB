@@ -148,74 +148,80 @@
       ✓ Todos los equipos de esta sucursal están marcados o justificados
     </p>
 
-    <div class="asset-pick-list" *ngIf="branchAssets.length > 0">
-      <ng-container *ngFor="let asset of branchAssets">
-      <div class="asset-pick-row">
-        <label class="asset-pick-row-main">
-          <input type="checkbox" [checked]="!!selectedAssetIds[asset.id]" (change)="toggleAsset(asset)">
-          <span class="asset-pick-name">{{ asset.name }}</span>
-          <span class="asset-pick-meta">{{ asset.type }}<span *ngIf="asset.serial_number"> · Serie: {{ asset.serial_number }}</span></span>
-        </label>
-        <input
-          *ngIf="!selectedAssetIds[asset.id]"
-          type="text"
-          class="asset-observation-input"
-          [(ngModel)]="assetObservations[asset.id]"
-          [name]="'obs-' + asset.id"
-          placeholder="Observación (ej. enviar a revisión en oficinas centrales)">
-      </div>
+    <div *ngIf="branchAssets.length > 0">
+      <div class="equipment-category-block" *ngFor="let group of groupedBranchAssets">
+        <h3 class="category-heading"><app-equipment-icon [type]="group.category" [size]="26"></app-equipment-icon>{{ group.category }} <span class="category-count">({{ group.items.length }})</span></h3>
 
-      <div class="item-card" *ngIf="selectedAssetIds[asset.id] && getItemForAsset(asset.id) as item">
-        <div class="item-card-header">
-          <strong>{{ asset.name }}</strong>
-          <span class="item-loc-tag">{{ asset.type }}</span>
-        </div>
+        <div class="category-asset-grid">
+          <div class="asset-cell" [class.expanded]="selectedAssetIds[asset.id]" *ngFor="let asset of group.items">
+            <div class="asset-pick-row">
+              <label class="asset-pick-row-main">
+                <input type="checkbox" [checked]="!!selectedAssetIds[asset.id]" (change)="toggleAsset(asset)">
+                <span class="asset-pick-name">{{ asset.name }}</span>
+                <span class="asset-pick-meta">{{ asset.type }}<span *ngIf="asset.serial_number"> · Serie: {{ asset.serial_number }}</span></span>
+              </label>
+              <input
+                *ngIf="!selectedAssetIds[asset.id]"
+                type="text"
+                class="asset-observation-input"
+                [(ngModel)]="assetObservations[asset.id]"
+                [name]="'obs-' + asset.id"
+                placeholder="Observación (ej. enviar a revisión en oficinas centrales)">
+            </div>
 
-        <div class="tri-checks">
-          <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.installed" [name]="'installed-a' + asset.id"> Instalado</label>
-          <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.working" [name]="'working-a' + asset.id"> Funciona</label>
-          <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.cleaning_done" [name]="'cleaning-a' + asset.id"> Limpieza realizada</label>
-        </div>
+            <div class="item-card" *ngIf="selectedAssetIds[asset.id] && getItemForAsset(asset.id) as item">
+              <div class="item-card-header">
+                <strong>{{ asset.name }}</strong>
+                <span class="item-loc-tag">{{ asset.type }}</span>
+              </div>
 
-        <div class="checklist-rows" *ngIf="entriesByCategory(item, 'limpieza').length > 0">
-          <label>Limpieza y mantenimiento</label>
-          <div class="checklist-row" *ngFor="let entry of entriesByCategory(item, 'limpieza')">
-            <label class="checkbox-chip">
-              <input type="checkbox" [(ngModel)]="entry.checked" [name]="'cla' + asset.id + '-' + entry.label">
-              {{ entry.label }}
-            </label>
-            <input type="text" class="comment-input" placeholder="Comentario" [(ngModel)]="entry.comment" [name]="'clacmt' + asset.id + '-' + entry.label">
-          </div>
-        </div>
+              <div class="tri-checks">
+                <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.installed" [name]="'installed-a' + asset.id"> Instalado</label>
+                <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.working" [name]="'working-a' + asset.id"> Funciona</label>
+                <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.cleaning_done" [name]="'cleaning-a' + asset.id"> Limpieza realizada</label>
+              </div>
 
-        <div class="checklist-rows" *ngIf="entriesByCategory(item, 'software').length > 0">
-          <label>Software / Aplicaciones instaladas</label>
-          <div class="checklist-row" *ngFor="let entry of entriesByCategory(item, 'software')">
-            <label class="checkbox-chip">
-              <input type="checkbox" [(ngModel)]="entry.checked" [name]="'swa' + asset.id + '-' + entry.label">
-              {{ entry.label }}
-            </label>
-            <input type="text" class="comment-input" placeholder="Comentario / versión" [(ngModel)]="entry.comment" [name]="'swacmt' + asset.id + '-' + entry.label">
-          </div>
-        </div>
+              <div class="checklist-rows" *ngIf="entriesByCategory(item, 'limpieza').length > 0">
+                <label>Limpieza y mantenimiento</label>
+                <div class="checklist-row" *ngFor="let entry of entriesByCategory(item, 'limpieza')">
+                  <label class="checkbox-chip">
+                    <input type="checkbox" [(ngModel)]="entry.checked" [name]="'cla' + asset.id + '-' + entry.label">
+                    {{ entry.label }}
+                  </label>
+                  <input type="text" class="comment-input" placeholder="Comentario" [(ngModel)]="entry.comment" [name]="'clacmt' + asset.id + '-' + entry.label">
+                </div>
+              </div>
 
-        <div class="form-group">
-          <label>Observaciones del equipo</label>
-          <textarea [(ngModel)]="item.notes" [name]="'notes-a' + asset.id" rows="2"></textarea>
-        </div>
+              <div class="checklist-rows" *ngIf="entriesByCategory(item, 'software').length > 0">
+                <label>Software / Aplicaciones instaladas</label>
+                <div class="checklist-row" *ngFor="let entry of entriesByCategory(item, 'software')">
+                  <label class="checkbox-chip">
+                    <input type="checkbox" [(ngModel)]="entry.checked" [name]="'swa' + asset.id + '-' + entry.label">
+                    {{ entry.label }}
+                  </label>
+                  <input type="text" class="comment-input" placeholder="Comentario / versión" [(ngModel)]="entry.comment" [name]="'swacmt' + asset.id + '-' + entry.label">
+                </div>
+              </div>
 
-        <div class="form-group">
-          <label>Fotos del equipo (cómo quedó)</label>
-          <input type="file" accept="image/*" multiple (change)="onPhotosSelected(item, $event)">
-          <div class="photo-preview-row" *ngIf="item._previews.length > 0">
-            <div class="photo-preview" *ngFor="let preview of item._previews; let p = index">
-              <img [src]="preview" alt="Foto del equipo">
-              <button type="button" (click)="removePhoto(item, p)">✕</button>
+              <div class="form-group">
+                <label>Observaciones del equipo</label>
+                <textarea [(ngModel)]="item.notes" [name]="'notes-a' + asset.id" rows="2"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label>Fotos del equipo (cómo quedó)</label>
+                <input type="file" accept="image/*" multiple (change)="onPhotosSelected(item, $event)">
+                <div class="photo-preview-row" *ngIf="item._previews.length > 0">
+                  <div class="photo-preview" *ngFor="let preview of item._previews; let p = index">
+                    <img [src]="preview" alt="Foto del equipo">
+                    <button type="button" (click)="removePhoto(item, p)">✕</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      </ng-container>
     </div>
   </section>
 

@@ -41,6 +41,7 @@ export class BulkBranchAssetsComponent implements OnInit {
     serverHasScanner: false,
     includeDvr: true,
     cameraCount: 0,
+    fingerprintCount: 0,
     clientCount: 0,
     cpuProcessor: '',
     cpuRam: '',
@@ -112,6 +113,10 @@ export class BulkBranchAssetsComponent implements OnInit {
     for (let i = 1; i <= cameraCount; i++) {
       payloads.push(this.buildAsset(`Cámara ${i}`, 'Cámaras', 'General', false));
     }
+    const fingerprintCount = Math.max(0, Math.floor(this.form.fingerprintCount || 0));
+    for (let i = 1; i <= fingerprintCount; i++) {
+      payloads.push(this.buildAsset(`Lector de huella ${i}`, 'Lector de huella', 'Marcaje', false));
+    }
 
     for (const client of this.clients) {
       const label = `Cliente ${client.number}`;
@@ -154,6 +159,7 @@ export class BulkBranchAssetsComponent implements OnInit {
         this.successMessage = `Se registraron ${created.length} equipos correctamente.`;
         this.form.clientCount = 0;
         this.form.cameraCount = 0;
+        this.form.fingerprintCount = 0;
         this.clients = [];
       },
       error: () => {

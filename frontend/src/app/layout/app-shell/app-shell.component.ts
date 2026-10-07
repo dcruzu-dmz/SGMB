@@ -5,6 +5,7 @@ import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationStart, Na
 import { AuthService, CurrentUser } from '../../core/services/auth.service';
 import { SearchService } from '../../core/services/search.service';
 import { ThemeService } from '../../core/services/theme.service';
+import { AssignedTasksService, AssignedTask, TASK_TYPE_LABELS } from '../../core/services/assigned-tasks.service';
 
 interface NavItem {
   label: string;
@@ -17,6 +18,7 @@ const ALL_NAV_ITEMS: NavItem[] = [
   { label: 'Usuarios', path: '/users', icon: 'users' },
   { label: 'Sucursales', path: '/branches', icon: 'building' },
   { label: 'Equipos', path: '/assets', icon: 'box' },
+  { label: 'Tareas', path: '/assigned-tasks', icon: 'calendar' },
   { label: 'Solicitudes', path: '/requests', icon: 'ticket' },
   { label: 'Visitas', path: '/maintenance-visits', icon: 'clipboard' },
   { label: 'Reportes', path: '/reports', icon: 'chart' },
@@ -24,7 +26,7 @@ const ALL_NAV_ITEMS: NavItem[] = [
 
 const ROLE_NAV_PATHS: Record<string, string[]> = {
   admin: ALL_NAV_ITEMS.map(i => i.path),
-  tecnico: ['/dashboard', '/assets', '/requests', '/maintenance-visits'],
+  tecnico: ['/dashboard', '/assets', '/assigned-tasks', '/requests', '/maintenance-visits'],
   solicitante: ['/dashboard', '/requests'],
 };
 
@@ -41,12 +43,16 @@ export class AppShellComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private searchService = inject(SearchService);
+  private assignedTasksService = inject(AssignedTasksService);
   themeService = inject(ThemeService);
 
   user: CurrentUser | null = null;
   searchTerm = '';
   sidebarOpen = false;
   showSearch = false;
+  showNotifications = false;
+  activeTasks: AssignedTask[] = [];
+  taskTypeLabels = TASK_TYPE_LABELS;
 
   navItems: NavItem[] = [];
 
@@ -56,6 +62,10 @@ export class AppShellComponent implements OnInit {
         this.user = res;
         const allowedPaths = ROLE_NAV_PATHS[res.role] || ['/dashboard'];
         this.navItems = ALL_NAV_ITEMS.filter(item => allowedPaths.includes(item.path));
+
+        if (res.role === 'tecnico') {
+          this.loadActiveTasks();
+        }
       },
       error: () => {},
     });
@@ -76,6 +86,25 @@ export class AppShellComponent implements OnInit {
 
   onSearchInput(): void {
     this.searchService.setTerm(this.searchTerm);
+  }
+
+  loadActiveTasks(): void {
+    this.assignedTasksService.getTasks().subscribe({
+      next: res => this.activeTasks = res.filter(t => t.status === 'activa'),
+    });
+  }
+
+  taskTypeLabel(type: string): string {
+    return this.taskTypeLabels[type] || type;
+  }
+
+  toggleNotifications(): void {
+    this.showNotifications = !this.showNotifications;
+  }
+
+  goToTaskAssets(task: AssignedTask): void {
+    this.showNotifications = false;
+    this.router.navigate(['/assets'], { queryParams: { branch: task.branch_id } });
   }
 
   toggleSidebar(): void {

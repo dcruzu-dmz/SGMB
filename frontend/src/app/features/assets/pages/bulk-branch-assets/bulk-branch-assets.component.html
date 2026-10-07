@@ -41,6 +41,11 @@
       <input type="number" min="0" [(ngModel)]="form.cameraCount" name="cameraCount" />
     </div>
 
+    <div class="form-group client-count">
+      <label>Lectores de huella (marcaje de entrada y salida)</label>
+      <input type="number" min="0" [(ngModel)]="form.fingerprintCount" name="fingerprintCount" />
+    </div>
+
     <h3>Especificaciones estándar de CPU (opcional)</h3>
     <p class="hint">Se aplican al servidor y a cada CPU de cliente generado. Puedes ajustarlas por equipo después desde Equipos.</p>
     <div class="cpu-specs">

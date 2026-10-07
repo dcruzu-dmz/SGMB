@@ -1,3 +1,4 @@
+import { EquipmentIconComponent } from '../../../../shared/equipment-icon/equipment-icon.component';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +13,7 @@ import {
   MaintenanceVisitChecklistEntryCreate,
 } from '../../../../core/services/maintenance-visit.service';
 import { ToastService } from '../../../../core/services/toast.service';
+import { groupByEquipmentCategory } from '../../../../core/utils/equipment-category';
 
 interface DraftItem extends MaintenanceVisitItemCreate {
   _files: File[];
@@ -98,7 +100,7 @@ function buildChecklistForType(type: string): MaintenanceVisitChecklistEntryCrea
 @Component({
   selector: 'app-visit-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, EquipmentIconComponent],
   templateUrl: './visit-form.component.html',
   styleUrl: './visit-form.component.css',
 })
@@ -164,6 +166,10 @@ export class VisitFormComponent implements OnInit {
   get branchAssets(): Asset[] {
     if (!this.header.branch_id) return [];
     return this.allAssets.filter(a => a.branch_id === this.header.branch_id);
+  }
+
+  get groupedBranchAssets(): { category: string; items: Asset[] }[] {
+    return groupByEquipmentCategory(this.branchAssets, a => a.type);
   }
 
   /** Equipos activos de la sucursal que todavía no fueron marcados como

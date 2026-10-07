@@ -2,7 +2,7 @@ import { Component, OnInit, inject, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BranchesService, Branch, BranchCreate, BranchUpdate } from '../../../../core/services/branches.service';
+import { BranchesService, Branch, BranchCreate, BranchUpdate, BRANCH_CHAINS } from '../../../../core/services/branches.service';
 import { AssetsService, Asset } from '../../../../core/services/assets.service';
 import { LabelPipe } from '../../../../core/pipes/label.pipe';
 import { SearchService } from '../../../../core/services/search.service';
@@ -38,11 +38,13 @@ export class BranchesListComponent implements OnInit{
   showFormModal = false;
 
   assetsModalBranch: Branch | null = null;
+  chains = BRANCH_CHAINS;
 
   form = {
     name: '',
     address: '',
     phone: '',
+    chain: null as string | null,
     is_active: false,
     maintenance_frequency_days: null as number | null,
   };
@@ -106,6 +108,7 @@ ngOnInit(): void {
       name: '',
       address: '',
       phone: '',
+      chain: null,
       is_active: true,
       maintenance_frequency_days: null,
     };
@@ -135,6 +138,7 @@ ngOnInit(): void {
         name: this.form.name,
         address: this.form.address,
         phone: this.form.phone,
+        chain: this.form.chain,
         is_active: this.form.is_active,
         maintenance_frequency_days: this.form.maintenance_frequency_days,
       };
@@ -155,6 +159,7 @@ ngOnInit(): void {
     name: this.form.name,
     address: this.form.address,
     phone: this.form.phone,
+    chain: this.form.chain,
     maintenance_frequency_days: this.form.maintenance_frequency_days,
   };
   this.branchesService.createBranch(createData).subscribe({
@@ -176,6 +181,7 @@ editBranch(branch: Branch): void {
     this.form.name = branch.name;
     this.form.address = branch.address;
     this.form.phone = branch.phone;
+    this.form.chain = branch.chain;
     this.form.is_active = branch.is_active;
     this.form.maintenance_frequency_days = branch.maintenance_frequency_days;
   }

@@ -70,50 +70,57 @@
 
     <section class="card">
       <h2>Equipos atendidos ({{ visit.items.length }})</h2>
-      <div class="item-block" *ngFor="let item of visit.items">
-        <div class="item-block-header">
-          <strong>{{ item.equipment_type }}</strong>
-          <span class="item-loc">{{ item.identification_location }}<span *ngIf="item.serial"> · Serie: {{ item.serial }}</span></span>
-        </div>
-        <div class="item-status-row">
-          <span class="status-pill" [class.ok]="item.installed" [class.bad]="item.installed === false">
-            Instalado: {{ item.installed === null ? 'N/A' : (item.installed ? 'Sí' : 'No') }}
-          </span>
-          <span class="status-pill" [class.ok]="item.working" [class.bad]="item.working === false">
-            Funciona: {{ item.working === null ? 'N/A' : (item.working ? 'Sí' : 'No') }}
-          </span>
-          <span class="status-pill" [class.ok]="item.cleaning_done" [class.bad]="item.cleaning_done === false">
-            Limpieza: {{ item.cleaning_done === null ? 'N/A' : (item.cleaning_done ? 'Sí' : 'No') }}
-          </span>
-        </div>
-        <p class="item-notes" *ngIf="item.notes">{{ item.notes }}</p>
 
-        <div class="checklist-view-rows" *ngIf="itemEntriesByCategory(item, 'limpieza').length > 0">
-          <span class="obs-label">Limpieza y mantenimiento</span>
-          <div class="checklist-view-row" *ngFor="let entry of itemEntriesByCategory(item, 'limpieza')">
-            <span class="status-pill small" [class.ok]="entry.checked" [class.bad]="!entry.checked">
-              {{ entry.checked ? '✓' : '✕' }}
-            </span>
-            <span class="entry-label">{{ entry.label }}</span>
-            <span class="entry-comment" *ngIf="entry.comment">{{ entry.comment }}</span>
+      <div class="equipment-category-block" *ngFor="let group of groupedItems">
+        <h3 class="category-heading"><app-equipment-icon [type]="group.category" [size]="26"></app-equipment-icon>{{ group.category }} <span class="category-count">({{ group.items.length }})</span></h3>
+
+        <div class="item-grid">
+          <div class="item-block" *ngFor="let item of group.items">
+            <div class="item-block-header">
+              <strong>{{ item.equipment_type }}</strong>
+              <span class="item-loc">{{ item.identification_location }}<span *ngIf="item.serial"> · Serie: {{ item.serial }}</span></span>
+            </div>
+            <div class="item-status-row">
+              <span class="status-pill" [class.ok]="item.installed" [class.bad]="item.installed === false">
+                Instalado: {{ item.installed === null ? 'N/A' : (item.installed ? 'Sí' : 'No') }}
+              </span>
+              <span class="status-pill" [class.ok]="item.working" [class.bad]="item.working === false">
+                Funciona: {{ item.working === null ? 'N/A' : (item.working ? 'Sí' : 'No') }}
+              </span>
+              <span class="status-pill" [class.ok]="item.cleaning_done" [class.bad]="item.cleaning_done === false">
+                Limpieza: {{ item.cleaning_done === null ? 'N/A' : (item.cleaning_done ? 'Sí' : 'No') }}
+              </span>
+            </div>
+            <p class="item-notes" *ngIf="item.notes">{{ item.notes }}</p>
+
+            <div class="checklist-view-rows" *ngIf="itemEntriesByCategory(item, 'limpieza').length > 0">
+              <span class="obs-label">Limpieza y mantenimiento</span>
+              <div class="checklist-view-row" *ngFor="let entry of itemEntriesByCategory(item, 'limpieza')">
+                <span class="status-pill small" [class.ok]="entry.checked" [class.bad]="!entry.checked">
+                  {{ entry.checked ? '✓' : '✕' }}
+                </span>
+                <span class="entry-label">{{ entry.label }}</span>
+                <span class="entry-comment" *ngIf="entry.comment">{{ entry.comment }}</span>
+              </div>
+            </div>
+
+            <div class="checklist-view-rows" *ngIf="itemEntriesByCategory(item, 'software').length > 0">
+              <span class="obs-label">Software / Aplicaciones instaladas</span>
+              <div class="checklist-view-row" *ngFor="let entry of itemEntriesByCategory(item, 'software')">
+                <span class="status-pill small" [class.ok]="entry.checked" [class.bad]="!entry.checked">
+                  {{ entry.checked ? '✓' : '✕' }}
+                </span>
+                <span class="entry-label">{{ entry.label }}</span>
+                <span class="entry-comment" *ngIf="entry.comment">{{ entry.comment }}</span>
+              </div>
+            </div>
+
+            <div class="photo-gallery" *ngIf="item.photos.length > 0">
+              <a *ngFor="let photo of item.photos" [href]="photoUrl(photo.file_path)" target="_blank">
+                <img [src]="photoUrl(photo.file_path)" alt="Foto del equipo">
+              </a>
+            </div>
           </div>
-        </div>
-
-        <div class="checklist-view-rows" *ngIf="itemEntriesByCategory(item, 'software').length > 0">
-          <span class="obs-label">Software / Aplicaciones instaladas</span>
-          <div class="checklist-view-row" *ngFor="let entry of itemEntriesByCategory(item, 'software')">
-            <span class="status-pill small" [class.ok]="entry.checked" [class.bad]="!entry.checked">
-              {{ entry.checked ? '✓' : '✕' }}
-            </span>
-            <span class="entry-label">{{ entry.label }}</span>
-            <span class="entry-comment" *ngIf="entry.comment">{{ entry.comment }}</span>
-          </div>
-        </div>
-
-        <div class="photo-gallery" *ngIf="item.photos.length > 0">
-          <a *ngFor="let photo of item.photos" [href]="photoUrl(photo.file_path)" target="_blank">
-            <img [src]="photoUrl(photo.file_path)" alt="Foto del equipo">
-          </a>
         </div>
       </div>
     </section>

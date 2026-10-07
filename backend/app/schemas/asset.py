@@ -16,6 +16,9 @@ class AssetBase(BaseModel):
     storage: str | None = None
     processor: str | None = None
     operating_system: str | None = None
+    channels: int | None = None
+    screen_size: str | None = None
+    video_port: str | None = None
 
 
 class AssetCreate(AssetBase):
@@ -35,6 +38,9 @@ class AssetUpdate(BaseModel):
     storage: Optional[str] = None
     processor: Optional[str] = None
     operating_system: Optional[str] = None
+    channels: Optional[int] = None
+    screen_size: Optional[str] = None
+    video_port: Optional[str] = None
 
 class AssetResponse(AssetBase):
     id: int

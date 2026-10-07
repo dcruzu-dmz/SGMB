@@ -111,6 +111,7 @@ html, body {
 .badge-en_mantenimiento { background: var(--color-warning-bg); color: var(--color-warning); }
 .badge-dado_de_baja,
 .badge-dado-de-baja { background: var(--color-neutral-bg); color: var(--color-text-muted); }
+.badge-baja_solicitada { background: var(--color-danger-bg); color: var(--color-danger); }
 
 /* Horizontal scroll wrapper for wide tables on narrow screens */
 .table-scroll {
@@ -148,6 +149,12 @@ html, body {
 .action-btn .icon {
   font-size: 0.95em;
   line-height: 1;
+}
+
+.action-btn .icon svg {
+  width: 14px;
+  height: 14px;
+  display: block;
 }
 
 .action-btn:hover {

@@ -20,6 +20,7 @@ def create_branch(
         name=data.name,
         address=data.address,
         phone=data.phone,
+        chain=data.chain,
         is_active=data.is_active,
         maintenance_frequency_days=data.maintenance_frequency_days,
     )

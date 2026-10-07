@@ -15,6 +15,7 @@ import { VisitScheduleComponent } from './features/maintenance-visits/pages/visi
 import { BulkBranchAssetsComponent } from './features/assets/pages/bulk-branch-assets/bulk-branch-assets.component';
 import { VisitPrintComponent } from './features/maintenance-visits/pages/visit-print/visit-print.component';
 import { CorrectiveRequestPrintComponent } from './features/corrective-requests/pages/corrective-request-print/corrective-request-print.component';
+import { AssignedTasksListComponent } from './features/assigned-tasks/pages/assigned-tasks-list/assigned-tasks-list.component';
 
 
 export const routes: Routes = [
@@ -32,6 +33,7 @@ export const routes: Routes = [
       { path: 'branches', component: BranchesListComponent, canActivate: [roleGuard(['admin'])] },
       { path: 'assets/bulk', component: BulkBranchAssetsComponent, canActivate: [roleGuard(['admin'])] },
       { path: 'assets', component: AssetsListComponent },
+      { path: 'assigned-tasks', component: AssignedTasksListComponent, canActivate: [roleGuard(['admin', 'tecnico'])] },
       { path: 'requests', component: CorrectiveRequestListComponent },
       { path: 'reports', component: ReportsDashboardComponent, canActivate: [roleGuard(['admin'])] },
       { path: 'maintenance-visits', component: VisitListComponent },
