@@ -1,7 +1,7 @@
 import os
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session, selectinload
 
 from app.database import get_db
 from app.models.maintenance_visit import (
@@ -35,10 +35,13 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 REPORTS_UPLOAD_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "uploads", "visit-reports")
 os.makedirs(REPORTS_UPLOAD_DIR, exist_ok=True)
 
+# selectinload carga cada coleccion con una consulta aparte. Con joinedload los tres
+# JOIN encadenados (fotos x checklist por equipo) multiplicaban las filas: 19 349 filas
+# para 327 registros reales y 350 ms para listar 10 visitas (ver SPEC-paginacion.md).
 VISIT_LOAD_OPTIONS = [
-    joinedload(MaintenanceVisit.items).joinedload(MaintenanceVisitItem.photos),
-    joinedload(MaintenanceVisit.items).joinedload(MaintenanceVisitItem.checklist_entries),
-    joinedload(MaintenanceVisit.checklist_entries),
+    selectinload(MaintenanceVisit.items).selectinload(MaintenanceVisitItem.photos),
+    selectinload(MaintenanceVisit.items).selectinload(MaintenanceVisitItem.checklist_entries),
+    selectinload(MaintenanceVisit.checklist_entries),
 ]
 
 
