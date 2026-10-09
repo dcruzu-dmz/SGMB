@@ -20,7 +20,6 @@ import { groupByEquipmentCategory } from '../../../../core/utils/equipment-categ
 import {
   CHECKLIST_TEMPLATE,
   ChecklistGroup,
-  CPU_TYPES,
   DraftItem,
   EQUIPMENT_TYPES,
   VISIT_REASONS,
@@ -222,10 +221,6 @@ export class VisitFormComponent implements OnInit {
         }
       }
     }
-  }
-
-  isCpuType(type: string): boolean {
-    return CPU_TYPES.includes(type);
   }
 
   toggleAsset(asset: Asset): void {

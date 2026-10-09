@@ -94,4 +94,4 @@ Se siguen los componentes standalone existentes (como `EquipmentIconComponent`):
 
 **Lo que costó:** el CSS total creció. Los estilos de Angular están encapsulados por componente, así que las reglas compartidas (campos, chips, ventana modal) se copiaron en los componentes nuevos. Esa duplicación ya existía en el proyecto: las reglas de ventana modal están en 8 componentes y `form-group` en 10. La solución de fondo es una hoja de estilos compartida (mejora aparte).
 
-**Código sin uso detectado, no tocado (fuera de alcance):** `isCpuType` y la importación de `CPU_TYPES` en `visit-form.component.ts` ya no se usaban antes de este cambio, y duplican `isCpuType` de `core/utils/equipment-category.ts`.
+**Código sin uso eliminado (aprobado aparte):** `isCpuType` en `visit-form.component.ts` ya no se usaba antes de este cambio y duplicaba `isCpuType` de `core/utils/equipment-category.ts`. Se quitó, y `CPU_TYPES` dejó de exportarse porque solo lo usa `visit-form.data.ts`.

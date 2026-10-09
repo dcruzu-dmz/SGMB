@@ -44,7 +44,7 @@ export const CHECKLIST_TEMPLATE: ChecklistGroup[] = [
   },
 ];
 
-export const CPU_TYPES = ['CPU Servidor', 'CPU Cliente'];
+const CPU_TYPES = ['CPU Servidor', 'CPU Cliente'];
 
 const SOFTWARE_CHECKLIST_ITEMS = [
   'Sistema de punto de venta', 'Servicio de impresión', '7-Zip',
