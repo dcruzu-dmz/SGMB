@@ -317,79 +317,17 @@ tbody tr:hover {
   margin-top: 0;
 }
 
-.detail-modal-card {
-  max-width: 640px;
-}
 
-.detail-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 0.85rem;
-  margin-bottom: 0.5rem;
-}
 
-.detail-grid div span {
-  display: block;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  color: var(--color-text-faint);
-  margin-bottom: 2px;
-}
 
-.detail-grid div strong {
-  font-size: 0.88rem;
-  color: var(--color-text);
-}
 
-.detail-description {
-  font-size: 0.88rem;
-  color: var(--color-text);
-  margin: 0 0 0.5rem;
-}
 
-.empty-note {
-  color: var(--color-text-faint);
-  font-size: 0.85rem;
-}
 
-.request-history {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
 
-.request-history-row {
-  border: 1px solid var(--color-sidebar-border);
-  border-radius: var(--radius-sm);
-  padding: 0.7rem 0.85rem;
-}
 
-.request-history-main {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.4rem;
-}
 
-.request-history-date {
-  font-size: 0.78rem;
-  color: var(--color-text-faint);
-  margin-left: auto;
-}
 
-.request-history-desc {
-  font-size: 0.85rem;
-  color: var(--color-text);
-  margin: 0 0 0.3rem;
-}
 
-.request-history-tech {
-  font-size: 0.78rem;
-  color: var(--color-text-muted);
-  margin: 0;
-}
 
 .modal-header {
   display: flex;
@@ -426,11 +364,6 @@ tbody tr:hover {
   gap: 0.65rem;
 }
 
-.detail-title {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
 
 .category-tab.empty-tab:not(.active) {
   opacity: 0.6;

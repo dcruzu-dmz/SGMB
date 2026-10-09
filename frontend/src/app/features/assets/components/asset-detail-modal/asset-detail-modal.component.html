@@ -1,0 +1,65 @@
+<div class="modal-backdrop" (click)="closed.emit()">
+    <div class="modal-card detail-modal-card" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="detail-title"><app-equipment-icon [type]="asset.type" [size]="40"></app-equipment-icon>{{ asset.name }}</h2>
+            <button type="button" class="modal-close" (click)="closed.emit()" aria-label="Cerrar">&times;</button>
+        </div>
+
+        <h3 class="form-section-title">Información general</h3>
+        <div class="detail-grid">
+            <div><span>Tipo</span><strong>{{ asset.type }}</strong></div>
+            <div><span>Marca</span><strong>{{ asset.brand || '—' }}</strong></div>
+            <div><span>Modelo</span><strong>{{ asset.model || '—' }}</strong></div>
+            <div><span>Serie</span><strong>{{ asset.serial_number || '—' }}</strong></div>
+            <div><span>Ubicación</span><strong>{{ asset.location || '—' }}</strong></div>
+            <div><span>Sucursal</span><strong>{{ branchName }}</strong></div>
+            <div><span>Estado</span><strong><span [class]="'badge badge-' + asset.status">{{ asset.status | label }}</span></strong></div>
+        </div>
+
+        <ng-container *ngIf="isCpu(asset.type)">
+          <h3 class="form-section-title">Especificaciones técnicas</h3>
+          <div class="detail-grid">
+            <div><span>Procesador</span><strong>{{ asset.processor || '—' }}</strong></div>
+            <div><span>Memoria RAM</span><strong>{{ asset.ram || '—' }}</strong></div>
+            <div><span>Disco</span><strong>{{ asset.storage || '—' }}</strong></div>
+            <div><span>Sistema operativo</span><strong>{{ asset.operating_system || '—' }}</strong></div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="isDvr(asset.type)">
+          <h3 class="form-section-title">Especificaciones técnicas</h3>
+          <div class="detail-grid">
+            <div><span>Número de canales</span><strong>{{ asset.channels || '—' }}</strong></div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="isMonitor(asset.type)">
+          <h3 class="form-section-title">Especificaciones técnicas</h3>
+          <div class="detail-grid">
+            <div><span>Tamaño de pantalla</span><strong>{{ asset.screen_size || '—' }}</strong></div>
+            <div><span>Puerto de video</span><strong>{{ asset.video_port || '—' }}</strong></div>
+          </div>
+        </ng-container>
+
+        <div *ngIf="asset.description">
+          <h3 class="form-section-title">Descripción</h3>
+          <p class="detail-description">{{ asset.description }}</p>
+        </div>
+
+        <h3 class="form-section-title">Historial de fallas reportadas ({{ requests.length }})</h3>
+        <div class="request-history" *ngIf="requests.length > 0; else noRequests">
+          <div class="request-history-row" *ngFor="let r of requests">
+            <div class="request-history-main">
+              <span class="badge" [class]="'badge-' + r.priority">{{ r.priority | label }}</span>
+              <span class="badge" [class]="'badge-' + r.status">{{ r.status | label }}</span>
+              <span class="request-history-date">{{ r.created_at | date: 'dd/MM/yyyy' }}</span>
+            </div>
+            <p class="request-history-desc">{{ r.description }}</p>
+            <p class="request-history-tech" *ngIf="r.assigned_id">Técnico: {{ technicianName(r.assigned_id) }}</p>
+          </div>
+        </div>
+        <ng-template #noRequests>
+          <p class="empty-note">Este equipo no tiene solicitudes correctivas registradas.</p>
+        </ng-template>
+    </div>
+</div>

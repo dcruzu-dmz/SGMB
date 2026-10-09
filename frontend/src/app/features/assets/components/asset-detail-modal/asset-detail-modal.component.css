@@ -1,0 +1,151 @@
+/* Los estilos de assets-list estan encapsulados y no llegan a esta ventana.
+   Las reglas de la ventana (fondo, tarjeta, encabezado, cerrar, titulos de
+   seccion) son las mismas que usa assets-list para su ventana de formulario. */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 100;
+}
+
+.modal-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-md, 16px);
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 740px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+.form-section-title {
+  margin: 1.25rem 0 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--color-text-faint);
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--color-sidebar-border);
+}
+
+.form-section-title:first-child {
+  margin-top: 0;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+}
+
+.modal-close:hover {
+  color: var(--color-text);
+}
+
+/* Propias del detalle */
+
+.detail-modal-card {
+  max-width: 640px;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.detail-grid div span {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--color-text-faint);
+  margin-bottom: 2px;
+}
+
+.detail-grid div strong {
+  font-size: 0.88rem;
+  color: var(--color-text);
+}
+
+.detail-description {
+  font-size: 0.88rem;
+  color: var(--color-text);
+  margin: 0 0 0.5rem;
+}
+
+.empty-note {
+  color: var(--color-text-faint);
+  font-size: 0.85rem;
+}
+
+.request-history {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.request-history-row {
+  border: 1px solid var(--color-sidebar-border);
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 0.85rem;
+}
+
+.request-history-main {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.request-history-date {
+  font-size: 0.78rem;
+  color: var(--color-text-faint);
+  margin-left: auto;
+}
+
+.request-history-desc {
+  font-size: 0.85rem;
+  color: var(--color-text);
+  margin: 0 0 0.3rem;
+}
+
+.request-history-tech {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.detail-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
