@@ -63,7 +63,7 @@ test('ACEP01 - un tecnico completa la tarea real de cerrar su solicitud asignada
   await expect(page.locator('tr', { hasText: `Impresora E2E ${SUFFIX}` }).getByText('Cerrada')).toBeVisible({ timeout: 10000 });
 });
 
-test('VIS01 - un tecnico completa su visita programada y lo guardado persiste', async ({ page }) => {
+test('VIS01 - un tecnico guarda su visita como borrador, la retoma y lo guardado persiste sin duplicarse', async ({ page }) => {
   await page.goto('/');
   await page.getByPlaceholder('admin@sgmb.com').fill(TEC_EMAIL);
   await page.getByPlaceholder('••••••••').fill(PASSWORD);
@@ -94,4 +94,20 @@ test('VIS01 - un tecnico completa su visita programada y lo guardado persiste', 
   await expect(page.getByText('Funciona: Sí')).toBeVisible();
   await expect(page.getByText('VIS01: limpieza general realizada')).toBeVisible();
   await expect(page.getByText('VIS01: encargado conforme')).toBeVisible();
+
+  // Retomar el borrador: el formulario debe volver a mostrar lo guardado
+  await page.getByRole('link', { name: 'Continuar visita' }).click();
+  await expect(page).toHaveURL(/\/maintenance-visits\/\d+\/edit/);
+  await expect(assetCheckbox).toBeChecked({ timeout: 10000 });
+  await expect(itemCard.getByLabel('Funciona')).toBeChecked();
+  await expect(page.locator('textarea[name="supervisor_observations"]')).toHaveValue('VIS01: encargado conforme');
+
+  // Cambiar y guardar de nuevo: se actualiza el mismo equipo, no se duplica
+  await itemCard.getByLabel('Funciona').uncheck();
+  await page.locator('textarea[name="general_observations"]').fill('VIS01: segunda pasada');
+  await page.getByRole('button', { name: 'Guardar como borrador' }).click();
+  await expect(page).toHaveURL(/\/maintenance-visits\/\d+$/, { timeout: 10000 });
+  await expect(page.getByText('VIS01: segunda pasada')).toBeVisible();
+  await expect(page.getByText(/Funciona: (Sí|No)/)).toHaveCount(1);
+  await expect(page.getByText('Funciona: No')).toBeVisible();
 });

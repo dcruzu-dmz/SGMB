@@ -24,6 +24,7 @@ export interface MaintenanceVisitItem {
 }
 
 export interface MaintenanceVisitItemCreate {
+  id?: number;  // al retomar un borrador: con id se actualiza ese equipo, sin id se crea
   asset_id?: number | null;
   equipment_type: string;
   identification_location?: string | null;
@@ -45,6 +46,7 @@ export interface MaintenanceVisitChecklistEntry {
 }
 
 export interface MaintenanceVisitChecklistEntryCreate {
+  id?: number;  // al retomar un borrador: con id se actualiza esa entrada, sin id se crea
   category: string;
   label: string;
   checked: boolean;

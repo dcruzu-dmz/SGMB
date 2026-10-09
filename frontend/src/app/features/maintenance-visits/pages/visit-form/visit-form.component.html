@@ -211,6 +211,11 @@
               <div class="form-group">
                 <label>Fotos del equipo (cómo quedó)</label>
                 <input type="file" accept=".jpg,.jpeg,.png,.webp" multiple (change)="onPhotosSelected(item, $event)">
+                <div class="photo-preview-row" *ngIf="item._savedPhotos.length > 0">
+                  <div class="photo-preview" *ngFor="let photo of item._savedPhotos">
+                    <img [src]="photoUrl(photo.file_path)" alt="Foto guardada del equipo">
+                  </div>
+                </div>
                 <div class="photo-preview-row" *ngIf="item._previews.length > 0">
                   <div class="photo-preview" *ngFor="let preview of item._previews; let p = index">
                     <img [src]="preview" alt="Foto del equipo">
@@ -292,7 +297,12 @@
       <div class="form-group">
         <label>Fotos del equipo (cómo quedó)</label>
         <input type="file" accept=".jpg,.jpeg,.png,.webp" multiple (change)="onPhotosSelected(item, $event)">
-        <div class="photo-preview-row" *ngIf="item._previews.length > 0">
+        <div class="photo-preview-row" *ngIf="item._savedPhotos.length > 0">
+                  <div class="photo-preview" *ngFor="let photo of item._savedPhotos">
+                    <img [src]="photoUrl(photo.file_path)" alt="Foto guardada del equipo">
+                  </div>
+                </div>
+                <div class="photo-preview-row" *ngIf="item._previews.length > 0">
           <div class="photo-preview" *ngFor="let preview of item._previews; let p = index">
             <img [src]="preview" alt="Foto del equipo">
             <button type="button" (click)="removePhoto(item, p)">✕</button>
