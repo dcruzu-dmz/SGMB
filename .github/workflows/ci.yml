@@ -26,6 +26,9 @@ jobs:
       # Valores solo para CI; no son credenciales reales.
       DATABASE_URL: postgresql+psycopg2://sgmb:sgmb@localhost:5432/sgmb_ci
       SECRET_KEY: ci-solo-pruebas-clave-de-al-menos-32-bytes
+      # Base desechable para tests que necesitan Postgres real; el test crea y borra
+      # las tablas antes de que corran las migraciones.
+      TEST_POSTGRES_URL: postgresql+psycopg2://sgmb:sgmb@localhost:5432/sgmb_ci
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -36,7 +39,7 @@ jobs:
       - run: pip install -r requirements-dev.txt
       # test_integration.py queda fuera: depende de los datos de la base de desarrollo.
       - name: Tests unitarios
-        run: python -m pytest tests/test_units.py tests/test_units_v2.py tests/test_authz.py -q
+        run: python -m pytest tests/test_units.py tests/test_units_v2.py tests/test_authz.py tests/test_scheduler_lock.py -q
       - name: Migraciones desde cero
         run: alembic upgrade head
       - name: Modelos y migraciones coinciden

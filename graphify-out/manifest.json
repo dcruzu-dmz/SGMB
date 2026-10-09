@@ -48,8 +48,8 @@
     "semantic_hash": "4ddd797b509411a13dcdb35f0658fe0e"
   },
   "backend/app/models/maintenance_visit.py": {
-    "mtime": 1791401231.4779394,
-    "seen": 1791401280.81834,
+    "mtime": 1791401420.2864623,
+    "seen": 1791509369.8576288,
     "ast_hash": "b12475519e7a07d554daa6f5cad635df",
     "semantic_hash": ""
   },
@@ -102,9 +102,9 @@
     "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
   },
   "backend/app/routers/maintenance_visit.py": {
-    "mtime": 1791401193.3836403,
-    "seen": 1791401280.8186681,
-    "ast_hash": "5279463d61513f0f97b4391d3339719f",
+    "mtime": 1791509790.5865486,
+    "seen": 1791509869.3801322,
+    "ast_hash": "9b155ec64dd98ada4cb082cd5688feb3",
     "semantic_hash": ""
   },
   "backend/app/routers/users.py": {
@@ -168,10 +168,10 @@
     "semantic_hash": "b725b147091b187067343fd540b30f5e"
   },
   "backend/app/services/preventive_scheduler.py": {
-    "mtime": 1787026324.1917596,
-    "seen": 1791345549.9320042,
-    "ast_hash": "d2127edd10521570bc0a2051b935ce27",
-    "semantic_hash": "d2127edd10521570bc0a2051b935ce27"
+    "mtime": 1791509771.8562524,
+    "seen": 1791509869.38079,
+    "ast_hash": "d783c3793165cebabd747fc5dedd0d1d",
+    "semantic_hash": ""
   },
   "backend/app/utils/dependencies.py": {
     "mtime": 1791349451.9380283,
@@ -978,26 +978,26 @@
     "semantic_hash": ""
   },
   "tasks/plan.md": {
-    "mtime": 1791398841.9654539,
-    "seen": 1791399553.224201,
-    "ast_hash": "30b220b9dadaffb67071c6679c835791",
+    "mtime": 1791509128.8149989,
+    "seen": 1791509369.866857,
+    "ast_hash": "4743410acdceaf0ca18dc79459716ea7",
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1791398841.9659398,
-    "seen": 1791399553.224203,
-    "ast_hash": "6c4cfdce110ff1227ade0713b652e3b4",
+    "mtime": 1791509864.8796773,
+    "seen": 1791509869.388906,
+    "ast_hash": "8598a0a5b9f6071e54857dca0f677002",
     "semantic_hash": ""
   },
   ".github/workflows/ci.yml": {
-    "mtime": 1791400681.7475264,
-    "seen": 1791401280.822648,
-    "ast_hash": "f33d4e53be24d45644ff44a6defb826f",
+    "mtime": 1791509338.1760354,
+    "seen": 1791509369.864596,
+    "ast_hash": "693b7daf055019a3904087da49434be1",
     "semantic_hash": ""
   },
   "SPEC-paginacion.md": {
-    "mtime": 1791401277.6762106,
-    "seen": 1791401280.8226812,
+    "mtime": 1791401420.2853212,
+    "seen": 1791509369.864649,
     "ast_hash": "fa9d824984741c6256ce68739b6f1a96",
     "semantic_hash": ""
   },
@@ -1005,6 +1005,12 @@
     "mtime": 1791400681.747956,
     "seen": 1791401280.8227851,
     "ast_hash": "535748e4c0a61983e3a3d9921aa1ac47",
+    "semantic_hash": ""
+  },
+  "backend/tests/test_scheduler_lock.py": {
+    "mtime": 1791509759.2126226,
+    "seen": 1791509869.3813498,
+    "ast_hash": "fa62921243ea94bfae8899a4426b23c7",
     "semantic_hash": ""
   }
 }

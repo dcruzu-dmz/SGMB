@@ -1,43 +1,30 @@
-# Tareas: endurecer el contrato de usuarios
+# Tareas: scheduler preventivo sin duplicados (punto 18)
 
-Ver `tasks/plan.md`. Rama: `fix/contrato-usuarios`.
+Ver `tasks/plan.md`. Rama: `fix/scheduler-sin-duplicados`. Supone la opción A (candado de Postgres).
+La lista anterior (contrato de usuarios, completa) está en el historial de git, PR #12.
 
-## Fase 1
-
-- [x] **T1: Proteger al último admin y evitar auto-bloqueo**
+- [x] **T1: Corrida del chequeo con candado de Postgres**
   - Acceptance:
-    - Un admin que se desactiva a sí mismo (PATCH `/users/{id}/status` o PUT con `is_active=false`) recibe 409 "No puedes desactivar tu propia cuenta".
-    - Un admin que se cambia su propio rol recibe 409 "No puedes cambiar tu propio rol".
-    - Desactivar o degradar al último admin activo da 409 "Debe quedar al menos un administrador activo".
-    - Con 2 admins activos, un admin sí puede desactivar o degradar al otro.
-    - Editar nombre o correo propio sigue funcionando.
-    - El toast de activar/desactivar muestra el mensaje del backend.
-  - Verify: `curl` con 2 admins de prueba (seed temporal) cubriendo los 5 casos; tests unitarios en verde.
-  - Files: `backend/app/routers/users.py`, `frontend/src/app/features/users/pages/users-list/users-list.component.ts`
+    - Dos corridas simultáneas sobre una sucursal vencida crean **una** visita, no dos.
+    - Si otra corrida está en curso, la segunda no hace nada y lo informa (`None` en la función).
+    - `run_preventive_check` sin candado sigue igual (tests unitarios en verde).
+  - Verify: prueba de concurrencia en una **base temporal** de Postgres: dos hilos llaman a la versión con candado a la vez → 1 visita creada; la misma prueba sin candado → reproduce el duplicado (demuestra que la prueba detecta el problema).
+  - Files: `backend/app/services/preventive_scheduler.py`
 
-- [x] **T2: Errores de validación legibles en todo el frontend**
+- [x] **T2: Loop y botón manual usan la versión con candado**
   - Acceptance:
-    - Un 422 con `detail` en lista llega a las pantallas como texto: `Datos inválidos: <campos>`.
-    - Los errores con `detail` de texto (400/403/404/409) no cambian.
-    - Crear un usuario con un correo inválido (ej. `x@y`) muestra el mensaje legible, no `[object Object]`.
-  - Verify: Playwright headless en Gestión de usuarios con correo inválido; `ng build`.
-  - Files: `frontend/src/app/core/interceptors/auth-interceptor.ts`
-
-- [x] **T3: Correos sin distinción de mayúsculas**
-  - Acceptance:
-    - Alta y edición guardan el correo en minúsculas.
-    - Login con `Correo@SGMB.com` funciona para `correo@sgmb.com`.
-    - Crear `JUAN@x.com` cuando existe `juan@x.com` da el error de correo duplicado.
-  - Verify: `curl` con usuario de prueba; tests unitarios.
-  - Files: `backend/app/schemas/user.py`, `backend/app/schemas/auth.py`
+    - `preventive_check_loop` y `POST /maintenance-visits/check-preventive` usan la versión con candado.
+    - El endpoint responde `{"created": N, "skipped": false}` o `{"created": 0, "skipped": true}`.
+    - El frontend que llama al botón sigue funcionando (lee `created`).
+  - Verify: `curl` al endpoint con admin temporal; e2e; `ng build` si cambia el frontend.
+  - Files: `backend/app/services/preventive_scheduler.py`, `backend/app/routers/maintenance_visit.py` (y el componente que llama al endpoint, solo si hace falta)
 
 ## Checkpoint
 
-- [x] Tests unitarios (24) y `ng build` en verde
-- [x] Verificación en vivo de T1–T3 con datos temporales, y limpieza
-- [x] Commit, push y PR; mergeado como #10
+- [x] Tests unitarios, e2e y CI en verde (CI se confirma en el PR)
+- [x] Prueba de concurrencia: 1 visita con candado, duplicado reproducido sin candado (tests SCH01/SCH02)
+- [x] Commit, push y PR; mergear cuando lo apruebes
 
-## Fase 2 (opcional, después del checkpoint)
+## Decisión pendiente (no incluida)
 
-- [x] **T4: Tipo `UserRole` en TypeScript** — `role: 'admin' | 'tecnico' | 'solicitante'` en `User`, `CurrentUser`, `UserCreate`, `UserUpdate`. Verify: `ng build`.
-- [x] **T5: Correo duplicado responde 409** en lugar de 400. Verify: `curl`.
+- [ ] Opción B (índice único parcial): solo si confirmas que **nunca** debe haber dos visitas pendientes para una misma sucursal.

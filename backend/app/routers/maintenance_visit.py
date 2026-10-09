@@ -24,7 +24,7 @@ from app.schemas.maintenance_visit import (
 )
 from app.utils.dependencies import get_current_user, require_roles
 from app.models.user import User
-from app.services.preventive_scheduler import run_preventive_check
+from app.services.preventive_scheduler import run_preventive_check_locked
 from app.utils.uploads import save_upload, remove_upload, PHOTO_EXTENSIONS, REPORT_EXTENSIONS
 
 router = APIRouter(prefix="/maintenance-visits", tags=["MaintenanceVisits"])
@@ -95,8 +95,9 @@ def check_preventive(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_roles("admin")),
 ):
-    created = run_preventive_check(db)
-    return {"created": created}
+    created = run_preventive_check_locked(db)
+    # skipped: otra corrida (el loop u otro admin) tenia el candado; no se creo nada
+    return {"created": created or 0, "skipped": created is None}
 
 
 # Crear visita (con equipos y checklist anidados) — solo administradores programan/registran visitas
