@@ -1,46 +1,41 @@
-# Plan: endurecer el contrato de usuarios
+# Plan: scheduler preventivo sin visitas duplicadas (auditoría, punto 18)
 
-Origen: revisión de interfaces de usuario (2026-10-07), hallazgos 1–3. Los hallazgos 5 y 6 quedan como fase 2 opcional; el 4 (token con `sub = email`) solo se documenta.
+El plan anterior (contrato de usuarios, completo) está en el historial de git, PR #12.
 
-## Estado actual relevante
+## Por qué puede duplicar
 
-- `backend/app/routers/users.py`: `update_user` (PUT) y `toggle_user_status` (PATCH `/status`) no miran a quién se modifica.
-- Base de datos (consulta de solo lectura): 5 usuarios, **2 admins activos**, ningún correo con mayúsculas ni duplicados ignorando mayúsculas. Por eso el punto 3 no necesita migrar datos.
-- `frontend/src/app/core/interceptors/auth-interceptor.ts`: ya intercepta todos los errores HTTP (lo usa el manejo de 401). Es el único punto por donde pasan los errores de todas las pantallas.
-- 10 lugares del frontend muestran `err.error.detail` directo (usuarios, visitas, solicitudes, login).
+`backend/app/main.py` arranca el scheduler dentro del `lifespan` de FastAPI:
 
-## Dependencias
-
-```
-T1 (último admin)      ──┐
-T2 (errores 422 legibles) ─┼──► Checkpoint (verificación en vivo + PR)
-T3 (correos sin mayúsculas)┘
+```python
+scheduler = asyncio.create_task(preventive_check_loop())
 ```
 
-Las tres tareas son independientes entre sí; van en un solo PR porque son pequeñas y tocan el mismo módulo. T2 mejora cómo se ven los errores de T1 y T3, por eso conviene verificarlas juntas.
+El `lifespan` corre **una vez por proceso**. Hoy hay un solo proceso (`uvicorn --reload`), así que hoy no duplica. Pero:
 
-## Decisiones de diseño
+1. **Con varios workers** (`uvicorn --workers 4`, lo normal en producción) habría 4 loops, uno por proceso, revisando las mismas sucursales al mismo tiempo.
+2. **El chequeo no es atómico.** `run_preventive_check` (`services/preventive_scheduler.py`) hace "¿hay visita pendiente para esta sucursal?" y después "si no, la creo". Si dos procesos hacen la pregunta a la vez, los dos ven "no hay" y los dos crean la visita: **dos visitas programadas para la misma sucursal**.
+3. **También pasa con un solo proceso**: el endpoint `POST /maintenance-visits/check-preventive` (botón del admin) llama a la misma función. Si coincide con la corrida automática, se da la misma carrera.
 
-**T1 — reglas (todas responden 409 con mensaje en español):**
-1. Un admin no puede desactivarse a sí mismo.
-2. Un admin no puede cambiarse su propio rol.
-3. Ningún cambio puede dejar el sistema sin admins activos (desactivar o degradar al último).
+Estado actual de la base (consulta de solo lectura, 2026-10-08): 4 visitas pendientes en 4 sucursales, **ninguna duplicada**; 1 sucursal activa con frecuencia configurada. El riesgo es real pero todavía no ocurrió.
 
-Las reglas 1–2 evitan que una persona se quede fuera sin querer; la 3 evita que el sistema se quede sin nadie que lo administre. Se aplican en un helper compartido que usan los dos endpoints, y se valida en el backend (el frontend solo muestra el mensaje).
+## Opciones
 
-**T2 — dónde normalizar:** en el interceptor, no en cada pantalla. Si `error.detail` es una lista (422 de FastAPI), se reemplaza por un texto: `Datos inválidos: <campos>`. Así los 10 lugares que ya leen `detail` como texto quedan bien sin tocarlos.
+| Opción | Cómo | Pros | Contras |
+|---|---|---|---|
+| **A. Candado de Postgres** (recomendada) | `pg_try_advisory_xact_lock` al inicio de cada corrida: si otro proceso ya está revisando, esta corrida se salta. | ~10 líneas, sin migración, cubre workers y botón manual, no cambia reglas de negocio. | Solo protege al scheduler; no impide que un admin cree a mano una segunda visita pendiente (eso hoy es válido). |
+| B. Índice único parcial | `UNIQUE (branch_id) WHERE status IN ('programada','borrador')` vía migración. | Garantía absoluta en la base. | **Cambia una regla de negocio**: el admin ya no podría tener dos visitas pendientes para una misma sucursal (por ejemplo, programar dos fechas futuras). Requiere tu decisión. |
+| C. Scheduler fuera del web | Un proceso o cron aparte que corre el chequeo. | Separación limpia. | Más infraestructura que mantener; sigue necesitando A para el botón manual. |
 
-**T3 — cómo:** un tipo `Email` en los schemas que valida con `EmailStr` y convierte a minúsculas. Se usa en alta, edición y login. Como los datos actuales ya están en minúsculas, las comparaciones exactas existentes siguen funcionando.
+## Diseño de la opción A
+
+- Nueva función `run_preventive_check_locked(db)` en `services/preventive_scheduler.py`: toma `pg_try_advisory_xact_lock(<clave fija>)` en la misma transacción. Si no obtiene el candado, devuelve `None` ("otra corrida en curso") sin hacer nada; si lo obtiene, llama a `run_preventive_check(db)`. El candado se libera solo al terminar la transacción (commit o rollback).
+- `run_preventive_check` no cambia: los tests unitarios que la usan con SQLite y mocks siguen funcionando.
+- El loop y el endpoint usan la versión con candado. El endpoint responde `{"created": 0, "skipped": true}` si otra corrida estaba en curso, para que el admin sepa por qué no se creó nada.
 
 ## Riesgos
 
 | Riesgo | Mitigación |
 |---|---|
-| T1 bloquea un flujo legítimo del admin | Solo bloquea sobre sí mismo o sobre el último admin; con 2 admins activos, el admin puede degradar o desactivar al otro. |
-| T2 oculta información útil del 422 | Se conservan los nombres de los campos en el mensaje. |
-| T3 rompe el login de alguien | Verificado: no hay correos con mayúsculas en la base. |
-
-## Fuera de alcance
-
-- Fase 2 (opcional, después del checkpoint): T4 tipo `UserRole` en TypeScript, T5 correo duplicado → 409.
-- Hallazgo 4 (`sub = email` en el token): solo documentar; cambiarlo cierra todas las sesiones al desplegar.
+| El candado no se libera | Es `xact` (de transacción): Postgres lo libera al cerrar la transacción, incluso si el proceso muere. |
+| Una corrida se salta | El loop vuelve a correr a las 6 h y el admin puede reintentar; saltar es preferible a duplicar. |
+| Tests con SQLite | La función original no cambia; la versión con candado solo se usa en el loop y el endpoint (Postgres). |
