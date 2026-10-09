@@ -8,9 +8,11 @@ import { UsersService, User } from '../../../../core/services/users.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { AssetsService, Asset } from '../../../../core/services/assets.service';
 import {
+  MaintenanceVisit,
   MaintenanceVisitService,
   MaintenanceVisitItemCreate,
   MaintenanceVisitChecklistEntryCreate,
+  MaintenanceVisitPhoto,
 } from '../../../../core/services/maintenance-visit.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { groupByEquipmentCategory } from '../../../../core/utils/equipment-category';
@@ -18,6 +20,7 @@ import { groupByEquipmentCategory } from '../../../../core/utils/equipment-categ
 interface DraftItem extends MaintenanceVisitItemCreate {
   _files: File[];
   _previews: string[];
+  _savedPhotos: MaintenanceVisitPhoto[];  // fotos ya guardadas (al retomar un borrador)
 }
 
 interface ChecklistGroup {
@@ -158,6 +161,8 @@ export class VisitFormComponent implements OnInit {
   selectedReasons: Record<string, boolean> = {};
   selectedAssetIds: Record<number, boolean> = {};
   assetObservations: Record<number, string> = {};
+  // id del equipo guardado como "no atendido, con observacion", por asset_id (al retomar un borrador)
+  flaggedItemIds: Record<number, number> = {};
   items: DraftItem[] = [];
   checklistGroups: ChecklistGroup[] = CHECKLIST_TEMPLATE.map(g => ({
     ...g,
@@ -228,6 +233,7 @@ export class VisitFormComponent implements OnInit {
           this.header.general_observations = visit.general_observations || '';
           this.header.supervisor_observations = visit.supervisor_observations || '';
           this.signedReportPath = visit.signed_report_path;
+          this.restoreSavedWork(visit);
 
           if (visit.visit_reasons) {
             try {
@@ -241,6 +247,52 @@ export class VisitFormComponent implements OnInit {
       this.authService.getMe().subscribe({
         next: user => this.header.technician_id = user.id,
       });
+    }
+  }
+
+  /** Al retomar un borrador, vuelve a cargar en el formulario lo ya guardado:
+   * equipos atendidos (con su checklist y fotos), equipos no atendidos con su
+   * observacion y el checklist general. Guardan su id para que el guardado los
+   * actualice en vez de duplicarlos. */
+  private restoreSavedWork(visit: MaintenanceVisit): void {
+    for (const item of visit.items) {
+      const flagged = item.asset_id !== null && item.installed === null && item.working === null
+        && item.cleaning_done === null && item.checklist_entries.length === 0;
+      if (flagged) {
+        this.assetObservations[item.asset_id!] = item.notes || '';
+        this.flaggedItemIds[item.asset_id!] = item.id;
+        continue;
+      }
+      this.items.push({
+        id: item.id,
+        asset_id: item.asset_id,
+        equipment_type: item.equipment_type,
+        identification_location: item.identification_location,
+        serial: item.serial,
+        installed: item.installed,
+        working: item.working,
+        cleaning_done: item.cleaning_done,
+        notes: item.notes || '',
+        checklist_entries: item.checklist_entries.map(e => ({
+          id: e.id, category: e.category, label: e.label, checked: e.checked, comment: e.comment || '',
+        })),
+        _files: [],
+        _previews: [],
+        _savedPhotos: item.photos,
+      });
+      if (item.asset_id) this.selectedAssetIds[item.asset_id] = true;
+    }
+
+    const general = visit.checklist_entries.filter(e => e.item_id === null);
+    for (const group of this.checklistGroups) {
+      for (const entry of group.entries) {
+        const saved = general.find(e => e.category === entry.category && e.label === entry.label);
+        if (saved) {
+          entry.id = saved.id;
+          entry.checked = saved.checked;
+          entry.comment = saved.comment;
+        }
+      }
     }
   }
 
@@ -269,6 +321,7 @@ export class VisitFormComponent implements OnInit {
         checklist_entries: buildChecklistForType(asset.type),
         _files: [],
         _previews: [],
+        _savedPhotos: [],
       });
     } else {
       const idx = this.items.findIndex(i => i.asset_id === asset.id);
@@ -284,6 +337,7 @@ export class VisitFormComponent implements OnInit {
     return this.branchAssets
       .filter(a => !this.selectedAssetIds[a.id] && (this.assetObservations[a.id] || '').trim())
       .map(a => ({
+        id: this.flaggedItemIds[a.id],
         asset_id: a.id,
         equipment_type: a.type,
         identification_location: a.location || a.name,
@@ -295,6 +349,7 @@ export class VisitFormComponent implements OnInit {
         checklist_entries: [],
         _files: [],
         _previews: [],
+        _savedPhotos: [],
       }));
   }
 
@@ -311,6 +366,7 @@ export class VisitFormComponent implements OnInit {
       checklist_entries: buildChecklistForType(this.equipmentTypes[0]),
       _files: [],
       _previews: [],
+      _savedPhotos: [],
     });
   }
 
@@ -375,6 +431,15 @@ export class VisitFormComponent implements OnInit {
         },
       });
     });
+  }
+
+  /** Empareja cada equipo enviado con su id guardado. Los que ya tenian id lo
+   * conservan; los nuevos reciben, en orden, los ids que no existian antes (el
+   * backend los crea en el orden enviado, asi que sus ids son crecientes). */
+  private savedIdsFor(sent: DraftItem[], saved: MaintenanceVisit): { id: number }[] {
+    const sentIds = new Set(sent.filter(i => i.id).map(i => i.id));
+    const newIds = saved.items.map(i => i.id).filter(i => !sentIds.has(i)).sort((a, b) => a - b);
+    return sent.map(i => ({ id: i.id ?? newIds.shift()! }));
   }
 
   onSignedReportSelected(event: Event): void {
@@ -457,47 +522,18 @@ export class VisitFormComponent implements OnInit {
 
     if (this.isCompleting && this.visitId) {
       const id = this.visitId;
-      this.visitService.updateVisit(id, headerPayload).subscribe({
-        next: () => {
-          let itemsSaved = 0;
-          const savedItems: { id: number }[] = [];
-          const totalItems = allItems.length;
-
-          const afterAllSaved = () => {
-            this.visitService.getVisit(id).subscribe({
-              next: (full) => {
-                this.uploadPendingPhotos(full.items, allItems, () => {
-                  this.loading = false;
-                  navigateAfterSave(id);
-                });
-              },
-              error: () => {
-                this.loading = false;
-                navigateAfterSave(id);
-              },
-            });
-          };
-
-          if (totalItems === 0) {
-            afterAllSaved();
-            return;
-          }
-
-          allItems.forEach(({ _files, _previews, ...rest }) => {
-            this.visitService.addVisitItem(id, rest).subscribe({
-              next: (saved) => {
-                savedItems.push(saved);
-                itemsSaved++;
-                if (itemsSaved === totalItems) afterAllSaved();
-              },
-              error: () => {
-                itemsSaved++;
-                if (itemsSaved === totalItems) afterAllSaved();
-              },
-            });
+      // Una sola llamada: la cabecera y la lista completa de equipos y checklist.
+      // El backend actualiza los que traen id, crea los nuevos y borra los quitados.
+      this.visitService.updateVisit(id, {
+        ...headerPayload,
+        items: allItems.map(({ _files, _previews, _savedPhotos, ...rest }) => rest),
+        checklist_entries,
+      }).subscribe({
+        next: (saved) => {
+          this.uploadPendingPhotos(this.savedIdsFor(allItems, saved), allItems, () => {
+            this.loading = false;
+            navigateAfterSave(id);
           });
-
-          this.visitService.addChecklistEntries(id, checklist_entries).subscribe();
         },
         error: (err) => {
           this.loading = false;
@@ -509,7 +545,7 @@ export class VisitFormComponent implements OnInit {
 
     const payload = {
       ...headerPayload,
-      items: allItems.map(({ _files, _previews, ...rest }) => rest),
+      items: allItems.map(({ _files, _previews, _savedPhotos, ...rest }) => rest),
       checklist_entries,
     };
 

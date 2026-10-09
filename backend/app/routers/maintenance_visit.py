@@ -153,7 +153,59 @@ def get_visit(
     return visit
 
 
-# Actualizar cabecera de la visita (el técnico solo puede completar sus propias visitas)
+def _sync_checklist(existing, entries_data, visit_id: int, item_id: int | None, db: Session) -> None:
+    """Deja el checklist igual a entries_data: actualiza por id, crea los nuevos y
+    borra los que no vienen."""
+    by_id = {entry.id: entry for entry in existing}
+    keep = set()
+    for data in entries_data:
+        fields = data.model_dump(exclude={"id", "item_id"})
+        if data.id is None:
+            db.add(MaintenanceVisitChecklistEntry(visit_id=visit_id, item_id=item_id, **fields))
+            continue
+        entry = by_id.get(data.id)
+        if entry is None:
+            raise HTTPException(status_code=400, detail="El checklist hace referencia a una entrada de otra visita")
+        for key, value in fields.items():
+            setattr(entry, key, value)
+        keep.add(entry.id)
+    for entry in existing:
+        if entry.id not in keep:
+            db.delete(entry)
+
+
+def _sync_items(visit: MaintenanceVisit, items_data, db: Session) -> list[str]:
+    """Deja los equipos de la visita iguales a items_data (por id, igual que el
+    checklist). Devuelve las fotos de los equipos borrados, para eliminarlas del
+    disco despues del commit."""
+    by_id = {item.id: item for item in visit.items}
+    keep = set()
+    for data in items_data:
+        fields = data.model_dump(exclude={"id", "checklist_entries"})
+        if data.id is None:
+            item = MaintenanceVisitItem(visit_id=visit.id, **fields)
+            db.add(item)
+            db.flush()
+            _sync_checklist([], data.checklist_entries, visit.id, item.id, db)
+            continue
+        item = by_id.get(data.id)
+        if item is None:
+            raise HTTPException(status_code=400, detail="La visita hace referencia a un equipo de otra visita")
+        for key, value in fields.items():
+            setattr(item, key, value)
+        _sync_checklist(list(item.checklist_entries), data.checklist_entries, visit.id, item.id, db)
+        keep.add(item.id)
+
+    removed_photos = []
+    for item_id, item in by_id.items():
+        if item_id not in keep:
+            removed_photos += [photo.file_path for photo in item.photos]
+            db.delete(item)
+    return removed_photos
+
+
+# Actualizar la visita (el técnico solo puede completar sus propias visitas).
+# Con `items` / `checklist_entries` sincroniza tambien equipos y checklist general.
 @router.put("/{visit_id}", response_model=MaintenanceVisitResponse)
 def update_visit(
     visit_id: int,
@@ -166,7 +218,7 @@ def update_visit(
         raise HTTPException(status_code=404, detail="Visita no encontrada")
     _check_visit_write(visit, current_user)
 
-    update_data = data.model_dump(exclude_unset=True)
+    update_data = data.model_dump(exclude_unset=True, exclude={"items", "checklist_entries"})
     # el formulario reenvia todos los campos; solo cuentan los que cambian
     changed = {k for k, v in update_data.items() if getattr(visit, k) != v}
     if current_user.role != "admin" and TECHNICIAN_FORBIDDEN_VISIT_FIELDS & changed:
@@ -178,7 +230,16 @@ def update_visit(
     for key, value in update_data.items():
         setattr(visit, key, value)
 
+    removed_photos = []
+    if data.items is not None:
+        removed_photos = _sync_items(visit, data.items, db)
+    if data.checklist_entries is not None:
+        general = [entry for entry in visit.checklist_entries if entry.item_id is None]
+        _sync_checklist(general, data.checklist_entries, visit.id, None, db)
+
     db.commit()
+    for path in removed_photos:
+        remove_upload(UPLOAD_DIR, path)
     return _get_visit_or_404(visit_id, db)
 
 

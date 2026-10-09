@@ -18,8 +18,8 @@
           [class.badge-pendiente]="visit.status === 'borrador'">
           {{ visit.status }}
         </span>
-        <a class="complete-btn" *ngIf="visit.status === 'programada'" [routerLink]="['/maintenance-visits', visit.id, 'edit']">
-          Completar visita
+        <a class="complete-btn" *ngIf="visit.status === 'programada' || visit.status === 'borrador'" [routerLink]="['/maintenance-visits', visit.id, 'edit']">
+          {{ visit.status === 'borrador' ? 'Continuar visita' : 'Completar visita' }}
         </a>
         <a class="print-btn" [routerLink]="['/maintenance-visits', visit.id, 'print']" target="_blank">
           Imprimir informe

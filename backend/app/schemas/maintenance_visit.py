@@ -103,6 +103,17 @@ class MaintenanceVisitCreate(MaintenanceVisitBase):
     checklist_entries: list[MaintenanceVisitChecklistEntryCreate] = []
 
 
+class MaintenanceVisitChecklistEntrySync(MaintenanceVisitChecklistEntryBase):
+    # Con id: se actualiza esa entrada; sin id: se crea
+    id: Optional[int] = None
+
+
+class MaintenanceVisitItemSync(MaintenanceVisitItemBase):
+    # Con id: se actualiza ese equipo; sin id: se crea
+    id: Optional[int] = None
+    checklist_entries: list[MaintenanceVisitChecklistEntrySync] = []
+
+
 class MaintenanceVisitUpdate(BaseModel):
     branch_id: Optional[int] = None
     technician_id: Optional[int] = None
@@ -128,6 +139,11 @@ class MaintenanceVisitUpdate(BaseModel):
     general_observations: Optional[str] = None
     supervisor_observations: Optional[str] = None
     status: Optional[VisitStatus] = None
+    # Opcionales. Si vienen, reemplazan los equipos y el checklist general de la
+    # visita: se actualizan los que traen id, se crean los nuevos y se borran los
+    # que no vienen (retomar un borrador sin duplicar). Si no vienen, no se tocan.
+    items: Optional[list[MaintenanceVisitItemSync]] = None
+    checklist_entries: Optional[list[MaintenanceVisitChecklistEntrySync]] = None
 
 
 class MaintenanceVisitResponse(MaintenanceVisitBase):
