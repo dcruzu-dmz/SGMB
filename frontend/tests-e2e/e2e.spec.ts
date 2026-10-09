@@ -126,3 +126,59 @@ test('VIS01 - un tecnico guarda su visita como borrador, la retoma y lo guardado
   await expect(page.getByText('Funciona: No')).toBeVisible();
   await expect(page.locator('img[alt="Foto del equipo"]')).toHaveCount(0);
 });
+
+async function login(page, email: string) {
+  await page.goto('/');
+  await page.getByPlaceholder('admin@sgmb.com').fill(email);
+  await page.getByPlaceholder('••••••••').fill(PASSWORD);
+  await page.getByRole('button', { name: 'Iniciar sesión' }).click();
+  await expect(page).toHaveURL(/\/dashboard/, { timeout: 10000 });
+}
+
+test('VIS02 - el admin registra una visita con un equipo no registrado y al retomarla no se duplica', async ({ page }) => {
+  await login(page, ADMIN_EMAIL);
+  await page.goto('/maintenance-visits/new');
+  await page.locator('select[name="branch_id"]').selectOption({ label: `Sucursal E2E ${SUFFIX}` });
+  await page.locator('select[name="technician_id"]').selectOption({ label: 'E2E Tecnico' });
+
+  await page.getByRole('button', { name: '+ Agregar equipo' }).click();
+  const manualCard = page.locator('.item-card', { hasText: 'Equipo no registrado 1' });
+  // [name] con ngModel no se refleja en el HTML: se ubican por posicion y placeholder
+  const manualType = manualCard.locator('select').first();
+  const manualLocation = manualCard.getByPlaceholder('Ej. Caja 1, Servidor principal');
+  await manualType.selectOption('Monitor');
+  await manualLocation.fill('Recepción VIS02');
+  await manualCard.getByLabel('Limpieza de pantalla').check();
+
+  await page.getByRole('button', { name: 'Guardar como borrador' }).click();
+  await expect(page).toHaveURL(/\/maintenance-visits\/\d+$/, { timeout: 10000 });
+  await expect(page.getByText('Recepción VIS02')).toBeVisible();
+
+  // Retomar: el equipo no registrado vuelve con su tipo, ubicacion y checklist
+  await page.getByRole('link', { name: 'Continuar visita' }).click();
+  await expect(manualType).toHaveValue('Monitor', { timeout: 10000 });
+  await expect(manualLocation).toHaveValue('Recepción VIS02');
+  await expect(manualCard.getByLabel('Limpieza de pantalla')).toBeChecked();
+
+  await page.getByRole('button', { name: 'Guardar como borrador' }).click();
+  await expect(page).toHaveURL(/\/maintenance-visits\/\d+$/, { timeout: 10000 });
+  await expect(page.getByText('Recepción VIS02')).toHaveCount(1);
+});
+
+test('AST01 - el detalle de un equipo muestra su informacion y su historial de fallas', async ({ page }) => {
+  await login(page, ADMIN_EMAIL);
+  await page.goto('/assets');
+  // El listado esta paginado: filtrar por la sucursal de prueba
+  await page.locator('select[name="filterBranchId"]').selectOption({ label: `Sucursal E2E ${SUFFIX}` });
+  await page.locator('tr', { hasText: `Impresora E2E ${SUFFIX}` }).getByRole('button', { name: 'Ver' }).click();
+
+  const modal = page.locator('.detail-modal-card');
+  await expect(modal.getByRole('heading', { name: `Impresora E2E ${SUFFIX}` })).toBeVisible();
+  await expect(modal.getByText('Epson')).toBeVisible();
+  await expect(modal.getByText('TM-T20')).toBeVisible();
+  await expect(modal.getByText(/Historial de fallas reportadas \(\d+\)/)).toBeVisible();
+  await expect(modal.getByText('Impresora no corta el papel')).toBeVisible();
+
+  await modal.getByRole('button', { name: 'Cerrar' }).click();
+  await expect(modal).toHaveCount(0);
+});

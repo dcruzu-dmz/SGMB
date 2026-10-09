@@ -116,12 +116,6 @@ input[type="file"] {
   margin: 0;
 }
 
-.tri-checks {
-  display: flex;
-  gap: 0.6rem;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-}
 
 .item-card {
   border: 1px solid var(--color-sidebar-border);
@@ -281,44 +275,9 @@ input[type="file"] {
   text-decoration: none;
 }
 
-.photo-preview-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-top: 0.75rem;
-}
 
-.photo-preview {
-  position: relative;
-  width: 84px;
-  height: 84px;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  border: 1px solid var(--color-sidebar-border);
-}
 
-.photo-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
 
-.photo-preview button {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  font-size: 0.65rem;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
-}
 
 .checklist-rows {
   display: flex;
@@ -410,15 +369,6 @@ button.secondary:hover:not(:disabled) {
   .checkbox-chip input[type="checkbox"] {
     width: 1.25rem;
     height: 1.25rem;
-  }
-
-  .tri-checks {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .tri-checks .checkbox-chip {
-    justify-content: flex-start;
   }
 
   .form-actions-bar {

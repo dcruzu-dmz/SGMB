@@ -12,6 +12,7 @@ import { ToastService } from '../../../../core/services/toast.service';
 import { ConfirmService } from '../../../../core/services/confirm.service';
 import { PaginationComponent } from '../../../../shared/pagination/pagination.component';
 import { EquipmentIconComponent } from '../../../../shared/equipment-icon/equipment-icon.component';
+import { AssetDetailModalComponent } from '../../components/asset-detail-modal/asset-detail-modal.component';
 import { AssignedTasksService, TASK_TYPE_INVENTORY } from '../../../../core/services/assigned-tasks.service';
 import { CorrectiveRequestService, CorrectiveRequest } from '../../../../core/services/corrective-requests.service';
 import { UsersService, User } from '../../../../core/services/users.service';
@@ -21,7 +22,7 @@ import { isCpuType, isDvrType, isMonitorType, equipmentCategory, groupByEquipmen
 @Component({
   selector: 'app-assets-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, LabelPipe, RouterLink, PaginationComponent, EquipmentIconComponent],
+  imports: [CommonModule, FormsModule, LabelPipe, RouterLink, PaginationComponent, EquipmentIconComponent, AssetDetailModalComponent],
   templateUrl: './assets-list.component.html',
   styleUrl: './assets-list.component.css',
 })
@@ -137,9 +138,8 @@ export class AssetsListComponent implements OnInit {
     return this.users.find(u => u.id === id)?.name || 'Desconocido';
   }
 
-  isCpu(type: string | null | undefined): boolean {
-    return isCpuType(type);
-  }
+  // Para la ventana de detalle: funcion estable (no se recrea en cada ciclo)
+  readonly technicianName = (id: number | null) => this.getTechnicianName(id);
 
   get formIsCpu(): boolean {
     return isCpuType(this.form.type);
@@ -149,16 +149,8 @@ export class AssetsListComponent implements OnInit {
     return isDvrType(this.form.type);
   }
 
-  isDvr(type: string | null | undefined): boolean {
-    return isDvrType(type);
-  }
-
   get formIsMonitor(): boolean {
     return isMonitorType(this.form.type);
-  }
-
-  isMonitor(type: string | null | undefined): boolean {
-    return isMonitorType(type);
   }
 
   assetRequests(assetId: number): CorrectiveRequest[] {

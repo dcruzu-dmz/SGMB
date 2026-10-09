@@ -175,55 +175,7 @@
                 <span class="item-loc-tag">{{ asset.type }}</span>
               </div>
 
-              <div class="tri-checks">
-                <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.installed" [name]="'installed-a' + asset.id"> Instalado</label>
-                <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.working" [name]="'working-a' + asset.id"> Funciona</label>
-                <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.cleaning_done" [name]="'cleaning-a' + asset.id"> Limpieza realizada</label>
-              </div>
-
-              <div class="checklist-rows" *ngIf="entriesByCategory(item, 'limpieza').length > 0">
-                <label>Limpieza y mantenimiento</label>
-                <div class="checklist-row" *ngFor="let entry of entriesByCategory(item, 'limpieza')">
-                  <label class="checkbox-chip">
-                    <input type="checkbox" [(ngModel)]="entry.checked" [name]="'cla' + asset.id + '-' + entry.label">
-                    {{ entry.label }}
-                  </label>
-                  <input type="text" class="comment-input" placeholder="Comentario" [(ngModel)]="entry.comment" [name]="'clacmt' + asset.id + '-' + entry.label">
-                </div>
-              </div>
-
-              <div class="checklist-rows" *ngIf="entriesByCategory(item, 'software').length > 0">
-                <label>Software / Aplicaciones instaladas</label>
-                <div class="checklist-row" *ngFor="let entry of entriesByCategory(item, 'software')">
-                  <label class="checkbox-chip">
-                    <input type="checkbox" [(ngModel)]="entry.checked" [name]="'swa' + asset.id + '-' + entry.label">
-                    {{ entry.label }}
-                  </label>
-                  <input type="text" class="comment-input" placeholder="Comentario / versión" [(ngModel)]="entry.comment" [name]="'swacmt' + asset.id + '-' + entry.label">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label>Observaciones del equipo</label>
-                <textarea [(ngModel)]="item.notes" [name]="'notes-a' + asset.id" rows="2"></textarea>
-              </div>
-
-              <div class="form-group">
-                <label>Fotos del equipo (cómo quedó)</label>
-                <input type="file" accept=".jpg,.jpeg,.png,.webp" multiple (change)="onPhotosSelected(item, $event)">
-                <div class="photo-preview-row" *ngIf="item._savedPhotos.length > 0">
-                  <div class="photo-preview" *ngFor="let photo of item._savedPhotos">
-                    <img [src]="photoUrl(photo.file_path)" alt="Foto guardada del equipo">
-                    <button type="button" (click)="removeSavedPhoto(item, photo)" aria-label="Eliminar foto guardada">✕</button>
-                  </div>
-                </div>
-                <div class="photo-preview-row" *ngIf="item._previews.length > 0">
-                  <div class="photo-preview" *ngFor="let preview of item._previews; let p = index">
-                    <img [src]="preview" alt="Foto del equipo">
-                    <button type="button" (click)="removePhoto(item, p)">✕</button>
-                  </div>
-                </div>
-              </div>
+              <app-visit-item-card [item]="item" [fieldKey]="'a' + asset.id" (photosSelected)="onPhotosSelected(item, $event)" (removeNewPhoto)="removePhoto(item, $event)" (removeSavedPhoto)="removeSavedPhoto(item, $event)"></app-visit-item-card>
             </div>
           </div>
         </div>
@@ -262,55 +214,7 @@
         </div>
       </div>
 
-      <div class="tri-checks">
-        <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.installed" [name]="'installed-' + i"> Instalado</label>
-        <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.working" [name]="'working-' + i"> Funciona</label>
-        <label class="checkbox-chip"><input type="checkbox" [(ngModel)]="item.cleaning_done" [name]="'cleaning-' + i"> Limpieza realizada</label>
-      </div>
-
-      <div class="checklist-rows" *ngIf="entriesByCategory(item, 'limpieza').length > 0">
-        <label>Limpieza y mantenimiento</label>
-        <div class="checklist-row" *ngFor="let entry of entriesByCategory(item, 'limpieza')">
-          <label class="checkbox-chip">
-            <input type="checkbox" [(ngModel)]="entry.checked" [name]="'cl' + i + '-' + entry.label">
-            {{ entry.label }}
-          </label>
-          <input type="text" class="comment-input" placeholder="Comentario" [(ngModel)]="entry.comment" [name]="'clcmt' + i + '-' + entry.label">
-        </div>
-      </div>
-
-      <div class="checklist-rows" *ngIf="entriesByCategory(item, 'software').length > 0">
-        <label>Software / Aplicaciones instaladas</label>
-        <div class="checklist-row" *ngFor="let entry of entriesByCategory(item, 'software')">
-          <label class="checkbox-chip">
-            <input type="checkbox" [(ngModel)]="entry.checked" [name]="'sw' + i + '-' + entry.label">
-            {{ entry.label }}
-          </label>
-          <input type="text" class="comment-input" placeholder="Comentario / versión" [(ngModel)]="entry.comment" [name]="'swcmt' + i + '-' + entry.label">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Observaciones del equipo</label>
-        <textarea [(ngModel)]="item.notes" [name]="'notes-' + i" rows="2"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>Fotos del equipo (cómo quedó)</label>
-        <input type="file" accept=".jpg,.jpeg,.png,.webp" multiple (change)="onPhotosSelected(item, $event)">
-        <div class="photo-preview-row" *ngIf="item._savedPhotos.length > 0">
-                  <div class="photo-preview" *ngFor="let photo of item._savedPhotos">
-                    <img [src]="photoUrl(photo.file_path)" alt="Foto guardada del equipo">
-                    <button type="button" (click)="removeSavedPhoto(item, photo)" aria-label="Eliminar foto guardada">✕</button>
-                  </div>
-                </div>
-                <div class="photo-preview-row" *ngIf="item._previews.length > 0">
-          <div class="photo-preview" *ngFor="let preview of item._previews; let p = index">
-            <img [src]="preview" alt="Foto del equipo">
-            <button type="button" (click)="removePhoto(item, p)">✕</button>
-          </div>
-        </div>
-      </div>
+      <app-visit-item-card [item]="item" [fieldKey]="'' + i" (photosSelected)="onPhotosSelected(item, $event)" (removeNewPhoto)="removePhoto(item, $event)" (removeSavedPhoto)="removeSavedPhoto(item, $event)"></app-visit-item-card>
     </div>
   </section>
 
