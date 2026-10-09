@@ -15,6 +15,7 @@ import {
   MaintenanceVisitPhoto,
 } from '../../../../core/services/maintenance-visit.service';
 import { ToastService } from '../../../../core/services/toast.service';
+import { ConfirmService } from '../../../../core/services/confirm.service';
 import { groupByEquipmentCategory } from '../../../../core/utils/equipment-category';
 
 interface DraftItem extends MaintenanceVisitItemCreate {
@@ -114,6 +115,7 @@ export class VisitFormComponent implements OnInit {
   private assetsService = inject(AssetsService);
   private visitService = inject(MaintenanceVisitService);
   private toast = inject(ToastService);
+  private confirmService = inject(ConfirmService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
@@ -408,6 +410,25 @@ export class VisitFormComponent implements OnInit {
     URL.revokeObjectURL(item._previews[index]);
     item._files.splice(index, 1);
     item._previews.splice(index, 1);
+  }
+
+  /** Borra una foto ya guardada del equipo (permanente, por eso pide confirmacion). */
+  async removeSavedPhoto(item: DraftItem, photo: MaintenanceVisitPhoto): Promise<void> {
+    const confirmed = await this.confirmService.confirm({
+      title: 'Eliminar foto',
+      message: 'La foto se eliminará de forma permanente. ¿Deseas continuar?',
+      confirmText: 'Eliminar',
+      danger: true,
+    });
+    if (!confirmed) return;
+
+    this.visitService.deletePhoto(photo.id).subscribe({
+      next: () => {
+        item._savedPhotos = item._savedPhotos.filter(p => p.id !== photo.id);
+        this.toast.success('Foto eliminada');
+      },
+      error: (err) => this.toast.error(err.error?.detail || 'No se pudo eliminar la foto'),
+    });
   }
 
   private uploadPendingPhotos(savedItems: { id: number }[], sourceItems: DraftItem[], onDone: () => void): void {

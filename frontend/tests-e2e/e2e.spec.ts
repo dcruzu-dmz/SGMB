@@ -9,6 +9,8 @@ const SUFFIX = process.env.E2E_SUFFIX || 'default';
 const ADMIN_EMAIL = `e2e-admin-${SUFFIX}@sgmb.com`;
 const TEC_EMAIL = `e2e-tec-${SUFFIX}@sgmb.com`;
 const PASSWORD = 'Qatest123!';
+// PNG valido de 1x1 (el backend valida la firma del archivo)
+const PHOTO_PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64');
 
 test('SIS01 - flujo completo de login redirige al Dashboard', async ({ page }) => {
   await page.goto('/');
@@ -82,6 +84,7 @@ test('VIS01 - un tecnico guarda su visita como borrador, la retoma y lo guardado
 
   const itemCard = page.locator('.item-card', { hasText: `Impresora E2E ${SUFFIX}` });
   await itemCard.getByLabel('Funciona').check();
+  await itemCard.locator('input[type="file"]').setInputFiles({ name: 'equipo.png', mimeType: 'image/png', buffer: PHOTO_PNG });
   await page.locator('textarea[name="general_observations"]').fill('VIS01: limpieza general realizada');
   // El tecnico puede escribir la observacion del encargado (regresion corregida en el PR #6)
   await page.locator('textarea[name="supervisor_observations"]').fill('VIS01: encargado conforme');
@@ -94,6 +97,7 @@ test('VIS01 - un tecnico guarda su visita como borrador, la retoma y lo guardado
   await expect(page.getByText('Funciona: Sí')).toBeVisible();
   await expect(page.getByText('VIS01: limpieza general realizada')).toBeVisible();
   await expect(page.getByText('VIS01: encargado conforme')).toBeVisible();
+  await expect(page.locator('img[alt="Foto del equipo"]')).toHaveCount(1);
 
   // Retomar el borrador: el formulario debe volver a mostrar lo guardado
   await page.getByRole('link', { name: 'Continuar visita' }).click();
@@ -101,6 +105,16 @@ test('VIS01 - un tecnico guarda su visita como borrador, la retoma y lo guardado
   await expect(assetCheckbox).toBeChecked({ timeout: 10000 });
   await expect(itemCard.getByLabel('Funciona')).toBeChecked();
   await expect(page.locator('textarea[name="supervisor_observations"]')).toHaveValue('VIS01: encargado conforme');
+
+  // La foto guardada se ve y se puede borrar (con confirmacion)
+  const savedPhoto = itemCard.locator('img[alt="Foto guardada del equipo"]');
+  await expect(savedPhoto).toHaveCount(1);
+  await itemCard.getByRole('button', { name: 'Eliminar foto guardada' }).click();
+  await page.locator('app-confirm-dialog').getByRole('button', { name: 'Cancelar' }).click();
+  await expect(savedPhoto).toHaveCount(1);
+  await itemCard.getByRole('button', { name: 'Eliminar foto guardada' }).click();
+  await page.locator('app-confirm-dialog').getByRole('button', { name: 'Eliminar' }).click();
+  await expect(savedPhoto).toHaveCount(0);
 
   // Cambiar y guardar de nuevo: se actualiza el mismo equipo, no se duplica
   await itemCard.getByLabel('Funciona').uncheck();
@@ -110,4 +124,5 @@ test('VIS01 - un tecnico guarda su visita como borrador, la retoma y lo guardado
   await expect(page.getByText('VIS01: segunda pasada')).toBeVisible();
   await expect(page.getByText(/Funciona: (Sí|No)/)).toHaveCount(1);
   await expect(page.getByText('Funciona: No')).toBeVisible();
+  await expect(page.locator('img[alt="Foto del equipo"]')).toHaveCount(0);
 });
