@@ -63,3 +63,74 @@ jobs:
       - run: npm ci
       - name: Build de produccion
         run: npx ng build
+
+  e2e:
+    name: E2E (Playwright)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: sgmb
+          POSTGRES_PASSWORD: sgmb
+          POSTGRES_DB: sgmb_ci
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      # Valores solo para CI; no son credenciales reales.
+      DATABASE_URL: postgresql+psycopg2://sgmb:sgmb@localhost:5432/sgmb_ci
+      SECRET_KEY: ci-solo-pruebas-clave-de-al-menos-32-bytes
+      E2E_DATABASE_URL: postgresql://sgmb:sgmb@localhost:5432/sgmb_ci
+      E2E_SUFFIX: ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Instalar dependencias
+        run: |
+          pip install -r backend/requirements.txt
+          npm ci --prefix frontend
+      - name: Cache de navegadores de Playwright
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}
+      - name: Instalar Chromium
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+      - name: Migraciones
+        working-directory: backend
+        run: alembic upgrade head
+      - name: Levantar backend y frontend
+        run: |
+          (cd backend && nohup uvicorn app.main:app --host 0.0.0.0 --port 8000 > /tmp/backend.log 2>&1 &)
+          (cd frontend && nohup npx ng serve --port 4200 > /tmp/frontend.log 2>&1 &)
+          for i in $(seq 1 90); do
+            curl -sf http://localhost:8000/ > /dev/null && curl -sf http://localhost:4200/ > /dev/null && exit 0
+            sleep 2
+          done
+          echo "Los servicios no arrancaron a tiempo"; tail -50 /tmp/backend.log /tmp/frontend.log; exit 1
+      - name: Datos de prueba
+        run: bash frontend/tests-e2e/seed.sh "$E2E_SUFFIX"
+      - name: Tests e2e
+        working-directory: frontend
+        run: npx playwright test -c tests-e2e/playwright.config.ts
+      - name: Capturas y logs si falla
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-resultados
+          path: |
+            frontend/test-results
+            /tmp/backend.log
+            /tmp/frontend.log
+          retention-days: 7
