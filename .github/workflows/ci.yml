@@ -39,7 +39,7 @@ jobs:
       - run: pip install -r requirements-dev.txt
       # test_integration.py queda fuera: depende de los datos de la base de desarrollo.
       - name: Tests unitarios
-        run: python -m pytest tests/test_units.py tests/test_units_v2.py tests/test_authz.py tests/test_scheduler_lock.py -q
+        run: python -m pytest tests/test_units.py tests/test_units_v2.py tests/test_authz.py tests/test_scheduler_lock.py tests/test_token_identity.py -q
       - name: Migraciones desde cero
         run: alembic upgrade head
       - name: Modelos y migraciones coinciden

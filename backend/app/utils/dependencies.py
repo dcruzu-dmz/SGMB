@@ -22,14 +22,17 @@ def get_current_user(
             detail="Token inválido o expirado"
         )
 
-    email = payload.get("sub")
-    if not email:
+    # sub es el id del usuario (no el correo): el id nunca cambia ni se reutiliza, asi
+    # un token no puede terminar autenticando a otra persona si un correo se reasigna.
+    # Los tokens antiguos con el correo en sub no son un id y se rechazan.
+    sub = payload.get("sub")
+    if not isinstance(sub, str) or not sub.isdigit():
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token sin usuario válido"
         )
 
-    user = db.query(User).filter(User.email == email).first()
+    user = db.query(User).filter(User.id == int(sub)).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
