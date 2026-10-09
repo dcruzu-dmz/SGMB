@@ -2,17 +2,6 @@
    Las reglas de la ventana (fondo, tarjeta, encabezado, cerrar, titulos de
    seccion) son las mismas que usa assets-list para su ventana de formulario. */
 
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  z-index: 100;
-}
-
 .modal-card {
   background: var(--color-surface);
   border-radius: var(--radius-md, 16px);
@@ -37,35 +26,6 @@
 
 .form-section-title:first-child {
   margin-top: 0;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.modal-header h2 {
-  margin: 0;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--color-text);
-}
-
-.modal-close {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  line-height: 1;
-  color: var(--color-text-muted);
-  cursor: pointer;
-  padding: 0.25rem 0.5rem;
-}
-
-.modal-close:hover {
-  color: var(--color-text);
 }
 
 /* Propias del detalle */

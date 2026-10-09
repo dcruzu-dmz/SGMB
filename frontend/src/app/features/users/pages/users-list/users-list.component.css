@@ -53,20 +53,6 @@
   color: var(--color-text);
 }
 
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.form-group label {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--color-text-muted);
-  margin-bottom: 0.4rem;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-
 input, select {
   width: 100%;
   padding: 0.7rem 0.85rem;
@@ -175,17 +161,6 @@ tbody tr:hover {
   gap: 0.4rem;
 }
 
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  z-index: 100;
-}
-
 .modal-card {
   background: var(--color-surface);
   border-radius: var(--radius-md, 16px);
@@ -195,35 +170,6 @@ tbody tr:hover {
   max-height: 80vh;
   overflow-y: auto;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.modal-header h2 {
-  margin: 0;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--color-text);
-}
-
-.modal-close {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  line-height: 1;
-  color: var(--color-text-muted);
-  cursor: pointer;
-  padding: 0.25rem 0.5rem;
-}
-
-.modal-close:hover {
-  color: var(--color-text);
 }
 
 .hint {

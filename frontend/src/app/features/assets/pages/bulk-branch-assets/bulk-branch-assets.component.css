@@ -59,20 +59,6 @@ h3 {
   font-size: 0.82rem;
 }
 
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.form-group label {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--color-text-muted);
-  margin-bottom: 0.4rem;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-
 .client-count {
   max-width: 220px;
 }
