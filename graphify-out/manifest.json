@@ -78,8 +78,8 @@
     "semantic_hash": "a9b0957b02c95a4b6d8abaa169194f4b"
   },
   "backend/app/routers/auth.py": {
-    "mtime": 1791510307.1002088,
-    "seen": 1791510359.549376,
+    "mtime": 1791510446.962393,
+    "seen": 1791510923.6884742,
     "ast_hash": "a9e04c470043d762390bc3107a24c31c",
     "semantic_hash": ""
   },
@@ -126,8 +126,8 @@
     "semantic_hash": ""
   },
   "backend/app/schemas/auth.py": {
-    "mtime": 1791510291.64957,
-    "seen": 1791510359.549782,
+    "mtime": 1791510446.963125,
+    "seen": 1791510923.688952,
     "ast_hash": "d59ccf4bd31c7058215f1eadab1acb55",
     "semantic_hash": ""
   },
@@ -174,8 +174,8 @@
     "semantic_hash": ""
   },
   "backend/app/utils/dependencies.py": {
-    "mtime": 1791510291.6488917,
-    "seen": 1791510359.5501812,
+    "mtime": 1791510446.9638515,
+    "seen": 1791510923.6894348,
     "ast_hash": "39edeb4120ecce683321107afe83187b",
     "semantic_hash": ""
   },
@@ -588,16 +588,16 @@
     "semantic_hash": "688ce78502980286ded5feacd5a42478"
   },
   "frontend/tests-e2e/cleanup.sh": {
-    "mtime": 1791347265.7551465,
-    "seen": 1791347970.286307,
-    "ast_hash": "8d81648a26b577426d879167d54fd455",
-    "semantic_hash": "8d81648a26b577426d879167d54fd455"
+    "mtime": 1791510752.5809999,
+    "seen": 1791510923.6949089,
+    "ast_hash": "614eb302657b32f44b9f65ba41ed0dde",
+    "semantic_hash": ""
   },
   "frontend/tests-e2e/e2e.spec.ts": {
-    "mtime": 1791347265.755766,
-    "seen": 1791347970.286309,
-    "ast_hash": "59558fcd25aba34914394ce13639b2ff",
-    "semantic_hash": "59558fcd25aba34914394ce13639b2ff"
+    "mtime": 1791510829.6730604,
+    "seen": 1791510923.694912,
+    "ast_hash": "ff744512c6255208a822f81923b5a84f",
+    "semantic_hash": ""
   },
   "frontend/tests-e2e/playwright.config.ts": {
     "mtime": 1791347265.756542,
@@ -606,10 +606,10 @@
     "semantic_hash": "7b6345faee9dce5f47e60f6598f94bed"
   },
   "frontend/tests-e2e/seed.sh": {
-    "mtime": 1791347265.7571847,
-    "seen": 1791347970.2863119,
-    "ast_hash": "cbaeb1609f2b52854b167443b2b4ba1b",
-    "semantic_hash": "cbaeb1609f2b52854b167443b2b4ba1b"
+    "mtime": 1791510752.5806518,
+    "seen": 1791510923.6949801,
+    "ast_hash": "102bcf118eba6549079ace541636a1e6",
+    "semantic_hash": ""
   },
   "frontend/tsconfig.app.json": {
     "mtime": 1785007828.3876662,
@@ -714,8 +714,8 @@
     "semantic_hash": ""
   },
   "frontend/src/app/features/maintenance-visits/pages/visit-form/visit-form.component.html": {
-    "mtime": 1791351365.7043161,
-    "seen": 1791351625.441919,
+    "mtime": 1791510875.3960075,
+    "seen": 1791510923.69649,
     "ast_hash": "466ec79d6a814fac2d97a5be9b23cd4f",
     "semantic_hash": ""
   },
@@ -990,9 +990,9 @@
     "semantic_hash": ""
   },
   ".github/workflows/ci.yml": {
-    "mtime": 1791510307.1502233,
-    "seen": 1791510359.555918,
-    "ast_hash": "10650f6400bec63af9688e11a072792f",
+    "mtime": 1791510905.4473712,
+    "seen": 1791510923.695153,
+    "ast_hash": "56a871b9b24c0919552a7562b9f74340",
     "semantic_hash": ""
   },
   "SPEC-paginacion.md": {
@@ -1014,8 +1014,8 @@
     "semantic_hash": ""
   },
   "backend/tests/test_token_identity.py": {
-    "mtime": 1791510279.928521,
-    "seen": 1791510359.550681,
+    "mtime": 1791510446.9644735,
+    "seen": 1791510923.6899981,
     "ast_hash": "08548b313e4ce6887f1b525c0f51ac84",
     "semantic_hash": ""
   }

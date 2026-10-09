@@ -3,7 +3,8 @@
 # Uso: ./seed.sh <suffix>
 set -e
 SUFFIX="$1"
-DB="postgresql://bofasa@localhost:5432/mantenimiento_db"
+# E2E_DATABASE_URL permite apuntar a otra base (el CI usa su propio Postgres)
+DB="${E2E_DATABASE_URL:-postgresql://bofasa@localhost:5432/mantenimiento_db}"
 # hash bcrypt de "Qatest123!" (mismo para admin y tecnico)
 HASH='$2b$12$JWYTipy0uJLhPSlLG2LtGOcI3UBKf.0PLQ14LE2GA3F0mRiOP3ylS'
 
@@ -23,6 +24,9 @@ INSERT INTO assets (name, type, brand, model, serial_number, location, status, b
 INSERT INTO corrective_requests (asset_id, requester_id, assigned_id, description, priority, status)
   VALUES (:asset_id, :admin_id, :tec_id, 'Impresora no corta el papel', 'alta', 'en_proceso')
   RETURNING id \gset req_
+INSERT INTO maintenance_visits (branch_id, technician_id, visit_date, status)
+  VALUES (:branch_id, :tec_id, CURRENT_DATE, 'programada')
+  RETURNING id \gset visit_
 SQL
 
 echo "ADMIN_EMAIL=e2e-admin-$SUFFIX@sgmb.com"

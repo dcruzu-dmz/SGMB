@@ -62,3 +62,36 @@ test('ACEP01 - un tecnico completa la tarea real de cerrar su solicitud asignada
   await page.getByRole('button', { name: 'Actualizar' }).click();
   await expect(page.locator('tr', { hasText: `Impresora E2E ${SUFFIX}` }).getByText('Cerrada')).toBeVisible({ timeout: 10000 });
 });
+
+test('VIS01 - un tecnico completa su visita programada y lo guardado persiste', async ({ page }) => {
+  await page.goto('/');
+  await page.getByPlaceholder('admin@sgmb.com').fill(TEC_EMAIL);
+  await page.getByPlaceholder('••••••••').fill(PASSWORD);
+  await page.getByRole('button', { name: 'Iniciar sesión' }).click();
+  await expect(page).toHaveURL(/\/dashboard/, { timeout: 10000 });
+
+  await page.goto('/maintenance-visits');
+  const visitRow = page.locator('tr', { hasText: `Sucursal E2E ${SUFFIX}` });
+  await visitRow.getByRole('link', { name: 'Completar' }).click();
+  await expect(page).toHaveURL(/\/maintenance-visits\/\d+\/edit/);
+
+  // El formulario debe cargar y responder (antes se congelaba con sucursales con equipos)
+  const assetCheckbox = page.locator('.asset-pick-row-main', { hasText: `Impresora E2E ${SUFFIX}` }).locator('input[type="checkbox"]');
+  await expect(assetCheckbox).toBeVisible({ timeout: 10000 });
+  await assetCheckbox.check();
+
+  const itemCard = page.locator('.item-card', { hasText: `Impresora E2E ${SUFFIX}` });
+  await itemCard.getByLabel('Funciona').check();
+  await page.locator('textarea[name="general_observations"]').fill('VIS01: limpieza general realizada');
+  // El tecnico puede escribir la observacion del encargado (regresion corregida en el PR #6)
+  await page.locator('textarea[name="supervisor_observations"]').fill('VIS01: encargado conforme');
+
+  await page.getByRole('button', { name: 'Guardar como borrador' }).click();
+
+  // Tras guardar, la app lleva al detalle de la visita: lo guardado debe verse ahi
+  await expect(page).toHaveURL(/\/maintenance-visits\/\d+$/, { timeout: 10000 });
+  await expect(page.getByText('Impresora de Facturación')).toBeVisible();
+  await expect(page.getByText('Funciona: Sí')).toBeVisible();
+  await expect(page.getByText('VIS01: limpieza general realizada')).toBeVisible();
+  await expect(page.getByText('VIS01: encargado conforme')).toBeVisible();
+});
