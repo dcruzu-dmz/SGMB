@@ -61,7 +61,7 @@ def login(data: LoginRequest, request: Request, db: Session = Depends(get_db)):
         )
 
     token = create_access_token({
-        "sub": user.email,
+        "sub": str(user.id),  # PyJWT exige que sub sea texto
         "role": user.role
         })
 
