@@ -98,8 +98,10 @@ async def preventive_check_loop() -> None:
     while True:
         db = SessionLocal()
         try:
-            created = run_preventive_check(db)
-            if created:
+            created = run_preventive_check_locked(db)
+            if created is None:
+                logger.info("Preventive check: otra corrida en curso, se omite esta")
+            elif created:
                 logger.info("Preventive check: %s visita(s) programada(s) creada(s)", created)
         except Exception:
             logger.exception("Error en el chequeo de mantenimiento preventivo")
