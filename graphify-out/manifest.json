@@ -247,7 +247,7 @@
   },
   "frontend/.vscode/mcp.json": {
     "mtime": 1785007828.3751445,
-    "seen": 1791350050.409913,
+    "seen": 1791514186.788218,
     "ast_hash": "",
     "semantic_hash": ""
   },
@@ -426,10 +426,10 @@
     "semantic_hash": "df5ba0583036637993b75959ffd05954"
   },
   "frontend/src/app/features/assets/pages/assets-list/assets-list.component.ts": {
-    "mtime": 1791344274.1076293,
-    "seen": 1791345549.9320672,
-    "ast_hash": "c12aee1df417cbea308bba11f959d421",
-    "semantic_hash": "c12aee1df417cbea308bba11f959d421"
+    "mtime": 1791514084.8118582,
+    "seen": 1791514186.788279,
+    "ast_hash": "f38bf1652a84044799d71817658a7483",
+    "semantic_hash": ""
   },
   "frontend/src/app/features/assets/pages/assets-list/assets-list.spec.ts": {
     "mtime": 1785007828.3815615,
@@ -498,9 +498,9 @@
     "semantic_hash": ""
   },
   "frontend/src/app/features/maintenance-visits/pages/visit-form/visit-form.component.ts": {
-    "mtime": 1791511823.731142,
-    "seen": 1791511849.365869,
-    "ast_hash": "18d92104547c4c13222c3bba68aa2fe9",
+    "mtime": 1791513997.942351,
+    "seen": 1791514186.7883048,
+    "ast_hash": "60c79a2146947ecd95ab73ccb2e45e6f",
     "semantic_hash": ""
   },
   "frontend/src/app/features/maintenance-visits/pages/visit-list/visit-list.component.ts": {
@@ -594,9 +594,9 @@
     "semantic_hash": ""
   },
   "frontend/tests-e2e/e2e.spec.ts": {
-    "mtime": 1791511782.686983,
-    "seen": 1791511849.367069,
-    "ast_hash": "1c957d0afc71ff1a59a24f82251b6c41",
+    "mtime": 1791513770.7341392,
+    "seen": 1791514186.788338,
+    "ast_hash": "5d54b8c6a6785ffee6673d8e3e8d49e3",
     "semantic_hash": ""
   },
   "frontend/tests-e2e/playwright.config.ts": {
@@ -666,10 +666,10 @@
     "semantic_hash": "54eae40cdf0cb9079ccec165b41c702e"
   },
   "frontend/src/app/features/assets/pages/assets-list/assets-list.component.html": {
-    "mtime": 1791344274.1067414,
-    "seen": 1791345549.932127,
-    "ast_hash": "ff50aab56d624a0e80a6b0a00822694d",
-    "semantic_hash": "ff50aab56d624a0e80a6b0a00822694d"
+    "mtime": 1791514060.7411706,
+    "seen": 1791514186.788374,
+    "ast_hash": "3bdc9af5c65c08980a87ca707acc826e",
+    "semantic_hash": ""
   },
   "frontend/src/app/features/assets/pages/bulk-branch-assets/bulk-branch-assets.component.html": {
     "mtime": 1791344274.108483,
@@ -714,9 +714,9 @@
     "semantic_hash": ""
   },
   "frontend/src/app/features/maintenance-visits/pages/visit-form/visit-form.component.html": {
-    "mtime": 1791511761.5259888,
-    "seen": 1791511849.3685498,
-    "ast_hash": "cce5b97b8234e5a2a7f54e40f847dfe7",
+    "mtime": 1791513997.9418097,
+    "seen": 1791514186.7883909,
+    "ast_hash": "36616d1f2a7aef9bc7eca6ef1094ad7a",
     "semantic_hash": ""
   },
   "frontend/src/app/features/maintenance-visits/pages/visit-list/visit-list.component.html": {
@@ -1023,6 +1023,42 @@
     "mtime": 1791511641.9072466,
     "seen": 1791511849.362211,
     "ast_hash": "78abba5e9e227e38b5fd7af41ec89474",
+    "semantic_hash": ""
+  },
+  "frontend/src/app/features/assets/components/asset-detail-modal/asset-detail-modal.component.ts": {
+    "mtime": 1791514060.7034194,
+    "seen": 1791514186.788277,
+    "ast_hash": "fd1a2b1442d4b02d8d181986d09e44c9",
+    "semantic_hash": ""
+  },
+  "frontend/src/app/features/maintenance-visits/components/visit-item-card/visit-item-card.component.ts": {
+    "mtime": 1791513997.9698896,
+    "seen": 1791514186.788301,
+    "ast_hash": "ae53d248d12be20b8af71e5f6e60037c",
+    "semantic_hash": ""
+  },
+  "frontend/src/app/features/maintenance-visits/visit-form.data.ts": {
+    "mtime": 1791513997.9702775,
+    "seen": 1791514186.7883132,
+    "ast_hash": "78e8cb1d9c26f2c49a71ffa4d776ead8",
+    "semantic_hash": ""
+  },
+  "SPEC-componentes.md": {
+    "mtime": 1791514183.8950827,
+    "seen": 1791514186.788353,
+    "ast_hash": "504983ac08076fda04bffae19ec4e337",
+    "semantic_hash": ""
+  },
+  "frontend/src/app/features/assets/components/asset-detail-modal/asset-detail-modal.component.html": {
+    "mtime": 1791514060.740824,
+    "seen": 1791514186.788372,
+    "ast_hash": "5e353078fbd35b9245bfecb245a098ef",
+    "semantic_hash": ""
+  },
+  "frontend/src/app/features/maintenance-visits/components/visit-item-card/visit-item-card.component.html": {
+    "mtime": 1791513997.9695413,
+    "seen": 1791514186.788388,
+    "ast_hash": "a848633a6d4cb27abdbd1f99cb5e7d63",
     "semantic_hash": ""
   }
 }
