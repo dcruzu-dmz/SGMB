@@ -1,0 +1,157 @@
+/* Los estilos de visit-form estan encapsulados y no llegan a este componente.
+   Las reglas de campos, chips y checklist son las mismas que en visit-form
+   (que tambien las usa para el checklist general). */
+input, textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1.5px solid var(--color-sidebar-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  color: var(--color-text);
+  background: var(--color-bg);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--color-accent);
+  background: var(--color-surface);
+}
+
+textarea {
+  resize: vertical;
+}
+
+input[type="file"] {
+  padding: 0.5rem;
+  background: var(--color-surface);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.checkbox-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.8rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-sidebar-border);
+  border-radius: 20px;
+  font-size: 0.82rem;
+  color: var(--color-text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.checkbox-chip input {
+  width: auto;
+  margin: 0;
+}
+
+.tri-checks {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.checklist-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.checklist-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.checklist-row .checkbox-chip {
+  min-width: 0;
+  white-space: normal;
+}
+
+.comment-input {
+  padding: 0.5rem 0.7rem;
+  font-size: 0.82rem;
+}
+
+.photo-preview-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+
+.photo-preview {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--color-sidebar-border);
+}
+
+.photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-preview button {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 0.65rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+@media (max-width: 640px) {
+  .checklist-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Objetivos táctiles más grandes para técnicos usando el celular en campo */
+  .checkbox-chip {
+    padding: 0.65rem 1rem;
+    font-size: 0.9rem;
+    gap: 0.55rem;
+  }
+
+  .checkbox-chip input[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .tri-checks {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tri-checks .checkbox-chip {
+    justify-content: flex-start;
+  }
+}
